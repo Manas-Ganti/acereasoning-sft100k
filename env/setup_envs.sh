@@ -60,7 +60,12 @@ if [ "$WHICH" = all ] || [ "$WHICH" = train ]; then
     "$PY" -m pip install "${TORCH_PIN[@]}"
     "$PY" -m pip install -r requirements.txt
     "$PY" -m pip install -e ".[torch,metrics]" --no-build-isolation
-    "$PY" -m pip install flash-attn --no-build-isolation
+    # flash-attn's setup.py downloads its prebuilt wheel and os.rename()s it into pip's cache in
+    # /home; with TMPDIR on /tmp (another filesystem on ARC) that fails with "Invalid cross-device
+    # link". Keep the build temp dir on the same filesystem as the cache.
+    mkdir -p "$HOME/.cache/pip-tmp"
+    TMPDIR="$HOME/.cache/pip-tmp" "$PY" -m pip install flash-attn --no-build-isolation
+    rm -rf "$HOME/.cache/pip-tmp"
     "$PY" -m pip install deepspeed==0.16.8
     add_constrained "$PY" pandas pyarrow scikit-learn sentence-transformers wandb
     "$PY" -c "import torch; assert torch.__version__.startswith('2.6.0'), 'torch was moved to ' + torch.__version__"
