@@ -51,7 +51,7 @@ quota                      # /home is 640 GB total
 > *previously active* prefix's PATH entries, so the module's base Python 3.13 stays first.
 > **Fix:** launchers submit eval jobs from a conda-clean environment (`env/clean_conda.sh`). Verified with
 > `launch/test_activation.sh`. Our own job bodies never use `source activate`: `env/arc_env.sh` sets
-> `PY`/`PATH` from the env path and checks a sentinel import (`REQUIRE_ENV`).
+> `PY`/`PATH` from the env named by `SFT_ENV` and checks a sentinel import.
 
 - **`CONDA_ENV` is taken:** `~/.bashrc` exports `CONDA_ENV=~/miniconda3/envs/vrr` (the VLM project), and the first
   audit job (7864578) ran in it. Our launchers select envs with **`SFT_ENV`** (`myenv`/`evalenv`, always set
