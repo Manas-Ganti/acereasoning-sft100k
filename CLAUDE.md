@@ -1,5 +1,28 @@
 # CLAUDE.md — Reasoning SFT Data Selection (ECE 6514)
 
+## Start here (every agent, every session)
+
+This project may have more than one human and several Claude agents. Shared state lives in the repo, not in any
+agent's private memory.
+
+1. **Read `docs/STATUS.md` first.** It holds the current step, running jobs, next actions and blockers. Then read the
+   note for the current step (`docs/steps/0N-*.md`) and skim `docs/reference/decision-log.md`.
+2. **Before acting:** `git pull`. Don't redo or contradict a decision in the decision log without asking a human.
+3. **After acting**, before you stop, update the docs and commit them together with your code:
+   - `docs/STATUS.md`: step board, running jobs (with job IDs), next actions, blockers, and a dated line in the
+     change log.
+   - the step note: fill in its **Results** section and set `status:` in its frontmatter to `not-started`,
+     `next`, `running`, `done` or `blocked`.
+   - `docs/reference/decision-log.md`: a dated entry for any decision.
+   - `docs/runs/<run>.md` for each training run, from `docs/templates/run.md`.
+4. **Docs conventions** (the vault must render in both Obsidian and GitHub):
+   - Use relative markdown links (`[text](../path.md)`), not `[[wikilinks]]`.
+   - Use YAML frontmatter and GitHub-style callouts (`> [!NOTE]`, `> [!WARNING]`).
+   - Name new notes in kebab-case.
+   - Never hand-edit generated files (`analysis/*.md`, `results/*.md`).
+5. **Ask the human** before anything expensive (state GPU-hours first), outward-facing (pushing, HF uploads), or
+   anything that contradicts the course README.
+
 ## What this project is
 
 Supervised fine-tuning of **Qwen/Qwen2.5-3B-Instruct** on a **15K subset** chosen from a fixed
@@ -162,6 +185,7 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
 ## Suggested layout
 
 ```
+docs/            Obsidian/GitHub vault: 00-home, STATUS (live state), steps/, reference/, runs/, templates/
 analysis/        pool_audit.*, pool_scores.parquet, plots
 data_subsets/    <name>.meta.json / .idx.txt (+ symlinks to LLaMA-Factory/data/<name>.json)
 dev/             held-out dev set (never the 8 test benchmarks)

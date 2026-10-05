@@ -23,3 +23,11 @@ analysis/*.parquet
 # notes about other ARC projects/accounts -- kept local, not published
 arc_runbook.md
 arc_quickref.md
+# Obsidian: share vault settings, not personal workspace state
+.obsidian/workspace*.json
+.obsidian/cache
+.obsidian/plugins/
+.obsidian/themes/
+.obsidian/hotkeys.json
+.obsidian/appearance.json
+.trash/
