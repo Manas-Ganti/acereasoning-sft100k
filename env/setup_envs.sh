@@ -76,8 +76,22 @@ fi
 if [ "$WHICH" = all ] || [ "$WHICH" = eval ]; then
     P=$(make_env evalenv 3.11); PY="$P/bin/python"
     echo "== evalenv: $PY"
-    "$PY" -m pip install -r "$REPO/eval/requirements.txt"
+    # eval/requirements.txt, installed in stages (2026-10-05, on ARC):
+    #  * its unpinned `transformers` now resolves to 5.x, which vllm<=0.6.1 (Sep 2024) predates; pin the
+    #    release contemporary with vLLM 0.6.1 (the file does not pin transformers);
+    #  * `flash_attn` cannot be built inside `pip install -r` (its setup imports torch, which the isolated
+    #    build env lacks). vLLM 0.6.1 bundles its own attention kernels and eval/ never imports
+    #    flash_attn, so it is installed afterwards the README way and is not fatal if no wheel exists.
+    "$PY" -m pip install "vllm<=0.6.1" "transformers==4.44.2"
+    grep -v -E '^\s*flash_attn' "$REPO/eval/requirements.txt" > /tmp/evalreq_$$.txt
+    "$PY" -m pip freeze | grep -i -E '^(torch|transformers|tokenizers|vllm)==' > /tmp/evalpin_$$.txt
+    "$PY" -m pip install -r /tmp/evalreq_$$.txt -c /tmp/evalpin_$$.txt
+    mkdir -p "$HOME/.cache/pip-tmp"
+    TMPDIR="$HOME/.cache/pip-tmp" "$PY" -m pip install flash_attn --no-build-isolation -c /tmp/evalpin_$$.txt \
+        || echo "!! flash_attn not installed in evalenv (no prebuilt wheel); eval does not use it -- continuing"
+    rm -rf "$HOME/.cache/pip-tmp"
     add_constrained "$PY" pandas pyarrow
+    "$PY" -c "import transformers; assert transformers.__version__ == '4.44.2', 'transformers moved to ' + transformers.__version__"
     # Guard, not an override: eval/utils/parser.py imports latex2sympy2 at module load, so if this
     # import fails, every eval job dies. Verified locally that latex2sympy2 1.9.1 cannot load under
     # antlr4 4.11.1; if that happens here, stop and report rather than silently changing a tested pin.

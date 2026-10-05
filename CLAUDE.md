@@ -133,6 +133,8 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
 - Current hiyouga/LLaMA-Factory main needs Python >=3.11, and unpinned `vllm` now pulls transformers 5.x,
   so the course repo's LLaMA-Factory snapshot is used. torch is pinned to 2.6.0+cu126 in myenv (unpinned
   torch now pulls 2.14/CUDA 13.0 -> flash-attn has no wheel and won't build against CUDA/12.6.0).
+- evalenv: `eval/requirements.txt` installed in stages: transformers pinned 4.44.2 (unpinned now gives 5.x,
+  which vllm 0.6.1 predates); flash_attn installed after torch with --no-build-isolation (eval never imports it).
 - On ARC, `source activate <env>` (Miniconda3 25.11 module) can silently leave the base python active:
   setup calls each env's python by absolute path; jobs pin PATH; PYTHONNOUSERSITE=1 everywhere.
 - Watch item: locally, `antlr4-python3-runtime==4.11.1` + `latex2sympy2==1.9.1` did not resolve, and
