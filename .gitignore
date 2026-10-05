@@ -1,0 +1,25 @@
+# course repo's .gitignore
+__pycache__/
+*.pyc
+eval/outputs/
+eval/completions/
+# large artefacts: pool, scores, dev outputs, logs
+work/
+logs/
+# trained models (pushed to the HF Hub instead)
+LLaMA-Factory/saves/
+# 15K subsets are ~0.5 GB each -> published on the HF Hub, not git. Tracked instead:
+# LLaMA-Factory/data/dataset_info.json and data_subsets/<name>.meta.json / .idx.txt
+LLaMA-Factory/data/random_s*.json
+LLaMA-Factory/data/filter_*.json
+LLaMA-Factory/data/full_method_*.json
+LLaMA-Factory/data/hardest_only_*.json
+data_subsets/*.json
+!data_subsets/*.meta.json
+# derived per-sample tables (rebuildable; pool_audit.md / clusters_spotcheck.md are tracked)
+analysis/*.parquet
+.DS_Store
+
+# notes about other ARC projects/accounts -- kept local, not published
+arc_runbook.md
+arc_quickref.md
