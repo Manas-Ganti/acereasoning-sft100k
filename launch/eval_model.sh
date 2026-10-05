@@ -21,9 +21,9 @@ fi
 
 # eval_single.sh reads these from the environment (sbatch exports the environment by default).
 # eval_single.sh runs `module load Miniconda3; ...; source activate ${CONDA_ENV}` and then a bare `python`.
-# The module load re-prepends base conda to PATH, so only a successful `source activate` can select the
-# env -- and the module's conda does not resolve bare env names in ~/.conda/envs. Pass the ABSOLUTE
-# path (verified with launch/test_activation.sh).
+# That only selects the env if the job starts conda-clean -- see env/clean_conda.sh for why. The env
+# is passed by absolute path (verified with launch/test_activation.sh).
+clean_conda_env
 CONDA_ENV="${EVAL_CONDA_ENV:-$HOME/.conda/envs/evalenv}"
 [ -x "$CONDA_ENV/bin/python" ] || { echo "no env at $CONDA_ENV -- run env/setup_envs.sh"; exit 1; }
 export MODEL OUTPUT_DIR="$REPO/eval/outputs/$RUN" CONDA_ENV

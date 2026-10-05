@@ -135,10 +135,12 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
   torch now pulls 2.14/CUDA 13.0 -> flash-attn has no wheel and won't build against CUDA/12.6.0).
 - evalenv: `eval/requirements.txt` installed in stages: transformers pinned 4.44.2 (unpinned now gives 5.x,
   which vllm 0.6.1 predates); flash_attn installed after torch with --no-build-isolation (eval never imports it).
-- On ARC (Miniconda3 25.11 module), `source activate <bare name>` leaves the base python active, and
-  `module load Miniconda3` re-prepends base to PATH, so a pre-set PATH cannot win. Hence:
-  eval_single.sh gets CONDA_ENV as an ABSOLUTE path (~/.conda/envs/evalenv; verify with
-  launch/test_activation.sh); our own jobs never `source activate` -- env/arc_env.sh sets PY/PATH/
+- On ARC, eval_single.sh's `source activate` succeeds but python stays the module's base 3.13. Root cause:
+  the login shell has a personal ~/miniconda3 base active (conda init + auto_activate), sbatch copies it
+  into the job, and conda activate only replaces the PREVIOUS prefix's PATH entries -- the module's bin,
+  prepended by `module load`, stays in front. Fix (env/clean_conda.sh): launchers submit eval jobs from a
+  conda-clean environment; from CONDA_SHLVL=0 activate prepends the env. CONDA_ENV is passed as an
+  absolute path. Verify with launch/test_activation.sh. Our own jobs never `source activate` -- env/arc_env.sh sets PY/PATH/
   CONDA_PREFIX from the path and checks a sentinel import for the env the job needs (REQUIRE_ENV).
   Setup calls each env's python by absolute path; PYTHONNOUSERSITE=1 everywhere. Never trust
   `conda env list` / `conda info` on a login node as evidence -- check sys.executable.

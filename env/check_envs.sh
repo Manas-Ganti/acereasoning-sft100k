@@ -18,13 +18,12 @@ for p in "$TPY" "$EPY"; do
     v=$("$p" -V 2>&1) && [ -n "$v" ] && ok "$p: $v" || bad "$p is missing or broken"
 done
 
-echo "== eval_single.sh's activation (module load + source activate <ABSOLUTE path>, as launch/eval_model.sh passes it)"
+echo "== eval_single.sh's activation from a conda-clean environment (what launch/eval_model.sh hands the job)"
+source "$REPO/env/clean_conda.sh"
 for e in "$TRAIN_ENV_NAME" "$EVAL_ENV_NAME"; do
     p="$HOME/.conda/envs/$e"
-    raw=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; python -c 'import sys; print(sys.executable)'" 2>&1 | tail -1)
-    [[ "$raw" == "$p"/* ]] || echo "       note: by bare name, 'source activate $e' gives $raw (expected; we pass the path)"
-    out=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $p; python -c 'import sys; print(sys.executable)'" 2>&1 | tail -1)
-    [[ "$out" == "$p"/* ]] && ok "$e by path -> $out" || bad "source activate $p gives $out -- see env/diagnose_activate.sh"
+    out=$( (clean_conda_env; bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $p; python -c 'import sys; print(sys.executable)'") 2>&1 | tail -1)
+    [[ "$out" == "$p"/* ]] && ok "$e -> $out" || bad "source activate $p gives $out -- see env/clean_conda.sh"
 done
 echo "   (login-node result only; confirm inside a batch job with launch/test_activation.sh)"
 

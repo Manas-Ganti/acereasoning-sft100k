@@ -19,6 +19,7 @@ case "$GPU" in
 esac
 QOS="${QOS:-$DEFAULT_QOS}"
 mkdir -p "$REPO/logs/slurm"
+source "$REPO/env/clean_conda.sh"
 
 # sb <sbatch args...>  -> prints the job id
 sb() {
