@@ -1,6 +1,8 @@
 # Sourced by every slurm/*.slurm job body:   [REQUIRE_ENV=<myenv|evalenv>] source "$REPO/env/arc_env.sh"
 #
-# Env selection: $CONDA_ENV (myenv for training/embeddings, evalenv for eval/scoring -- set by launch/*.sh).
+# Env selection: $SFT_ENV = myenv (training/embeddings) or evalenv (eval/scoring), always set explicitly by
+# launch/*.sh. NOT $CONDA_ENV: the login ~/.bashrc exports CONDA_ENV=.../miniconda3/envs/vrr (another project),
+# which leaked into the first audit job.
 # We do NOT use `source activate`: on ARC's Miniconda3 25.11 module it can return success without
 # switching interpreters in a batch shell. Instead PY / CONDA_PREFIX / PATH are set directly from the
 # env's absolute path, and every job body calls "$PY", never a bare `python`. Also (arc_runbook.md):
@@ -13,7 +15,7 @@
 #  * NCCL_SOCKET_IFNAME probed per node (`ib0` exists on H200 nodes but has no IPv4 address).
 : "${REPO:?REPO must be exported by the launcher (launch/*.sh does this)}"
 cd "$REPO"
-export CONDA_ENV="${CONDA_ENV:-myenv}"
+unset PYTHONPATH                               # nothing inherited from other projects
 export HF_HOME="${HF_HOME:-/home/$USER/hf_cache}"
 export WANDB_DIR="${WANDB_DIR:-/home/$USER/wandb}"
 export WANDB_PROJECT="${WANDB_PROJECT:-acereason-sft-selection}"
@@ -27,11 +29,12 @@ if command -v module &>/dev/null; then
     module load CUDA/12.6.0
 fi
 export PYTHONNOUSERSITE=1                       # keep ~/.local site-packages out of every job
-case "$CONDA_ENV" in
-    /*) ENV_PREFIX="$CONDA_ENV" ;;
-    *)  ENV_PREFIX="$HOME/.conda/envs/$CONDA_ENV" ;;
+case "${SFT_ENV:-}" in
+    myenv|evalenv) ;;
+    *) echo "[arc_env] FATAL: SFT_ENV must be myenv or evalenv (got '${SFT_ENV:-}'); launch/*.sh sets it" >&2; exit 3 ;;
 esac
-[ -x "$ENV_PREFIX/bin/python" ] || { echo "[arc_env] FATAL: no env at $ENV_PREFIX (CONDA_ENV=$CONDA_ENV)" >&2; exit 3; }
+ENV_PREFIX="$HOME/.conda/envs/$SFT_ENV"
+[ -x "$ENV_PREFIX/bin/python" ] || { echo "[arc_env] FATAL: no env at $ENV_PREFIX" >&2; exit 3; }
 export CONDA_PREFIX="$ENV_PREFIX" CONDA_DEFAULT_ENV="$(basename "$ENV_PREFIX")"
 export PATH="$ENV_PREFIX/bin:$PATH"
 export PY="$ENV_PREFIX/bin/python"
@@ -40,16 +43,14 @@ if ! "$PY" -V 2>&1 | grep -q '^Python 3'; then
 fi
 exe=$("$PY" -c 'import sys; print(sys.executable)')
 [[ "$exe" == "$ENV_PREFIX"/* ]] || { echo "[arc_env] FATAL: sys.executable=$exe is not inside $ENV_PREFIX" >&2; exit 3; }
-if [ -n "${REQUIRE_ENV:-}" ]; then
-    [ "$(basename "$ENV_PREFIX")" = "$REQUIRE_ENV" ] \
-        || { echo "[arc_env] FATAL: this job needs env $REQUIRE_ENV, got $ENV_PREFIX" >&2; exit 3; }
-    case "$REQUIRE_ENV" in
-        myenv)   sentinel="import llamafactory, transformers, flash_attn" ;;
-        evalenv) sentinel="import vllm; from latex2sympy2 import latex2sympy" ;;
-        *)       sentinel="pass" ;;
-    esac
-    "$PY" -c "$sentinel" 2>/dev/null || { echo "[arc_env] FATAL: sentinel import failed in $REQUIRE_ENV: $sentinel" >&2; exit 3; }
+if [ -n "${REQUIRE_ENV:-}" ] && [ "$REQUIRE_ENV" != "$SFT_ENV" ]; then
+    echo "[arc_env] FATAL: this job needs env $REQUIRE_ENV, launcher gave SFT_ENV=$SFT_ENV" >&2; exit 3
 fi
+case "$SFT_ENV" in   # sentinel import: the env really is what it claims to be
+    myenv)   sentinel="import llamafactory, transformers, flash_attn" ;;
+    evalenv) sentinel="import vllm; from latex2sympy2 import latex2sympy" ;;
+esac
+"$PY" -c "$sentinel" 2>/dev/null || { echo "[arc_env] FATAL: sentinel import failed in $SFT_ENV: $sentinel" >&2; exit 3; }
 
 if [ -z "${NCCL_SOCKET_IFNAME:-}" ] && command -v ip &>/dev/null; then
     for cand in ib0 eth0 $(ls /sys/class/net 2>/dev/null); do
@@ -59,5 +60,5 @@ if [ -z "${NCCL_SOCKET_IFNAME:-}" ] && command -v ip &>/dev/null; then
         fi
     done
 fi
-echo "[arc_env] host=$(hostname) job=${SLURM_JOB_ID:-none} python=$PY"
+echo "[arc_env] host=$(hostname) job=${SLURM_JOB_ID:-none} env=$SFT_ENV python=$PY"
 echo "[arc_env] HF_HOME=$HF_HOME NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME:-unset} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"

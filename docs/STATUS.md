@@ -25,7 +25,7 @@ is built. Activation inside batch jobs was verified with `launch/test_activation
 | # | Step | Status | Gate / key result | Note |
 |---|---|---|---|---|
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
-| 1 | Audit pool | ⏭️ next | — | [01-audit-pool](steps/01-audit-pool.md) |
+| 1 | Audit pool | ⏭️ next (first try 7864578 failed: wrong env, fixed) | — | [01-audit-pool](steps/01-audit-pool.md) |
 | 2 | Base eval + gate | ⏭️ next | gate: within tolerance of last year's baseline | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ⬜ not started (needs Step 1) | — | [04-score-pool](steps/04-score-pool.md) |
@@ -55,6 +55,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-05**: Step 1 audit job 7864578 failed at start: it ran in the old `vrr` env because `~/.bashrc` exports
+  `CONDA_ENV`. Fixed (launchers use `SFT_ENV`, and an env sentinel runs in every job). Resubmit after `git pull`.
 - **2026-10-05**: Docs reorganised into an Obsidian vault (`docs/`). Setup finished on ARC. Solved along the way:
   base-conda leakage into jobs, the torch/flash-attn pin, the transformers pin, the antlr4 conflict, and ARC's `$WORK`
   variable. See [Decision log](reference/decision-log.md) and [ARC guide](reference/arc-guide.md).

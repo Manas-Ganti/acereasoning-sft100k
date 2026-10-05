@@ -53,6 +53,10 @@ quota                      # /home is 640 GB total
 > `launch/test_activation.sh`. Our own job bodies never use `source activate`: `env/arc_env.sh` sets
 > `PY`/`PATH` from the env path and checks a sentinel import (`REQUIRE_ENV`).
 
+- **`CONDA_ENV` is taken:** `~/.bashrc` exports `CONDA_ENV=~/miniconda3/envs/vrr` (the VLM project), and the first
+  audit job (7864578) ran in it. Our launchers select envs with **`SFT_ENV`** (`myenv`/`evalenv`, always set
+  explicitly), and `arc_env.sh` refuses anything else and runs a sentinel import every time. The log line
+  `[arc_env] ... env=evalenv python=/home/manasganti/.conda/envs/evalenv/bin/python` confirms the right env.
 - **`conda env list` / `conda info` aren't evidence** of which Python runs. Check `sys.executable`.
 - **ARC sets `$WORK`** (`/notavailable` without a work allocation). Our scripts use `SFT_WORK_DIR` instead.
 - **`pip` missing the env:** inside `setup_envs.sh`, pip ran from base and installed into `~/.local`. Every pip call

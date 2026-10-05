@@ -2,7 +2,8 @@
 #
 #   GPU=h200|a100        (default h200)      ACCOUNT=<slurm account> (default tml_2026)
 #   QOS=<name>|none      (default tc_<gpu>_normal_short)
-#   CONDA_ENV            per job: evalenv (eval, audit, scoring, selection) or myenv (training, embeddings)
+#   SFT_ENV              per job, set by each launcher: evalenv (eval, audit, scoring, selection) or myenv (training,
+#                        embeddings). Never CONDA_ENV: ~/.bashrc exports that for another project.
 #   MAIL_USER=<address>  (optional)          CPU_PARTITION (default normal_q), CPU_QOS (default tc_normal_short)
 #   DRY_RUN=1            print sbatch lines, submit nothing
 #
@@ -23,7 +24,7 @@ source "$REPO/env/clean_conda.sh"
 
 # sb <sbatch args...>  -> prints the job id
 sb() {
-    local args=(--parsable --account="$ACCOUNT" --chdir="${SB_CHDIR:-$REPO}" --export="ALL,REPO=$REPO,CONDA_ENV=${CONDA_ENV:-myenv}${REQUIRE_ENV:+,REQUIRE_ENV=$REQUIRE_ENV}"
+    local args=(--parsable --account="$ACCOUNT" --chdir="${SB_CHDIR:-$REPO}" --export="ALL,REPO=$REPO${SFT_ENV:+,SFT_ENV=$SFT_ENV}"
                 --output="$REPO/logs/slurm/%x-%j.out")
     [ -n "${MAIL_USER:-}" ] && args+=(--mail-user="$MAIL_USER" --mail-type=END,FAIL,TIME_LIMIT_80)
     if [ -n "${DRY_RUN:-}" ]; then
