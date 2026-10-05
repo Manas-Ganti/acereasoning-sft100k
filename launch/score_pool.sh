@@ -12,7 +12,7 @@ h=4; [ "$GPU" = a100 ] && h=8
 gen=$(CONDA_ENV=evalenv sb --job-name=score-gen $(gpu_flags 1) --cpus-per-task=8 --mem=96G --time="$h:00:00" \
       --array="0-$((SHARDS - 1))" slurm/run.slurm python scripts/score_pool_generate.py --num-shards "$SHARDS")
 echo "generation array: $gen ($SHARDS shards)"
-grade=$(CONDA_ENV=evalenv sb --job-name=score-grade --partition="$CPU_PARTITION" --cpus-per-task=64 --mem=128G \
+grade=$(CONDA_ENV=evalenv sb --job-name=score-grade --partition="$CPU_PARTITION" --qos="${CPU_QOS:-tc_normal_short}" --cpus-per-task=64 --mem=128G \
         --time=06:00:00 --dependency=afterok:"$gen" slurm/run.slurm python scripts/score_pool_grade.py --workers 64)
 echo "grading: $grade (after $gen)"
 emb=$(CONDA_ENV=myenv sb --job-name=embed $(gpu_flags 1) --cpus-per-task=16 --mem=96G --time=02:00:00 \

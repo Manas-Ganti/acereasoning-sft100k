@@ -3,7 +3,7 @@
 #   GPU=h200|a100        (default h200)      ACCOUNT=<slurm account> (default tml_2026)
 #   QOS=<name>|none      (default tc_<gpu>_normal_short)
 #   CONDA_ENV            per job: evalenv (eval, audit, scoring, selection) or myenv (training, embeddings)
-#   MAIL_USER=<address>  (optional)          CPU_PARTITION (default normal_q)
+#   MAIL_USER=<address>  (optional)          CPU_PARTITION (default normal_q), CPU_QOS (default tc_normal_short)
 #   DRY_RUN=1            print sbatch lines, submit nothing
 #
 # "short" QOS = highest priority, 1-day cap (arc_runbook.md section 5). Never fall back to the
