@@ -85,7 +85,14 @@ if [ "$WHICH" = all ] || [ "$WHICH" = eval ]; then
     "$PY" -m pip install "vllm<=0.6.1" "transformers==4.44.2"
     grep -v -E '^\s*flash_attn' "$REPO/eval/requirements.txt" > /tmp/evalreq_$$.txt
     "$PY" -m pip freeze | grep -i -E '^(torch|transformers|tokenizers|vllm)==' > /tmp/evalpin_$$.txt
-    "$PY" -m pip install -r /tmp/evalreq_$$.txt -c /tmp/evalpin_$$.txt
+    if ! "$PY" -m pip install -r /tmp/evalreq_$$.txt -c /tmp/evalpin_$$.txt; then
+        echo "!! pip could not install eval/requirements.txt as written. If the error above is a"
+        echo "!! ResolutionImpossible between antlr4-python3-runtime==4.11.1 and latex2sympy2==1.9.1"
+        echo "!! (latex2sympy2 requires antlr4 4.7.2), the tested pins conflict with each other. The main"
+        echo "!! README's route works: install everything else, then latex2sympy2 with --no-deps."
+        echo "!! Not applied automatically -- decide first."
+        exit 1
+    fi
     mkdir -p "$HOME/.cache/pip-tmp"
     TMPDIR="$HOME/.cache/pip-tmp" "$PY" -m pip install flash_attn --no-build-isolation -c /tmp/evalpin_$$.txt \
         || echo "!! flash_attn not installed in evalenv (no prebuilt wheel); eval does not use it -- continuing"
