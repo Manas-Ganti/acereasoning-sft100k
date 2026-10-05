@@ -18,17 +18,17 @@ tags: [status]
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
-**Next: submit the Step 1 audit, and the Step 2 base eval alongside it.**
+Step 1 audit done. **Next: Step 4 scoring (`launch/score_pool.sh`) and the Step 2 base eval + gate.**
 
 ## Step board
 
 | # | Step | Status | Gate / key result | Note |
 |---|---|---|---|---|
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
-| 1 | Audit pool | ⏭️ next (first try 7864578 failed: wrong env, fixed) | — | [01-audit-pool](steps/01-audit-pool.md) |
+| 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
 | 2 | Base eval + gate | ⏭️ next | gate: within tolerance of last year's baseline | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
-| 4 | Score pool | ⬜ not started (needs Step 1) | — | [04-score-pool](steps/04-score-pool.md) |
+| 4 | Score pool | ⏭️ next (unblocked) | — | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline Oct 14, 11:59 PM ET | [07-compare-submit](steps/07-compare-submit.md) |
@@ -43,7 +43,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Next actions
 
-- [ ] Step 1: `launch/cpu.sh python scripts/audit_pool.py` → read `analysis/pool_audit.md`
+- [x] Step 1: audit, see [results](steps/01-audit-pool.md#results)
+- [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
 - [ ] Step 2: `launch/eval_model.sh base` → `scripts/collect_results.py --gate base`
 - [ ] Step 4: after the audit finishes, `launch/score_pool.sh`
 - [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
@@ -55,6 +56,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-05**: Step 1 done. The pool is 67% math / 33% code and already clean apart from 3.7% truncation;
+  91 verbatim test-set matches (AMC 4/40). Step 4 unblocked.
 - **2026-10-05**: Step 1 audit job 7864578 failed at start: it ran in the old `vrr` env because `~/.bashrc` exports
   `CONDA_ENV`. Fixed (launchers use `SFT_ENV`, and an env sentinel runs in every job). Resubmit after `git pull`.
 - **2026-10-05**: Docs reorganised into an Obsidian vault (`docs/`). Setup finished on ARC. Solved along the way:
