@@ -14,8 +14,10 @@ import sys
 import unicodedata
 from pathlib import Path
 
-REPO = Path(os.environ.get("REPO", Path(__file__).resolve().parents[1]))
-WORK = Path(os.environ.get("WORK", REPO / "work"))  # large, gitignored artefacts
+REPO = Path(__file__).resolve().parents[1]
+# Large, gitignored artefacts. NOT $WORK: ARC defines WORK for every user (=/notavailable when no
+# work filesystem is allocated), which silently redirected downloads there.
+WORK = Path(os.environ.get("SFT_WORK_DIR", REPO / "work"))
 EVAL_DIR = REPO / "eval"
 ANALYSIS = REPO / "analysis"
 SUBSETS = REPO / "data_subsets"
