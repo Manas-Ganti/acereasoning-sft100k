@@ -83,32 +83,24 @@ if [ "$WHICH" = all ] || [ "$WHICH" = eval ]; then
     #    build env lacks). vLLM 0.6.1 bundles its own attention kernels and eval/ never imports
     #    flash_attn, so it is installed afterwards the README way and is not fatal if no wheel exists.
     "$PY" -m pip install "vllm<=0.6.1" "transformers==4.44.2"
-    grep -v -E '^\s*flash_attn' "$REPO/eval/requirements.txt" > /tmp/evalreq_$$.txt
+    #  * the file's own pins antlr4-python3-runtime==4.11.1 and latex2sympy2==1.9.1 cannot coexist
+    #    (latex2sympy2 requires antlr4==4.7.2: ResolutionImpossible, confirmed on ARC 2026-10-05; under
+    #    4.11.1 latex2sympy2 cannot even be imported). Decided 2026-10-05: follow the main README --
+    #    `pip install --no-deps latex2sympy2==1.9.1` with antlr4 at 4.9.x (omegaconf's pin) -> 4.9.3.
+    grep -v -E '^\s*(flash_attn|antlr4-python3-runtime|latex2sympy2)' "$REPO/eval/requirements.txt" > /tmp/evalreq_$$.txt
     "$PY" -m pip freeze | grep -i -E '^(torch|transformers|tokenizers|vllm)==' > /tmp/evalpin_$$.txt
-    if ! "$PY" -m pip install -r /tmp/evalreq_$$.txt -c /tmp/evalpin_$$.txt; then
-        echo "!! pip could not install eval/requirements.txt as written. If the error above is a"
-        echo "!! ResolutionImpossible between antlr4-python3-runtime==4.11.1 and latex2sympy2==1.9.1"
-        echo "!! (latex2sympy2 requires antlr4 4.7.2), the tested pins conflict with each other. The main"
-        echo "!! README's route works: install everything else, then latex2sympy2 with --no-deps."
-        echo "!! Not applied automatically -- decide first."
-        exit 1
-    fi
+    "$PY" -m pip install -r /tmp/evalreq_$$.txt -c /tmp/evalpin_$$.txt
+    "$PY" -m pip install "antlr4-python3-runtime==4.9.3"
+    "$PY" -m pip install --no-deps latex2sympy2==1.9.1
     mkdir -p "$HOME/.cache/pip-tmp"
     TMPDIR="$HOME/.cache/pip-tmp" "$PY" -m pip install flash_attn --no-build-isolation -c /tmp/evalpin_$$.txt \
         || echo "!! flash_attn not installed in evalenv (no prebuilt wheel); eval does not use it -- continuing"
     rm -rf "$HOME/.cache/pip-tmp"
     add_constrained "$PY" pandas pyarrow
     "$PY" -c "import transformers; assert transformers.__version__ == '4.44.2', 'transformers moved to ' + transformers.__version__"
-    # Guard, not an override: eval/utils/parser.py imports latex2sympy2 at module load, so if this
-    # import fails, every eval job dies. Verified locally that latex2sympy2 1.9.1 cannot load under
-    # antlr4 4.11.1; if that happens here, stop and report rather than silently changing a tested pin.
-    if ! "$PY" -c "from latex2sympy2 import latex2sympy; latex2sympy(r'\frac{1}{2}')" 2>/dev/null; then
-        echo "!! latex2sympy2 does not import in evalenv with the tested pins:"
-        "$PY" -m pip list 2>/dev/null | grep -i -E '^(antlr4-python3-runtime|latex2sympy2) '
-        echo "!! The main README's way (latex2sympy2 --no-deps, antlr4 4.9.x) is known to work:"
-        echo "!!     $PY -m pip install antlr4-python3-runtime==4.9.3"
-        exit 1
-    fi
+    # eval/utils/parser.py imports latex2sympy2 at module load: if this fails, every eval job dies.
+    "$PY" -c "from latex2sympy2 import latex2sympy; print('latex2sympy2 OK:', latex2sympy(r'\frac{1}{2}'))" \
+        || { echo "!! latex2sympy2 does not import in evalenv"; exit 1; }
     "$PY" -c "import vllm, sympy, torch; print('evalenv OK: vllm', vllm.__version__, 'torch', torch.__version__, 'sympy', sympy.__version__)"
 fi
 

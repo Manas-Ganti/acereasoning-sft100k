@@ -16,7 +16,7 @@ the compliance table below, with the reason.
 |---|---|---|
 | 1.0 tokens | HF token (read/write), GPQA access, W&B token | same (`env/check_envs.sh` verifies the HF token) |
 | 1.1 LLaMA-Factory | `git clone hiyouga/LLaMA-Factory`, `conda create -n myenv python=3.10`, `pip install -r requirements.txt`, `pip install -e ".[torch,metrics]" --no-build-isolation` | env `myenv`: same commands, run on the **LLaMA-Factory snapshot shipped in the course repo** (`LLaMA-Factory/`, v0.9.4.dev0, the tested `requirements.txt`). Current hiyouga main requires Python ≥3.11. **torch pinned to 2.6.0+cu126**: the unpinned `.[torch]` extra now resolves to torch 2.14 built for CUDA 13.0, which has no flash-attn wheel and fails to build against ARC's CUDA 12.6 module (seen on ARC 2026-10-05). No requirement file pins torch. |
-| 1.2 eval deps | eval/README: separate env, `python=3.11`, `pip install -r requirements.txt` | env `evalenv`: `eval/requirements.txt` with all its pins kept (the **tested pins win**). It's installed in stages because, as of 2026-10-05, two unpinned lines no longer install as written. Unpinned `transformers` resolves to 5.x, which vLLM 0.6.1 predates, so it's pinned to 4.44.2 (contemporary with vLLM 0.6.1). `flash_attn` can't build inside `pip install -r` (torch isn't available at build time), so it's installed afterwards with `--no-build-isolation`; eval doesn't use it. `setup_envs.sh` only *checks* that latex2sympy2 imports and never re-pins it. |
+| 1.2 eval deps | eval/README: separate env, `python=3.11`, `pip install -r requirements.txt` | env `evalenv`: `eval/requirements.txt` with all its pins kept (the **tested pins win**). It's installed in stages because, as of 2026-10-05, two unpinned lines no longer install as written. Unpinned `transformers` resolves to 5.x, which vLLM 0.6.1 predates, so it's pinned to 4.44.2 (contemporary with vLLM 0.6.1). `flash_attn` can't build inside `pip install -r` (torch isn't available at build time), so it's installed afterwards with `--no-build-isolation`; eval doesn't use it. The file's `antlr4==4.11.1` and `latex2sympy2==1.9.1` pins contradict each other (pip `ResolutionImpossible`, confirmed on ARC). Following the main README, `latex2sympy2` is installed with `--no-deps` and antlr4 is set to 4.9.3 (omegaconf's 4.9.x). |
 | 1.3 / 1.4 | `pip install flash-attn --no-build-isolation`; `pip install deepspeed==0.16.8` | same |
 | 1.5 data | `hf_hub_download(..., filename="data/acereason11_100k.json")` | same (`scripts/fetch_data.py`), plus a parquet cache of the same rows in the same order |
 | 2 base eval | `cd eval; sbatch eval_single.sh <dataset>` with `MODEL` / `OUTPUT_DIR` / `CONDA_ENV` | same: `launch/eval_model.sh` runs exactly that, one job per benchmark. Scheduling flags (account, partition, QOS, GPU type, wall time) go on the sbatch command line because `eval/` is never edited. |
@@ -36,10 +36,9 @@ It applies identically to every run, so the comparisons stay fair.
 analysis scripts add only packages the files don't list (pandas, pyarrow; sentence-transformers, scikit-learn,
 wandb in `myenv`). Those are installed under a constraints file frozen from the env, so no tested version moves.
 
-**Watch item:** in a local test (macOS, pip's resolver), `eval/requirements.txt` did not resolve, because
-`antlr4-python3-runtime==4.11.1` conflicts with `latex2sympy2==1.9.1`, which requires 4.7.2. Under 4.11.1,
-latex2sympy2 also failed to import. If the same happens on ARC, `setup_envs.sh` stops and prints the main README's
-alternative (antlr4 4.9.x). It does not change anything silently.
+**antlr4 (decided 2026-10-05):** `eval/requirements.txt` can't be installed as written; its antlr4 4.11.1 pin conflicts with
+latex2sympy2 1.9.1 (needs 4.7.2), confirmed on ARC. `evalenv` follows the main README instead: `--no-deps latex2sympy2`, with
+antlr4 4.9.3.
 
 **Other upstream notes:**
 - The README YAML uses `//` comments (invalid YAML), the README writes `git depth -1 clone` (should be `git clone --depth 1`),

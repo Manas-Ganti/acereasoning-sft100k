@@ -137,9 +137,8 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
   which vllm 0.6.1 predates); flash_attn installed after torch with --no-build-isolation (eval never imports it).
 - On ARC, `source activate <env>` (Miniconda3 25.11 module) can silently leave the base python active:
   setup calls each env's python by absolute path; jobs pin PATH; PYTHONNOUSERSITE=1 everywhere.
-- Watch item: locally, `antlr4-python3-runtime==4.11.1` + `latex2sympy2==1.9.1` did not resolve, and
-  latex2sympy2 did not import. If evalenv shows the same, `env/setup_envs.sh` stops and reports it; the
-  main README's `--no-deps` route (antlr4 4.9.x) is known to work. Ask before changing a pin.
+- `antlr4-python3-runtime==4.11.1` + `latex2sympy2==1.9.1` in eval/requirements.txt cannot coexist
+  (ResolutionImpossible on ARC). Decided 2026-10-05: main README route, latex2sympy2 --no-deps + antlr4 4.9.3.
 - `cutoff_len: 16384` silently truncates long R1 traces → model learns to stop without `\boxed{}`.
   Handle in Step 1/5, do not ignore.
 
