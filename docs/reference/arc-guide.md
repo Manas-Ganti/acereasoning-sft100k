@@ -13,7 +13,7 @@ tags: [reference, arc]
 |---|---|
 | Cluster | VT ARC **Tinkercliffs** (`tinkercliffs1/2.arc.vt.edu`) |
 | Account | **`tml_2026`**: A100 + H200 access |
-| GPU partitions / QOS | `h200_normal_q` + `tc_h200_normal_short`, `a100_normal_q` + `tc_a100_normal_short` (top priority, 1-day cap) |
+| GPU partitions / QOS | **default `a100_normal_q`** + `tc_a100_normal_short`; `h200_normal_q` + `tc_h200_normal_short` with `GPU=h200` (H200 queue showed 4-day waits on 2026-10-05) |
 | CPU partition / QOS | `normal_q` + `tc_normal_short` |
 | Repo on ARC | `~/ondemand/data/acereasoning-sft100k` (Manas's checkout) |
 | Envs | `~/.conda/envs/myenv` (training), `~/.conda/envs/evalenv` (eval / scoring) |

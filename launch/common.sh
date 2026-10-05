@@ -1,6 +1,6 @@
 # Sourced by launch/*.sh. All scheduling knobs live here and are passed as sbatch CLI flags.
 #
-#   GPU=h200|a100        (default h200)      ACCOUNT=<slurm account> (default tml_2026)
+#   GPU=a100|h200        (default a100)      ACCOUNT=<slurm account> (default tml_2026)
 #   QOS=<name>|none      (default tc_<gpu>_normal_short)
 #   SFT_ENV              per job, set by each launcher: evalenv (eval, audit, scoring, selection) or myenv (training,
 #                        embeddings). Never CONDA_ENV: ~/.bashrc exports that for another project.
@@ -11,7 +11,7 @@
 # preemptable partitions. Always an explicit --mem on partial-node jobs (--mem=0 can't backfill).
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ACCOUNT="${ACCOUNT:-tml_2026}"
-GPU="${GPU:-h200}"
+GPU="${GPU:-a100}"   # H200 queue estimated 4-day waits on 2026-10-05; A100 is the default
 CPU_PARTITION="${CPU_PARTITION:-normal_q}"
 case "$GPU" in
     h200) PARTITION=h200_normal_q; DEFAULT_QOS=tc_h200_normal_short ;;
