@@ -23,10 +23,13 @@ if command -v module &>/dev/null; then
     module load Miniconda3
     module load CUDA/12.6.0
 fi
-source activate "$CONDA_ENV"
+export PYTHONNOUSERSITE=1                       # keep ~/.local site-packages out of every job
+source activate "$CONDA_ENV" || true
 ENV_PREFIX=$(conda env list | awk -v e="$CONDA_ENV" '$1==e {print $NF}')
 [ -n "$ENV_PREFIX" ] || ENV_PREFIX="$CONDA_ENV"   # CONDA_ENV may be an absolute path
 export PY="$ENV_PREFIX/bin/python"
+# `source activate` silently did not switch interpreters on ARC (Miniconda3 25.11); fall back to PATH.
+[ "$(command -v python)" = "$PY" ] || export PATH="$ENV_PREFIX/bin:$PATH"
 if ! "$PY" -V 2>&1 | grep -q '^Python 3'; then
     echo "[arc_env] FATAL: $PY did not print a version -- broken or 0-byte interpreter" >&2; exit 3
 fi

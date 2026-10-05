@@ -131,7 +131,10 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
   files as written** (never re-pin them): `myenv` (py3.10, LLaMA-Factory/requirements.txt) for training and
   embeddings; `evalenv` (py3.11, eval/requirements.txt) for eval, audit, scoring and selection.
 - Current hiyouga/LLaMA-Factory main needs Python >=3.11, and unpinned `vllm` now pulls transformers 5.x,
-  so the course repo's LLaMA-Factory snapshot is used.
+  so the course repo's LLaMA-Factory snapshot is used. torch is pinned to 2.6.0+cu126 in myenv (unpinned
+  torch now pulls 2.14/CUDA 13.0 -> flash-attn has no wheel and won't build against CUDA/12.6.0).
+- On ARC, `source activate <env>` (Miniconda3 25.11 module) can silently leave the base python active:
+  setup calls each env's python by absolute path; jobs pin PATH; PYTHONNOUSERSITE=1 everywhere.
 - Watch item: locally, `antlr4-python3-runtime==4.11.1` + `latex2sympy2==1.9.1` did not resolve, and
   latex2sympy2 did not import. If evalenv shows the same, `env/setup_envs.sh` stops and reports it; the
   main README's `--no-deps` route (antlr4 4.9.x) is known to work. Ask before changing a pin.

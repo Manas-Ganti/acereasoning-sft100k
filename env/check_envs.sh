@@ -19,11 +19,19 @@ for p in "$TPY" "$EPY"; do
     v=$("$p" -V 2>&1) && [ -n "$v" ] && ok "$p: $v" || bad "$p is missing or broken"
 done
 
-echo "== activation as eval_single.sh / run_training.sh do it (module + source activate <name>)"
+echo "== activation as eval_single.sh does it, with the launcher's PATH pin (module + PATH + source activate)"
 for e in "$TRAIN_ENV_NAME" "$EVAL_ENV_NAME"; do
-    out=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e; command -v python" 2>&1 | tail -1)
-    [ "$out" = "$(prefix "$e")/bin/python" ] && ok "$e -> $out" || bad "source activate $e gave: $out"
+    p="$(prefix "$e")"
+    raw=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; command -v python" 2>&1 | tail -1)
+    [ "$raw" = "$p/bin/python" ] || echo "       note: plain 'source activate $e' resolves to $raw (launchers pin PATH)"
+    out=$(PATH="$p/bin:$PATH" bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; command -v python" 2>&1 | tail -1)
+    [ "$out" = "$p/bin/python" ] && ok "$e -> $out" || bad "$e resolves to $out even with PATH pinned"
 done
+
+echo "== stray user-site packages (pip installs that missed the env)"
+if ls -d ~/.local/lib/python3.13/site-packages/torch >/dev/null 2>&1; then
+    echo "       ~/.local/lib/python3.13 holds torch from the failed first setup ($(du -sh ~/.local/lib/python3.13 2>/dev/null | cut -f1)); jobs ignore it (PYTHONNOUSERSITE=1) -- safe to delete"
+fi
 
 echo "== $TRAIN_ENV_NAME: training stack (no deepspeed import on a login node: no GPU driver for Triton)"
 "$TPY" -c "import llamafactory, transformers, torch, flash_attn, sentence_transformers; print('torch', torch.__version__, 'transformers', transformers.__version__)" \
