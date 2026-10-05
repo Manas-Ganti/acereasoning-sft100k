@@ -10,23 +10,23 @@ ok()  { echo "  ok   $*"; }
 bad() { echo "  FAIL $*"; fail=1; }
 
 module load Miniconda3 >/dev/null 2>&1
-prefix() { conda env list | awk -v e="$1" '$1==e {print $NF}'; }
-TPY="$(prefix "$TRAIN_ENV_NAME")/bin/python"
-EPY="$(prefix "$EVAL_ENV_NAME")/bin/python"
+TPY="$HOME/.conda/envs/$TRAIN_ENV_NAME/bin/python"   # by path: `conda env list` may query another conda
+EPY="$HOME/.conda/envs/$EVAL_ENV_NAME/bin/python"
 
 echo "== interpreters (a 0-byte python prints nothing)"
 for p in "$TPY" "$EPY"; do
     v=$("$p" -V 2>&1) && [ -n "$v" ] && ok "$p: $v" || bad "$p is missing or broken"
 done
 
-echo "== activation as eval_single.sh does it, with the launcher's PATH pin (module + PATH + source activate)"
+echo "== eval_single.sh's activation (module load + source activate <ABSOLUTE path>, as launch/eval_model.sh passes it)"
 for e in "$TRAIN_ENV_NAME" "$EVAL_ENV_NAME"; do
-    p="$(prefix "$e")"
-    raw=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; command -v python" 2>&1 | tail -1)
-    [ "$raw" = "$p/bin/python" ] || echo "       note: plain 'source activate $e' resolves to $raw (launchers pin PATH)"
-    out=$(PATH="$p/bin:$PATH" bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; command -v python" 2>&1 | tail -1)
-    [ "$out" = "$p/bin/python" ] && ok "$e -> $out" || bad "$e resolves to $out even with PATH pinned"
+    p="$HOME/.conda/envs/$e"
+    raw=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $e >/dev/null 2>&1; python -c 'import sys; print(sys.executable)'" 2>&1 | tail -1)
+    [[ "$raw" == "$p"/* ]] || echo "       note: by bare name, 'source activate $e' gives $raw (expected; we pass the path)"
+    out=$(bash -c "module load Miniconda3 >/dev/null 2>&1; source activate $p; python -c 'import sys; print(sys.executable)'" 2>&1 | tail -1)
+    [[ "$out" == "$p"/* ]] && ok "$e by path -> $out" || bad "source activate $p gives $out -- see env/diagnose_activate.sh"
 done
+echo "   (login-node result only; confirm inside a batch job with launch/test_activation.sh)"
 
 echo "== stray user-site packages (pip installs that missed the env)"
 if ls -d ~/.local/lib/python3.13/site-packages/torch >/dev/null 2>&1; then

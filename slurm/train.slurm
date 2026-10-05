@@ -11,7 +11,7 @@
 # Additions: resume from the newest checkpoint-* if the job was cut off; DONE marker on success.
 set -eo pipefail
 RUN="$1"
-source "$REPO/env/arc_env.sh"
+REQUIRE_ENV=myenv source "$REPO/env/arc_env.sh"
 "$PY" scripts/make_config.py --check "$RUN"
 
 # All comparison runs must share the global batch (per_device 1 x grad_accum 8 x GPUs).

@@ -135,8 +135,13 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
   torch now pulls 2.14/CUDA 13.0 -> flash-attn has no wheel and won't build against CUDA/12.6.0).
 - evalenv: `eval/requirements.txt` installed in stages: transformers pinned 4.44.2 (unpinned now gives 5.x,
   which vllm 0.6.1 predates); flash_attn installed after torch with --no-build-isolation (eval never imports it).
-- On ARC, `source activate <env>` (Miniconda3 25.11 module) can silently leave the base python active:
-  setup calls each env's python by absolute path; jobs pin PATH; PYTHONNOUSERSITE=1 everywhere.
+- On ARC (Miniconda3 25.11 module), `source activate <bare name>` leaves the base python active, and
+  `module load Miniconda3` re-prepends base to PATH, so a pre-set PATH cannot win. Hence:
+  eval_single.sh gets CONDA_ENV as an ABSOLUTE path (~/.conda/envs/evalenv; verify with
+  launch/test_activation.sh); our own jobs never `source activate` -- env/arc_env.sh sets PY/PATH/
+  CONDA_PREFIX from the path and checks a sentinel import for the env the job needs (REQUIRE_ENV).
+  Setup calls each env's python by absolute path; PYTHONNOUSERSITE=1 everywhere. Never trust
+  `conda env list` / `conda info` on a login node as evidence -- check sys.executable.
 - `antlr4-python3-runtime==4.11.1` + `latex2sympy2==1.9.1` in eval/requirements.txt cannot coexist
   (ResolutionImpossible on ARC). Decided 2026-10-05: main README route, latex2sympy2 --no-deps + antlr4 4.9.3.
 - `cutoff_len: 16384` silently truncates long R1 traces → model learns to stop without `\boxed{}`.

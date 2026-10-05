@@ -22,7 +22,7 @@ mkdir -p "$REPO/logs/slurm"
 
 # sb <sbatch args...>  -> prints the job id
 sb() {
-    local args=(--parsable --account="$ACCOUNT" --chdir="${SB_CHDIR:-$REPO}" --export="ALL,REPO=$REPO,CONDA_ENV=${CONDA_ENV:-myenv}"
+    local args=(--parsable --account="$ACCOUNT" --chdir="${SB_CHDIR:-$REPO}" --export="ALL,REPO=$REPO,CONDA_ENV=${CONDA_ENV:-myenv}${REQUIRE_ENV:+,REQUIRE_ENV=$REQUIRE_ENV}"
                 --output="$REPO/logs/slurm/%x-%j.out")
     [ -n "${MAIL_USER:-}" ] && args+=(--mail-user="$MAIL_USER" --mail-type=END,FAIL,TIME_LIMIT_80)
     if [ -n "${DRY_RUN:-}" ]; then

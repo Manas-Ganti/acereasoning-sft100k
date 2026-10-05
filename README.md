@@ -74,7 +74,7 @@ python scripts/fetch_data.py                # README 1.5 + base model
 python scripts/build_dev_set.py             # dev/ (before the audit, so contam_dev is filled)
 ```
 
-Which env runs what: `evalenv` runs `eval_single.sh` (`CONDA_ENV=evalenv`), dev eval, audit, pool scoring/grading,
+Which env runs what: `evalenv` runs `eval_single.sh` (as `CONDA_ENV=~/.conda/envs/evalenv`: on ARC, `source activate` only works with the absolute path), dev eval, audit, pool scoring/grading,
 selection and results. `myenv` runs training, prompt embeddings and HF upload. The launchers pick the env for each job.
 
 Scheduling knobs, set per command: `GPU=h200|a100` (default h200), `ACCOUNT=` (default `tml_2026`, with access to both

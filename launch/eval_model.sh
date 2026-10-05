@@ -20,19 +20,15 @@ if [ "$RUN" != base ] && [ -z "${AFTER:-}" ] && [ ! -f "$MODEL/DONE" ]; then
 fi
 
 # eval_single.sh reads these from the environment (sbatch exports the environment by default).
-export MODEL OUTPUT_DIR="$REPO/eval/outputs/$RUN" CONDA_ENV="${EVAL_CONDA_ENV:-evalenv}"
+# eval_single.sh runs `module load Miniconda3; ...; source activate ${CONDA_ENV}` and then a bare `python`.
+# The module load re-prepends base conda to PATH, so only a successful `source activate` can select the
+# env -- and the module's conda does not resolve bare env names in ~/.conda/envs. Pass the ABSOLUTE
+# path (verified with launch/test_activation.sh).
+CONDA_ENV="${EVAL_CONDA_ENV:-$HOME/.conda/envs/evalenv}"
+[ -x "$CONDA_ENV/bin/python" ] || { echo "no env at $CONDA_ENV -- run env/setup_envs.sh"; exit 1; }
+export MODEL OUTPUT_DIR="$REPO/eval/outputs/$RUN" CONDA_ENV
 export HF_HOME="${HF_HOME:-/home/$USER/hf_cache}" PYTHONNOUSERSITE=1
 mkdir -p "$OUTPUT_DIR"
-# eval_single.sh runs `module load Miniconda3; source activate $CONDA_ENV`, and on ARC that activation
-# can silently leave the base python in place. Load the module here and put the env first on PATH:
-# the job inherits this environment, its `module load` is then a no-op, and `python` resolves to
-# the env whether or not `source activate` works.
-if command -v module &>/dev/null; then
-    module load Miniconda3 >/dev/null 2>&1
-    EPFX=$(conda env list | awk -v e="$CONDA_ENV" '$1==e {print $NF}')
-    [ -x "$EPFX/bin/python" ] || { echo "conda env $CONDA_ENV not found -- run env/setup_envs.sh"; exit 1; }
-    export PATH="$EPFX/bin:$PATH"
-fi
 
 hours_h200() {  # post-SFT models write 5-15K-token traces x 8 samples; base model is far faster
     case "$1" in

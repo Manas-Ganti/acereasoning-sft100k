@@ -10,7 +10,7 @@
 #   sbatch ... slurm/dev_eval.slurm <model path or HF id> <run name>
 set -eo pipefail
 MODEL="$1"; RUN="$2"
-source "$REPO/env/arc_env.sh"
+REQUIRE_ENV=evalenv source "$REPO/env/arc_env.sh"
 bash "$REPO/scripts/check_eval_frozen.sh"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 OUT="$REPO/work/dev_eval/$RUN"

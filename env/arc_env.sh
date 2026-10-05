@@ -1,11 +1,14 @@
-# Sourced by every slurm/*.slurm job body:   source "$REPO/env/arc_env.sh"
+# Sourced by every slurm/*.slurm job body:   [REQUIRE_ENV=<myenv|evalenv>] source "$REPO/env/arc_env.sh"
 #
-# Activation follows the upstream README (module load Miniconda3 + CUDA/12.6.0, source activate
-# $CONDA_ENV: myenv for training/embeddings, evalenv for eval/scoring -- set by launch/*.sh),
-# plus checks learned the hard way on ARC (arc_runbook.md):
-#  * assert the activated python really lives in the env (`source activate` can silently no-op
-#    in a batch shell) and is a real binary (`python -V` must print; a 0-byte python once made
+# Env selection: $CONDA_ENV (myenv for training/embeddings, evalenv for eval/scoring -- set by launch/*.sh).
+# We do NOT use `source activate`: on ARC's Miniconda3 25.11 module it can return success without
+# switching interpreters in a batch shell. Instead PY / CONDA_PREFIX / PATH are set directly from the
+# env's absolute path, and every job body calls "$PY", never a bare `python`. Also (arc_runbook.md):
+#  * `conda env list` on a login node may query a different conda -> resolve envs by path instead;
+#  * assert the interpreter is a real binary (`python -V` must print; a 0-byte python once made
 #    every job "succeed" in 2 s);
+#  * sentinel import for the env the job needs (REQUIRE_ENV), so a wrong-env job dies in seconds,
+#    not after an 8-GPU allocation;
 #  * explicit HF_HOME (the HF token lives under it);
 #  * NCCL_SOCKET_IFNAME probed per node (`ib0` exists on H200 nodes but has no IPv4 address).
 : "${REPO:?REPO must be exported by the launcher (launch/*.sh does this)}"
@@ -24,17 +27,28 @@ if command -v module &>/dev/null; then
     module load CUDA/12.6.0
 fi
 export PYTHONNOUSERSITE=1                       # keep ~/.local site-packages out of every job
-source activate "$CONDA_ENV" || true
-ENV_PREFIX=$(conda env list | awk -v e="$CONDA_ENV" '$1==e {print $NF}')
-[ -n "$ENV_PREFIX" ] || ENV_PREFIX="$CONDA_ENV"   # CONDA_ENV may be an absolute path
+case "$CONDA_ENV" in
+    /*) ENV_PREFIX="$CONDA_ENV" ;;
+    *)  ENV_PREFIX="$HOME/.conda/envs/$CONDA_ENV" ;;
+esac
+[ -x "$ENV_PREFIX/bin/python" ] || { echo "[arc_env] FATAL: no env at $ENV_PREFIX (CONDA_ENV=$CONDA_ENV)" >&2; exit 3; }
+export CONDA_PREFIX="$ENV_PREFIX" CONDA_DEFAULT_ENV="$(basename "$ENV_PREFIX")"
+export PATH="$ENV_PREFIX/bin:$PATH"
 export PY="$ENV_PREFIX/bin/python"
-# `source activate` silently did not switch interpreters on ARC (Miniconda3 25.11); fall back to PATH.
-[ "$(command -v python)" = "$PY" ] || export PATH="$ENV_PREFIX/bin:$PATH"
 if ! "$PY" -V 2>&1 | grep -q '^Python 3'; then
     echo "[arc_env] FATAL: $PY did not print a version -- broken or 0-byte interpreter" >&2; exit 3
 fi
-if [ "$(command -v python)" != "$PY" ]; then
-    echo "[arc_env] FATAL: 'python' resolves to $(command -v python), not $PY (activation failed)" >&2; exit 3
+exe=$("$PY" -c 'import sys; print(sys.executable)')
+[[ "$exe" == "$ENV_PREFIX"/* ]] || { echo "[arc_env] FATAL: sys.executable=$exe is not inside $ENV_PREFIX" >&2; exit 3; }
+if [ -n "${REQUIRE_ENV:-}" ]; then
+    [ "$(basename "$ENV_PREFIX")" = "$REQUIRE_ENV" ] \
+        || { echo "[arc_env] FATAL: this job needs env $REQUIRE_ENV, got $ENV_PREFIX" >&2; exit 3; }
+    case "$REQUIRE_ENV" in
+        myenv)   sentinel="import llamafactory, transformers, flash_attn" ;;
+        evalenv) sentinel="import vllm; from latex2sympy2 import latex2sympy" ;;
+        *)       sentinel="pass" ;;
+    esac
+    "$PY" -c "$sentinel" 2>/dev/null || { echo "[arc_env] FATAL: sentinel import failed in $REQUIRE_ENV: $sentinel" >&2; exit 3; }
 fi
 
 if [ -z "${NCCL_SOCKET_IFNAME:-}" ] && command -v ip &>/dev/null; then

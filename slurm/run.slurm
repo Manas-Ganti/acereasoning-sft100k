@@ -6,7 +6,7 @@
 #   sbatch ... slurm/run.slurm python scripts/<x>.py [args]
 # A leading `python` is replaced by the env's interpreter ($PY), never resolved through PATH.
 set -eo pipefail
-source "$REPO/env/arc_env.sh"
+REQUIRE_ENV="${REQUIRE_ENV:-}" source "$REPO/env/arc_env.sh"
 cmd=("$@")
 [ "${cmd[0]}" = python ] && cmd[0]="$PY"
 echo "[run] ${cmd[*]}"
