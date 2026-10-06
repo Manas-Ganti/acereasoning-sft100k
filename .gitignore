@@ -31,3 +31,7 @@ arc_quickref.md
 .obsidian/hotkeys.json
 .obsidian/appearance.json
 .trash/
+
+# agent-local state: Claude memory / local settings must never be committed
+.claude/
+memory/
