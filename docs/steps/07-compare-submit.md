@@ -4,7 +4,7 @@ title: Compare against random, write up, submit
 status: not-started
 depends_on: [6]
 outputs: [results/results.md, results/results.csv, report/, HF models + datasets]
-deadline: 2026-10-14 23:59 ET
+deadline: 2026-10-20
 tags: [step, deliverable]
 ---
 

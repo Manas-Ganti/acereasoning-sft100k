@@ -39,7 +39,7 @@ hyperparameters, by more than seed noise?
 - Training: LLaMA-Factory, the snapshot shipped in the course repo (`LLaMA-Factory/`), with the README's
   YAML verbatim (full fine-tune, `ds_z3_offload_config.json`, FlashAttention 2)
 - Eval: the repo's `eval/` folder (vLLM generation + SymPy `\boxed{}` grader). **Fixed. Never modify.**
-- Deadline: **Wed Oct 14, 2026, 11:59 PM ET.** No late submissions.
+- Deadline: **Oct 20, 2026** (the course README says Oct 14; Manas confirmed Oct 20 on 2026-10-05). No late submissions.
 
 ---
 

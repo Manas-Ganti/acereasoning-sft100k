@@ -31,7 +31,7 @@ Step 1 audit done. **Next: Step 4 scoring (`launch/score_pool.sh`) and the Step 
 | 4 | Score pool | ⏭️ next (unblocked) | — | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
-| 7 | Compare + submit | ⬜ not started | deadline Oct 14, 11:59 PM ET | [07-compare-submit](steps/07-compare-submit.md) |
+| 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
 Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocked / gate failed
 
@@ -56,6 +56,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-05**: Deadline is **Oct 20** (confirmed by Manas). A100 batch queue estimates Oct 10 for 1-GPU jobs;
+  the remaining base-eval benchmarks run interactively (`LOCAL=1 launch/eval_model.sh base`).
 - **2026-10-05**: Base eval moved from H200 (4-day queue) to A100. AIME done. Found that the leaderboard numbers are
   **pass@8**, so the gate now compares Acc; both metrics are reported. See the decision log.
 - **2026-10-05**: Step 1 done. The pool is 67% math / 33% code and already clean apart from 3.7% truncation;

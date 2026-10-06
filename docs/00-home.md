@@ -9,7 +9,7 @@ tags: [moc]
 (R1-distilled math and code). Does a *smart* 15K subset beat a *random* 15K subset, at identical
 hyperparameters, by more than seed noise?
 
-**Deadline:** Wed **Oct 14, 2026, 11:59 PM ET**. No late submissions.
+**Deadline:** **Oct 20, 2026** (the course README says Oct 14; Manas confirmed Oct 20 on 2026-10-05). No late submissions.
 
 > [!IMPORTANT]
 > **Where are we right now?** See **[STATUS](STATUS.md)**. It is the single source of truth for the current
