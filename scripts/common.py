@@ -47,11 +47,12 @@ BENCHMARKS = ["aime", "math", "cn_math_2024", "kaoyan", "amc", "minerva", "olymp
 # Leaderboard AVG = AIME25, CN_MATH_24, KAOYAN, AMC, MINERVA, OLYMPIADBENCH, GPQA.
 # AIME25 is not in eval/data, so locally we can only average the other six.
 LB_VISIBLE = ["cn_math_2024", "kaoyan", "amc", "minerva", "olympiadbench", "gpqa"]
-# Fall 2025 BASELINE row (Qwen2.5-3B-Instruct, Pass@1) -- the Step 2 gate reference.
+# Fall 2025 BASELINE row (Qwen2.5-3B-Instruct). These leaderboard numbers are Acc = pass@8 (any of 8
+# samples correct), NOT Pass@1 -- verified on our AIME base run (Acc 0.167 vs 0.200; Pass@1 0.067).
 BASELINE_REF = {"aime": 0.200, "math": 0.844, "cn_math_2024": 0.233, "kaoyan": 0.513,
                 "amc": 0.700, "minerva": 0.338, "olympiadbench": 0.495, "gpqa": 0.742}
 BASELINE_REF_LB_AVG = 0.446  # includes AIME25 = 0.100
-# Fall 2025 random-15K runs (leaderboard AVG) -- the published seed spread.
+# Fall 2025 random-15K runs (leaderboard AVG, pass@8) -- the published seed spread.
 RANDOM_REF_LB_AVG = {"rand1": 0.451, "rand2": 0.492}
 
 

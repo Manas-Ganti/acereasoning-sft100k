@@ -17,6 +17,16 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-05: The leaderboard metric is pass@8; the gate compares Acc
+The base AIME run gave Acc 0.167 (last year 0.200, one problem apart) but Pass@1 0.067 (Qwen reports ~6.7%), and
+GPQA's 0.742 can't be Pass@1 for a 3B model. So last year's table, the 0.446 baseline and the 0.451/0.492 random
+runs are **pass@8**. The Step 2 gate now compares Acc. Pass@1 stays the primary metric for our smart-vs-random
+claim (lower variance), and `results.md` reports both metrics with a seed spread for each.
+
+### 2026-10-05: A100 by default
+The H200 queue estimated a 4-day wait for 1-GPU eval jobs. A100s are the default (`GPU=h200` to override); every
+compared run should use the same GPU type.
+
 ### 2026-10-05: antlr4 4.9.3 in evalenv (main README route)
 `eval/requirements.txt` pins `antlr4-python3-runtime==4.11.1` and `latex2sympy2==1.9.1`, which cannot coexist:
 pip raises `ResolutionImpossible` on ARC, and under 4.11.1 latex2sympy2 can't even be imported. We follow the main

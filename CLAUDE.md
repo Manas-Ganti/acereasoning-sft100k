@@ -59,7 +59,8 @@ Output: `analysis/pool_audit.md`, a one-page summary of the distributions.
 ### Step 2 — Evaluate the BASE model (no training)
 - Run `eval/eval_single.sh <benchmark>` for all 8 benchmarks, **one GPU/job per benchmark in parallel**.
 - **Gate:** the numbers must land near last year's baseline (avg ≈ 0.446; MATH ≈ 0.84, GPQA ≈ 0.74,
-  AMC ≈ 0.70, OlympiadBench ≈ 0.50). If they are far off, the eval environment is broken.
+  AMC ≈ 0.70, OlympiadBench ≈ 0.50). **These leaderboard numbers are Acc = pass@8**, not Pass@1 (verified
+  2026-10-05: base AIME Acc 0.167 vs 0.200, Pass@1 0.067), so the gate compares Acc. If they are far off, the eval environment is broken.
   STOP and fix it before any training comparison.
 
 ### Step 3 — Random baseline, TWO seeds (the noise floor)
@@ -135,7 +136,8 @@ If time allows, run `full_method` with a second seed so the claim is method-vs-r
   `minerva` (272), `olympiadbench` (675), `gpqa` (198).
 - Leaderboard AVG uses: AIME25, CN_MATH_24, KAOYAN, AMC, MINERVA, OLYMPIADBENCH, GPQA (not AIME24 or MATH).
 - Settings: temp 0.6, top-p 0.95, n=8, max_tokens 32768. Logs report pass@8 ("Acc") and **Pass@1** (avg over 8).
-  **Pass@1 is the number to compare.**
+  **Pass@1 is our primary metric** for the smart-vs-random claim (less noisy). **The leaderboard (and last
+  year's 0.446 / 0.451 / 0.492) uses Acc = pass@8**; results.md reports both.
 - `gpqa` and most of `kaoyan` are **multiple-choice with a letter answer** in `\boxed{}`; kaoyan is in Chinese.
   Pure-math SFT can degrade these. Watch them in every run.
 - Small benchmarks are noisy: one AIME/CN Math problem = 3.3 pts, one AMC problem = 2.5 pts.

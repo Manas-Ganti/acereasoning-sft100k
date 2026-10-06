@@ -1,7 +1,7 @@
 ---
 step: 2
 title: Evaluate the base model (gate)
-status: next
+status: running
 depends_on: [0]
 outputs: [eval/outputs/base/, results/results.md]
 cost: ~1 GPU-h (8 parallel 1-GPU jobs)
@@ -26,7 +26,7 @@ launch/eval_model.sh base                       # 8 jobs: cd eval; sbatch eval_s
 
 ## Gate
 
-The numbers must land near last year's baseline row:
+The **Acc (pass@8)** numbers must land near last year's baseline row (these are leaderboard numbers, which are pass@8):
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | LB avg |
 |---|---|---|---|---|---|---|---|---|
@@ -38,11 +38,15 @@ The numbers must land near last year's baseline row:
 
 ## Results
 
-*(paste the gate table + PASS/FAIL here)*
+| benchmark | Pass@1 | Acc (pass@8) | ref (pass@8) | job |
+|---|---|---|---|---|
+| aime | 0.067 (2.0/30) | 0.167 (5/30) | 0.200 | A100 |
+
+*(the remaining 7 + gate verdict once all jobs finish)*
 
 ## Notes
 
-- Compare **Pass@1** (the mean over 8 samples). `Acc` in the logs is pass@8.
+- The gate compares **Acc (pass@8)**. Pass@1 stays our primary metric for the study; the tables show both.
 - Eval jobs are submitted from a conda-clean environment (`env/clean_conda.sh`); see the
   [ARC guide](../reference/arc-guide.md).
 - Spec: [CLAUDE.md, Step 2](../../CLAUDE.md). Benchmarks: [Eval facts](../reference/eval-facts.md).

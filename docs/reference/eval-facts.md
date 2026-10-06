@@ -23,7 +23,8 @@ it** (`scripts/check_eval_frozen.sh` verifies the checksums).
 
 - **Settings:** temperature 0.6, top-p 0.95, n=8, max_tokens 32768. System prompt: "Please reason step by step, and
   put your final answer within \boxed{}."
-- **Metric:** compare **Pass@1** (the mean over 8 samples). `Acc` in the logs is pass@8.
+- **Metrics:** **Pass@1** (the mean over 8 samples) is our primary metric for the claim. **`Acc` (pass@8: at least one of
+  8 right) is the leaderboard metric**, and all of last year's numbers below are Acc. `results.md` reports both.
 - **Leaderboard AVG** = AIME25, CN_MATH_24, KAOYAN, AMC, MINERVA, OLYMPIADBENCH, GPQA (not AIME24 or MATH). AIME25
   isn't in `eval/data`, so locally we report **avg(LB6)** over the other six.
 - **Cost:** post-SFT models write 5–15K-token traces, so eval is much more expensive than for the base model. We run
@@ -31,7 +32,7 @@ it** (`scripts/check_eval_frozen.sh` verifies the checksums).
 - **Re-runs:** an existing results jsonl makes eval skip that benchmark, so each model gets its own
   `eval/outputs/<run>/`.
 
-## Last year's reference numbers (Pass@1)
+## Last year's reference numbers (Acc / pass@8: the leaderboard metric)
 
 | Model | AIME24 | AIME25 | MATH | CN | KAOYAN | AMC | MINERVA | OLY | GPQA | AVG |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -40,7 +41,9 @@ it** (`scripts/check_eval_frozen.sh` verifies the checksums).
 | rand2 | 0.167 | 0.167 | 0.856 | 0.400 | 0.618 | 0.625 | 0.338 | 0.526 | 0.768 | 0.492 |
 | best team | 0.233 | 0.233 | 0.900 | 0.433 | 0.688 | 0.800 | 0.346 | 0.569 | 0.606 | 0.525 |
 
-The random seed spread alone was ~4 points of AVG.
+The random seed spread alone was ~4 points of AVG (in pass@8). How do we know these are pass@8? Our base AIME run gave Acc
+0.167 (vs 0.200, one problem off) and Pass@1 0.067, which matches Qwen's published ~6.7%. Also, a 3B model can't reach
+0.742 Pass@1 on 4-choice GPQA.
 
 ## Dev set (for every decision; never the test benchmarks)
 

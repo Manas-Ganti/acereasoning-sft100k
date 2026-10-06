@@ -26,7 +26,7 @@ Step 1 audit done. **Next: Step 4 scoring (`launch/score_pool.sh`) and the Step 
 |---|---|---|---|---|
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
-| 2 | Base eval + gate | ⏭️ next | gate: within tolerance of last year's baseline | [02-base-eval](steps/02-base-eval.md) |
+| 2 | Base eval + gate | 🔄 running (A100) | AIME: Pass@1 0.067, Acc 0.167 (ref 0.200 is pass@8 ✓) | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ⏭️ next (unblocked) | — | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
@@ -56,6 +56,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-05**: Base eval moved from H200 (4-day queue) to A100. AIME done. Found that the leaderboard numbers are
+  **pass@8**, so the gate now compares Acc; both metrics are reported. See the decision log.
 - **2026-10-05**: Step 1 done. The pool is 67% math / 33% code and already clean apart from 3.7% truncation;
   91 verbatim test-set matches (AMC 4/40). Step 4 unblocked.
 - **2026-10-05**: Step 1 audit job 7864578 failed at start: it ran in the old `vrr` env because `~/.bashrc` exports
