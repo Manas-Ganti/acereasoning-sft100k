@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 1
 phase: setup done, starting Step 1
-last_updated: 2026-10-05
+last_updated: 2026-10-05 (session end)
 updated_by: Manas + Claude
 tags: [status]
 ---
@@ -18,7 +18,16 @@ tags: [status]
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
-Step 1 audit done. **Next: Step 4 scoring (`launch/score_pool.sh`) and the Step 2 base eval + gate.**
+Step 1 audit done. Step 2: AIME evaluated (A100). The other 7 base-eval jobs were estimated to start Oct 10 in the
+batch queue, so the plan is to cancel them (7865701–7865707) and run them interactively:
+`srun -A tml_2026 -p a100_normal_q --qos=tc_a100_normal_int --gres=gpu:a100:1 -c 8 --mem=64G -t 2:00:00 --pty bash`
+(inside tmux), then `LOCAL=1 launch/eval_model.sh base`.
+
+**Resume here:**
+1. Confirm the 7 remaining base-eval benchmarks ran.
+2. Run `scripts/collect_results.py --gate base`. The gate compares Acc = pass@8 (see the decision log).
+3. Submit Step 4 (`launch/score_pool.sh`).
+4. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
 
 ## Step board
 
@@ -39,18 +48,23 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 | Job ID | What | Submitted | Expected | Log |
 |---|---|---|---|---|
-| — | | | | |
+| 7865518–25 | base eval on H200 | 2026-10-05 | cancelled (4-day queue) | — |
+| (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
+| 7865701–07 | base eval, other 7 benchmarks, A100 batch | 2026-10-05 | est. start Oct 10 → to be cancelled, run with `LOCAL=1` | — |
 
 ## Next actions
 
 - [x] Step 1: audit, see [results](steps/01-audit-pool.md#results)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
-- [ ] Step 2: `launch/eval_model.sh base` → `scripts/collect_results.py --gate base`
+- [ ] Step 2: finish the 7 remaining benchmarks (`LOCAL=1`), then `scripts/collect_results.py --gate base` (Acc vs last year)
 - [ ] Step 4: after the audit finishes, `launch/score_pool.sh`
 - [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
 
 ## Blockers / open questions
 
+- **GPU scarcity:** on 2026-10-05, 1-GPU A100 batch jobs were estimated 4–5 days out, and H200 was worse. 8-GPU training
+  may not schedule in time. Options: 4 GPUs with grad-accum 16 (same global batch 64; GA is a README "tweak" field),
+  or Owl B200 / Falcon. Undecided: needs `sinfo`/`sshare` numbers and Manas's decision.
 - Disk: `/home` had ~151 GB free before two old repos were deleted, and the quota display updates later. Re-check
   `quota` before Step 3.
 
