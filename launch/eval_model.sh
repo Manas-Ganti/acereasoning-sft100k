@@ -36,6 +36,20 @@ hours_h200() {  # post-SFT models write 5-15K-token traces x 8 samples; base mod
         olympiadbench) echo 8 ;; *) echo "unknown benchmark $1" >&2; exit 1 ;;
     esac
 }
+if [ -n "${LOCAL:-}" ]; then
+    # LOCAL=1: run the benchmarks one after another on the GPU(s) of an allocation you are already in
+    # (e.g. an interactive session), instead of queueing one batch job per benchmark. Same unmodified
+    # eval_single.sh, same conda-clean environment; benchmarks that already have results are skipped.
+    [ -n "${SLURM_JOB_ID:-}" ] || { echo "LOCAL=1 must run inside a GPU allocation (salloc / interact)"; exit 1; }
+    export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+    for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa}; do
+        if find "$OUTPUT_DIR" -path "*/$B/test_*.jsonl" 2>/dev/null | grep -q .; then echo "== $B: done already, skipping"; continue; fi
+        echo "== $B"
+        (cd "$REPO/eval" && SLURM_SUBMIT_DIR="$REPO/eval" bash eval_single.sh "$B") | grep -E "^(correct cnt|Acc|Pass@1)"
+    done
+    exit 0
+fi
+
 for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa}; do
     h=$(hours_h200 "$B") || exit 1
     [ "$GPU" = a100 ] && h=$(( h * 2 > 24 ? 24 : h * 2 ))
