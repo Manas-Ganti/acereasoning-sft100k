@@ -38,11 +38,27 @@ The **Acc (pass@8)** numbers must land near last year's baseline row (these are 
 
 ## Results
 
-| benchmark | Pass@1 | Acc (pass@8) | ref (pass@8) | job |
-|---|---|---|---|---|
-| aime | 0.067 (2.0/30) | 0.167 (5/30) | 0.200 | A100 |
+| benchmark | Pass@1 | Acc (pass@8) | ref (pass@8) | gate | job |
+|---|---|---|---|---|---|
+| aime | 0.067 (2.0/30) | 0.167 (5/30) | 0.200 | ok | 7865700 |
+| math | 0.646 (322.9/500) | 0.854 (427/500) | 0.844 | ok | 7865701 |
+| cn_math_2024 | 0.133 (4.0/30) | 0.400 (12/30) | 0.233 | ok | 7865702 |
+| kaoyan | 0.220 (43.9/199) | 0.528 (105/199) | 0.513 | ok | 7865703 |
+| amc | 0.412 (16.5/40) | 0.650 (26/40) | 0.700 | ok | 7865704 |
+| minerva | 0.303 (82.4/272) | 0.489 (133/272) | 0.338 | OFF (+0.151, *above* ref) | 7865705 |
+| olympiadbench | — | — | 0.495 | missing | — |
+| gpqa | — | — | 0.742 | missing | — |
 
-*(the remaining 7 + gate verdict once all jobs finish)*
+Gate (2026-10-08, 6/8 done): **FAIL**, for two reasons: the LB average is `nan` because OlympiadBench and GPQA
+have not run yet, and Minerva is flagged OFF because it is 0.151 *above* the reference. A broken eval would lower
+scores, not raise them, and the other 6 benchmarks match within tolerance (MATH 0.854 vs 0.844), so the eval
+environment looks sound. The Minerva gap is most likely a difference in last year's setup. Logs are clean apart from
+tokenizers-parallelism warnings and the expected ANTLR 4.9.3/4.7.2 version notice (the latex2sympy2 route from the
+decision log). Grading still works: MATH matches.
+
+> [!NOTE]
+> Manas (2026-10-08): the assignment does not require matching last year's base numbers. Proposed: make the gate
+> one-sided (fail only when far *below* the ref). Awaiting a decision; not yet changed.
 
 ## Notes
 

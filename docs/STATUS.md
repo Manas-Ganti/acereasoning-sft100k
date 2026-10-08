@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 1
 phase: setup done, starting Step 1
-last_updated: 2026-10-05 (session end)
+last_updated: 2026-10-08
 updated_by: Manas + Claude
 tags: [status]
 ---
@@ -35,7 +35,7 @@ batch queue, so the plan is to cancel them (7865701–7865707) and run them inte
 |---|---|---|---|---|
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
-| 2 | Base eval + gate | 🔄 running (A100) | AIME: Pass@1 0.067, Acc 0.167 (ref 0.200 is pass@8 ✓) | [02-base-eval](steps/02-base-eval.md) |
+| 2 | Base eval + gate | 🔄 running (6/8 done) | 6/8 done; all within tolerance except Minerva, which is *above* ref; OlympiadBench + GPQA pending | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ⏭️ next (unblocked) | — | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
@@ -50,7 +50,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 |---|---|---|---|---|
 | 7865518–25 | base eval on H200 | 2026-10-05 | cancelled (4-day queue) | — |
 | (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
-| 7865701–07 | base eval, other 7 benchmarks, A100 batch | 2026-10-05 | est. start Oct 10 → to be cancelled, run with `LOCAL=1` | — |
+| 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
+| 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | not finished as of 2026-10-08 | — |
 
 ## Next actions
 
@@ -69,6 +70,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-08**: Base eval 6/8 done (see [Step 2](steps/02-base-eval.md#results)). Gate prints FAIL only because
+  OlympiadBench/GPQA are missing and Minerva is 0.151 *above* ref; the eval env looks sound. Proposed a one-sided gate (Manas to decide).
 
 - **2026-10-05**: Deadline is **Oct 20** (confirmed by Manas). A100 batch queue estimates Oct 10 for 1-GPU jobs;
   the remaining base-eval benchmarks run interactively (`LOCAL=1 launch/eval_model.sh base`).
