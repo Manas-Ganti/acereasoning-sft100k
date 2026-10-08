@@ -89,6 +89,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-08**: Added `analysis/explore_pool_audit.ipynb`, interactive Plotly views of `pool_audit.parquet` (sources,
+  length vs cutoff, math selection funnel, answer kinds, duplicates, contamination, trace quality, slice explorer).
+  Run it in a pandas 2.x env (anaconda `base` on Mac); pandas 3.0 + pyarrow 25 fails on `read_parquet`.
+
 - **2026-10-08**: Base eval 6/8 done (see [Step 2](steps/02-base-eval.md#results)). Gate prints FAIL only because
   OlympiadBench/GPQA are missing and Minerva is 0.151 *above* ref; the eval env looks sound. Proposed a one-sided gate (Manas to decide).
 
