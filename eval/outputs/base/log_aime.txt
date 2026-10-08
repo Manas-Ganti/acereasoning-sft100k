@@ -1,0 +1,55 @@
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+current stop list: None
+Random seed set as 0
+current eval model: Qwen/Qwen2.5-3B-Instruct
+use n = 8, generation epoch is: 1
+available_gpus: ['0']
+  0%|          | 0/30 [00:00<?, ?it/s]  3%|▎         | 1/30 [00:00<00:04,  6.56it/s]100%|██████████| 30/30 [00:00<00:00, 176.18it/s]
+<|im_start|>system
+Please reason step by step, and put your final answer within \boxed{}.<|im_end|>
+<|im_start|>user
+Every morning Aya goes for a $9$-kilometer-long walk and stops at a coffee shop afterwards. When she walks at a constant speed of $s$ kilometers per hour, the walk takes her 4 hours, including $t$ minutes spent in the coffee shop. When she walks $s+2$ kilometers per hour, the walk takes her 2 hours and 24 minutes, including $t$ minutes spent in the coffee shop. Suppose Aya walks at $s+\frac{1}{2}$ kilometers per hour. Find the number of minutes the walk takes her, including the $t$ minutes spent in the coffee shop.<|im_end|>
+<|im_start|>assistant
+
+INFO 10-05 20:02:30 llm_engine.py:232] Initializing an LLM engine (v0.6.1) with config: model='Qwen/Qwen2.5-3B-Instruct', speculative_config=None, tokenizer='Qwen/Qwen2.5-3B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=Qwen/Qwen2.5-3B-Instruct, use_v2_block_manager=False, num_scheduler_steps=1, enable_prefix_caching=False, use_async_output_proc=True)
+INFO 10-05 20:02:33 model_runner.py:997] Starting to load model Qwen/Qwen2.5-3B-Instruct...
+INFO 10-05 20:02:34 weight_utils.py:242] Using model weights format ['*.safetensors']
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:08<00:08,  8.13s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:12<00:00,  5.86s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:12<00:00,  6.20s/it]
+
+INFO 10-05 20:02:47 model_runner.py:1008] Loading model weights took 5.7915 GB
+INFO 10-05 20:02:49 gpu_executor.py:122] # GPU blocks: 122763, # CPU blocks: 7281
+INFO 10-05 20:02:51 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 10-05 20:02:51 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 10-05 20:03:03 model_runner.py:1428] Graph capturing finished in 12 secs.
+Processed prompts:   0%|          | 0/30 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   3%|▎         | 1/30 [00:19<09:20, 19.31s/it, est. speed input: 6.68 toks/s, output: 183.19 toks/s]Processed prompts:   7%|▋         | 2/30 [00:20<04:04,  8.72s/it, est. speed input: 16.30 toks/s, output: 356.46 toks/s]Processed prompts:  10%|█         | 3/30 [00:22<02:26,  5.43s/it, est. speed input: 18.89 toks/s, output: 490.14 toks/s]Processed prompts:  13%|█▎        | 4/30 [00:23<01:42,  3.93s/it, est. speed input: 23.99 toks/s, output: 694.04 toks/s]Processed prompts:  17%|█▋        | 5/30 [00:23<01:04,  2.57s/it, est. speed input: 28.17 toks/s, output: 888.38 toks/s]Processed prompts:  20%|██        | 6/30 [00:26<01:02,  2.59s/it, est. speed input: 30.45 toks/s, output: 1003.11 toks/s]Processed prompts:  23%|██▎       | 7/30 [00:26<00:43,  1.87s/it, est. speed input: 32.97 toks/s, output: 1187.25 toks/s]Processed prompts:  27%|██▋       | 8/30 [00:27<00:30,  1.38s/it, est. speed input: 37.02 toks/s, output: 1384.08 toks/s]Processed prompts:  33%|███▎      | 10/30 [00:27<00:16,  1.18it/s, est. speed input: 42.86 toks/s, output: 1711.26 toks/s]Processed prompts:  37%|███▋      | 11/30 [00:28<00:16,  1.16it/s, est. speed input: 44.14 toks/s, output: 1894.18 toks/s]Processed prompts:  40%|████      | 12/30 [00:29<00:14,  1.27it/s, est. speed input: 46.26 toks/s, output: 2080.60 toks/s]Processed prompts:  43%|████▎     | 13/30 [00:31<00:21,  1.29s/it, est. speed input: 45.87 toks/s, output: 2167.85 toks/s]Processed prompts:  47%|████▋     | 14/30 [00:33<00:23,  1.47s/it, est. speed input: 46.96 toks/s, output: 2304.28 toks/s]Processed prompts:  50%|█████     | 15/30 [00:33<00:16,  1.08s/it, est. speed input: 59.19 toks/s, output: 2556.97 toks/s]Processed prompts:  53%|█████▎    | 16/30 [00:34<00:13,  1.05it/s, est. speed input: 61.36 toks/s, output: 2717.72 toks/s]Processed prompts:  57%|█████▋    | 17/30 [00:34<00:10,  1.29it/s, est. speed input: 63.71 toks/s, output: 2920.89 toks/s]Processed prompts:  60%|██████    | 18/30 [00:35<00:09,  1.25it/s, est. speed input: 68.46 toks/s, output: 3098.00 toks/s]Processed prompts:  63%|██████▎   | 19/30 [00:37<00:12,  1.12s/it, est. speed input: 69.36 toks/s, output: 3171.74 toks/s]Processed prompts:  67%|██████▋   | 20/30 [00:38<00:09,  1.04it/s, est. speed input: 72.77 toks/s, output: 3385.04 toks/s]Processed prompts:  70%|███████   | 21/30 [00:38<00:07,  1.26it/s, est. speed input: 76.64 toks/s, output: 3608.47 toks/s]Processed prompts:  73%|███████▎  | 22/30 [00:41<00:10,  1.30s/it, est. speed input: 74.18 toks/s, output: 3580.78 toks/s]Processed prompts:  77%|███████▋  | 23/30 [01:03<00:53,  7.68s/it, est. speed input: 49.39 toks/s, output: 2487.36 toks/s]Processed prompts:  80%|████████  | 24/30 [01:20<01:03, 10.54s/it, est. speed input: 40.93 toks/s, output: 2099.48 toks/s]Processed prompts:  83%|████████▎ | 25/30 [01:46<01:15, 15.10s/it, est. speed input: 31.93 toks/s, output: 1792.96 toks/s]Processed prompts:  87%|████████▋ | 26/30 [02:13<01:13, 18.49s/it, est. speed input: 26.91 toks/s, output: 1688.74 toks/s]Processed prompts:  90%|█████████ | 27/30 [09:41<07:22, 147.41s/it, est. speed input: 6.40 toks/s, output: 619.39 toks/s] Processed prompts:  93%|█████████▎| 28/30 [09:41<03:26, 103.31s/it, est. speed input: 6.61 toks/s, output: 688.01 toks/s]Processed prompts:  97%|█████████▋| 29/30 [09:42<01:12, 72.39s/it, est. speed input: 6.81 toks/s, output: 755.70 toks/s] Processed prompts: 100%|██████████| 30/30 [09:42<00:00, 50.80s/it, est. speed input: 6.96 toks/s, output: 818.35 toks/s]Processed prompts: 100%|██████████| 30/30 [09:42<00:00, 19.42s/it, est. speed input: 6.96 toks/s, output: 818.35 toks/s]
+llm generate done
+30
+check correct...:   0%|          | 0/30 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  37%|███▋      | 11/30 [00:00<00:01, 11.63it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  43%|████▎     | 13/30 [00:01<00:02,  7.98it/s]check correct...:  93%|█████████▎| 28/30 [00:01<00:00, 22.83it/s]check correct...: 100%|██████████| 30/30 [00:01<00:00, 18.55it/s]
+writing generation to jsonl file...:   0%|          | 0/30 [00:00<?, ?it/s]writing generation to jsonl file...: 100%|██████████| 30/30 [00:00<00:00, 4011.26it/s]
+correct cnt / total cnt: 5/30
+Acc: 0.1667
+Pass@1: 2.0/30 = 0.0667

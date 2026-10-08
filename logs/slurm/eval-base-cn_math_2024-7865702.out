@@ -1,0 +1,787 @@
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+current stop list: None
+Random seed set as 0
+current eval model: Qwen/Qwen2.5-3B-Instruct
+use n = 8, generation epoch is: 1
+available_gpus: ['0']
+  0%|          | 0/30 [00:00<?, ?it/s]  3%|▎         | 1/30 [00:00<00:03,  7.44it/s]100%|██████████| 30/30 [00:00<00:00, 200.24it/s]
+<|im_start|>system
+Please reason step by step, and put your final answer within \boxed{}.<|im_end|>
+<|im_start|>user
+A rare species appears on Earth. For each rare organism, the following events occur daily: there is a probability $p (0 \leq p \leq 1)$ that it disappears, a probability $\frac{1-p}{3}$ that it remains unchanged, a probability $\frac{1-p}{3}$ that it splits into two, and a probability $\frac{1-p}{3}$ that it splits into three. For all newly produced organisms, the same events occur daily. Assuming initially there is only one such rare organism, determine the maximum value of $p$ such that the probability of this species eventually going extinct does not exceed $\frac{1}{2}$.<|im_end|>
+<|im_start|>assistant
+
+INFO 10-07 05:30:12 llm_engine.py:232] Initializing an LLM engine (v0.6.1) with config: model='Qwen/Qwen2.5-3B-Instruct', speculative_config=None, tokenizer='Qwen/Qwen2.5-3B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=Qwen/Qwen2.5-3B-Instruct, use_v2_block_manager=False, num_scheduler_steps=1, enable_prefix_caching=False, use_async_output_proc=True)
+INFO 10-07 05:30:14 model_runner.py:997] Starting to load model Qwen/Qwen2.5-3B-Instruct...
+INFO 10-07 05:30:15 weight_utils.py:242] Using model weights format ['*.safetensors']
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:07<00:07,  7.71s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:12<00:00,  5.73s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:12<00:00,  6.03s/it]
+
+INFO 10-07 05:30:27 model_runner.py:1008] Loading model weights took 5.7915 GB
+INFO 10-07 05:30:31 gpu_executor.py:122] # GPU blocks: 122763, # CPU blocks: 7281
+INFO 10-07 05:30:33 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 10-07 05:30:33 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 10-07 05:30:46 model_runner.py:1428] Graph capturing finished in 13 secs.
+Processed prompts:   0%|          | 0/30 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   3%|▎         | 1/30 [01:13<35:29, 73.42s/it, est. speed input: 2.11 toks/s, output: 70.15 toks/s]Processed prompts:   7%|▋         | 2/30 [01:13<14:15, 30.54s/it, est. speed input: 3.96 toks/s, output: 133.14 toks/s]Processed prompts:  10%|█         | 3/30 [01:15<07:43, 17.16s/it, est. speed input: 6.01 toks/s, output: 198.91 toks/s]Processed prompts:  13%|█▎        | 4/30 [01:23<05:52, 13.55s/it, est. speed input: 6.32 toks/s, output: 243.93 toks/s]Processed prompts:  17%|█▋        | 5/30 [01:30<04:38, 11.15s/it, est. speed input: 7.22 toks/s, output: 290.89 toks/s]Processed prompts:  20%|██        | 6/30 [01:31<03:04,  7.70s/it, est. speed input: 8.07 toks/s, output: 341.58 toks/s]Processed prompts:  23%|██▎       | 7/30 [01:32<02:11,  5.73s/it, est. speed input: 8.75 toks/s, output: 401.71 toks/s]Processed prompts:  27%|██▋       | 8/30 [01:33<01:31,  4.16s/it, est. speed input: 9.96 toks/s, output: 456.78 toks/s]Processed prompts:  30%|███       | 9/30 [01:35<01:15,  3.58s/it, est. speed input: 10.71 toks/s, output: 520.31 toks/s]Processed prompts:  33%|███▎      | 10/30 [01:36<00:52,  2.62s/it, est. speed input: 11.60 toks/s, output: 587.51 toks/s]Processed prompts:  37%|███▋      | 11/30 [01:36<00:35,  1.85s/it, est. speed input: 12.45 toks/s, output: 655.77 toks/s]Processed prompts:  40%|████      | 12/30 [01:37<00:30,  1.70s/it, est. speed input: 13.28 toks/s, output: 720.06 toks/s]Processed prompts:  43%|████▎     | 13/30 [01:47<01:07,  3.98s/it, est. speed input: 13.12 toks/s, output: 729.12 toks/s]Processed prompts:  47%|████▋     | 14/30 [01:47<00:46,  2.88s/it, est. speed input: 14.63 toks/s, output: 786.73 toks/s]Processed prompts:  50%|█████     | 15/30 [01:49<00:40,  2.67s/it, est. speed input: 15.02 toks/s, output: 835.77 toks/s]Processed prompts:  53%|█████▎    | 16/30 [01:56<00:55,  3.96s/it, est. speed input: 15.12 toks/s, output: 867.09 toks/s]Processed prompts:  57%|█████▋    | 17/30 [02:05<01:12,  5.60s/it, est. speed input: 14.79 toks/s, output: 885.56 toks/s]Processed prompts:  60%|██████    | 18/30 [02:06<00:47,  3.98s/it, est. speed input: 15.67 toks/s, output: 971.28 toks/s]Processed prompts:  63%|██████▎   | 19/30 [02:09<00:41,  3.80s/it, est. speed input: 16.01 toks/s, output: 1022.55 toks/s]Processed prompts:  67%|██████▋   | 20/30 [02:10<00:29,  2.97s/it, est. speed input: 17.09 toks/s, output: 1087.15 toks/s]Processed prompts:  70%|███████   | 21/30 [02:15<00:32,  3.62s/it, est. speed input: 17.78 toks/s, output: 1137.14 toks/s]Processed prompts:  73%|███████▎  | 22/30 [02:17<00:24,  3.10s/it, est. speed input: 18.99 toks/s, output: 1190.10 toks/s]Processed prompts:  77%|███████▋  | 23/30 [10:30<17:29, 149.96s/it, est. speed input: 4.41 toks/s, output: 303.62 toks/s] Processed prompts:  80%|████████  | 24/30 [21:20<30:00, 300.09s/it, est. speed input: 2.28 toks/s, output: 180.87 toks/s]Processed prompts:  83%|████████▎ | 25/30 [21:20<17:30, 210.16s/it, est. speed input: 2.39 toks/s, output: 213.69 toks/s]Processed prompts:  87%|████████▋ | 26/30 [21:20<09:48, 147.17s/it, est. speed input: 2.50 toks/s, output: 244.81 toks/s]Processed prompts:  93%|█████████▎| 28/30 [21:21<02:38, 79.32s/it, est. speed input: 2.70 toks/s, output: 332.89 toks/s] Processed prompts:  97%|█████████▋| 29/30 [21:22<00:59, 59.85s/it, est. speed input: 2.77 toks/s, output: 374.45 toks/s]Processed prompts: 100%|██████████| 30/30 [21:22<00:00, 44.33s/it, est. speed input: 2.83 toks/s, output: 406.77 toks/s]Processed prompts: 100%|██████████| 30/30 [21:22<00:00, 42.75s/it, est. speed input: 2.83 toks/s, output: 406.77 toks/s]
+llm generate done
+30
+check correct...:   0%|          | 0/30 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:   3%|▎         | 1/30 [00:02<01:04,  2.23s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  10%|█         | 3/30 [00:04<00:36,  1.34s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  13%|█▎        | 4/30 [00:06<00:40,  1.56s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  20%|██        | 6/30 [00:08<00:30,  1.27s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  27%|██▋       | 8/30 [00:10<00:26,  1.20s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  40%|████      | 12/30 [00:12<00:14,  1.27it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  43%|████▎     | 13/30 [00:14<00:17,  1.03s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  47%|████▋     | 14/30 [00:16<00:19,  1.19s/it]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  60%|██████    | 18/30 [00:16<00:07,  1.54it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  63%|██████▎   | 19/30 [00:18<00:08,  1.32it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  67%|██████▋   | 20/30 [00:19<00:07,  1.32it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  70%|███████   | 21/30 [00:20<00:08,  1.11it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  80%|████████  | 24/30 [00:22<00:04,  1.21it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  87%|████████▋ | 26/30 [00:22<00:02,  1.64it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  93%|█████████▎| 28/30 [00:25<00:01,  1.35it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  97%|█████████▋| 29/30 [00:27<00:01,  1.01s/it]check correct...: 100%|██████████| 30/30 [00:27<00:00,  1.10it/s]
+writing generation to jsonl file...:   0%|          | 0/30 [00:00<?, ?it/s]writing generation to jsonl file...: 100%|██████████| 30/30 [00:00<00:00, 3890.94it/s]
+correct cnt / total cnt: 12/30
+Acc: 0.4000
+Pass@1: 4.0/30 = 0.1333
