@@ -18,14 +18,32 @@ tags: [status]
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
-Step 1 audit done. Step 2: AIME evaluated (A100). The other 7 base-eval jobs were estimated to start Oct 10 in the
-batch queue, so the plan is to cancel them (7865701–7865707) and run them interactively:
-`srun -A tml_2026 -p a100_normal_q --qos=tc_a100_normal_int --gres=gpu:a100:1 -c 8 --mem=64G -t 2:00:00 --pty bash`
-(inside tmux), then `LOCAL=1 launch/eval_model.sh base`.
+Step 1 audit done. Step 2: 6 of 8 base-eval benchmarks done (batch jobs 7865700–05). OlympiadBench and GPQA
+(7865706–07) have not finished.
+
+**Base model (Qwen2.5-3B-Instruct), as of 2026-10-08:**
+
+| benchmark | Pass@1 | Acc (pass@8) | last year (pass@8) | gate |
+|---|---|---|---|---|
+| aime | 0.067 | 0.167 | 0.200 | ok |
+| math | 0.646 | 0.854 | 0.844 | ok |
+| cn_math_2024 | 0.133 | 0.400 | 0.233 | ok |
+| kaoyan | 0.220 | 0.528 | 0.513 | ok |
+| amc | 0.412 | 0.650 | 0.700 | ok |
+| minerva | 0.303 | 0.489 | 0.338 | OFF (+0.151, *above* ref) |
+| olympiadbench | — | — | 0.495 | pending |
+| gpqa | — | — | 0.742 | pending |
+
+> [!NOTE]
+> The gate prints FAIL only because two benchmarks are missing (LB avg = `nan`) and Minerva is *above* the reference.
+> The eval environment looks sound: logs are clean and MATH matches within 0.01. Manas: matching last year's base is
+> not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
 **Resume here:**
-1. Confirm the 7 remaining base-eval benchmarks ran.
-2. Run `scripts/collect_results.py --gate base`. The gate compares Acc = pass@8 (see the decision log).
+1. Finish OlympiadBench and GPQA: check `squeue -u $USER`; if still queued, run
+   `BENCHES="olympiadbench gpqa" LOCAL=1 launch/eval_model.sh base` in an interactive A100 session
+   (`srun -A tml_2026 -p a100_normal_q --qos=tc_a100_normal_int --gres=gpu:a100:1 -c 8 --mem=64G -t 2:00:00 --pty bash`, inside tmux).
+2. Rerun `scripts/collect_results.py --gate base`; decide on the one-sided gate.
 3. Submit Step 4 (`launch/score_pool.sh`).
 4. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
 
@@ -57,7 +75,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 - [x] Step 1: audit, see [results](steps/01-audit-pool.md#results)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
-- [ ] Step 2: finish the 7 remaining benchmarks (`LOCAL=1`), then `scripts/collect_results.py --gate base` (Acc vs last year)
+- [ ] Step 2: finish OlympiadBench + GPQA (`LOCAL=1`), then `scripts/collect_results.py --gate base` (Acc vs last year)
 - [ ] Step 4: after the audit finishes, `launch/score_pool.sh`
 - [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
 
