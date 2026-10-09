@@ -89,6 +89,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-09**: Base OlympiadBench rerun on 2× A100 interactive (job 7921685, est. start Oct 11). A second copy races it on
+  H200 via the new `OUT_TAG=h200` launcher option (writes to `eval/outputs/base_h200/`). Whichever finishes first is kept;
+  cancel the other, and if H200 wins move its files into `eval/outputs/base/`.
+
 - **2026-10-09**: Base GPQA done interactively (Acc 0.707, Pass@1 0.289; within gate tolerance). OlympiadBench crashed at
   600/675: `RuntimeError: Aborted due to the lack of CPU swap space` (vLLM default swap_space 4 GiB; `eval.py` has
   `swap_space=60` commented out). eval/ stays frozen; proposed fix: run on 2 GPUs (tensor parallel 2 = 2x KV cache, 8 GiB swap).

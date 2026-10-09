@@ -9,6 +9,7 @@
 #   launch/eval_model.sh random_s1                    # LLaMA-Factory/saves/qwen25_3b_instruct/random_s1
 #   AFTER=<train jobid> launch/eval_model.sh random_s1
 #   BENCHES="aime amc" launch/eval_model.sh random_s1
+#   OUT_TAG=h200 BENCHES=olympiadbench LOCAL=1 launch/eval_model.sh base   # -> eval/outputs/base_h200/
 # Outputs: eval/outputs/<run>/log_<bench>.txt and <model>/<bench>/*.jsonl (a fresh OUTPUT_DIR per
 # model, since an existing jsonl makes eval skip that benchmark).
 source "$(dirname "$0")/common.sh"
@@ -26,7 +27,9 @@ fi
 clean_conda_env
 CONDA_ENV="${EVAL_CONDA_ENV:-$HOME/.conda/envs/evalenv}"
 [ -x "$CONDA_ENV/bin/python" ] || { echo "no env at $CONDA_ENV -- run env/setup_envs.sh"; exit 1; }
-export MODEL OUTPUT_DIR="$REPO/eval/outputs/$RUN" CONDA_ENV
+# OUT_TAG=<tag>: write to eval/outputs/<run>_<tag>/ instead, e.g. a second copy of a run on other
+# hardware racing the first (two runs must never share an OUTPUT_DIR). Keep one, discard the other.
+export MODEL OUTPUT_DIR="$REPO/eval/outputs/$RUN${OUT_TAG:+_$OUT_TAG}" CONDA_ENV
 export HF_HOME="${HF_HOME:-/home/$USER/hf_cache}" PYTHONNOUSERSITE=1
 mkdir -p "$OUTPUT_DIR"
 
