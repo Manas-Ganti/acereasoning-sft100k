@@ -31,8 +31,8 @@ Step 1 audit done. Step 2: 6 of 8 base-eval benchmarks done (batch jobs 7865700�
 | kaoyan | 0.220 | 0.528 | 0.513 | ok |
 | amc | 0.412 | 0.650 | 0.700 | ok |
 | minerva | 0.303 | 0.489 | 0.338 | OFF (+0.151, *above* ref) |
-| olympiadbench | — | — | 0.495 | pending |
-| gpqa | — | — | 0.742 | pending |
+| olympiadbench | — | — | 0.495 | crashed (vLLM CPU swap), rerun on 2 GPUs |
+| gpqa | 0.289 | 0.707 | 0.742 | ok (−0.035, tol ±0.093) |
 
 > [!NOTE]
 > The gate prints FAIL only because two benchmarks are missing (LB avg = `nan`) and Minerva is *above* the reference.
@@ -88,6 +88,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-09**: Base GPQA done interactively (Acc 0.707, Pass@1 0.289; within gate tolerance). OlympiadBench crashed at
+  600/675: `RuntimeError: Aborted due to the lack of CPU swap space` (vLLM default swap_space 4 GiB; `eval.py` has
+  `swap_space=60` commented out). eval/ stays frozen; proposed fix: run on 2 GPUs (tensor parallel 2 = 2x KV cache, 8 GiB swap).
+  Post-SFT evals (long traces) will hit this harder, so plan them on 2 GPUs or H200.
 
 - **2026-10-08**: Added `analysis/explore_pool_audit.ipynb`, interactive Plotly views of `pool_audit.parquet` (sources,
   length vs cutoff, math selection funnel, answer kinds, duplicates, contamination, trace quality, slice explorer).
