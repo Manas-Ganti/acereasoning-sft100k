@@ -75,9 +75,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | after all shards | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
-| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
+| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 15:44 (tc-dgx005); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
 | 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
-| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
+| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 17:20 (tc-gpu002); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
 
 ## Next actions
