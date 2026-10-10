@@ -84,6 +84,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Blockers / open questions
 
+- **Disk for training (2026-10-10):** ~118 GB free on Manas's `/home` vs ~100 GB peak per run. Decide where training
+  runs live (teammates' quota / scratch / `save_only_model`). Two teammates are joining the project.
+
 - **GPU scarcity:** on 2026-10-05, 1-GPU A100 batch jobs were estimated 4–5 days out, and H200 was worse. 8-GPU training
   may not schedule in time. Options: 4 GPUs with grad-accum 16 (same global batch 64; GA is a README "tweak" field),
   or Owl B200 / Falcon. Undecided: needs `sinfo`/`sshare` numbers and Manas's decision.
@@ -91,6 +94,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-10**: Disk plan. `/home` 522.4 / 640 GB (~118 GB free; Manas can't free much). Per training run: final model
+  ~6.2 GB, ZeRO-3 checkpoint ~43–50 GB, **peak ~90–100 GB** (save_total_limit 1 keeps two briefly). One run at a time
+  barely fits; two concurrent runs (~200 GB) don't. Two teammates with more quota are joining; options: train from their
+  accounts/space, use /scratch, or `save_only_model: true` (peak ~15 GB, no exact resume). Undecided.
 
 - **2026-10-10**: Base OlympiadBench done on 2 GPUs: Acc 0.492 (ref 0.495), Pass@1 0.277; all 8 base benchmarks in.
   Step 4 launched (k=4). Sanity check on shard 0 chunk 0 (2000 prompts): median 750 gen tokens, p90 1314, 1.8% hit the
