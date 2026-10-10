@@ -1,0 +1,15 @@
+[arc_env] host=tc140 job=7864578 python=/home/manasganti/miniconda3/envs/vrr/bin/python
+[arc_env] HF_HOME=/home/manasganti/hf_cache NCCL_SOCKET_IFNAME=ib0 CUDA_VISIBLE_DEVICES=unset
+[run] /home/manasganti/miniconda3/envs/vrr/bin/python scripts/audit_pool.py
+Traceback (most recent call last):
+  File "/home/manasganti/ondemand/data/acereasoning-sft100k/scripts/audit_pool.py", line 271, in <module>
+    main()
+  File "/home/manasganti/ondemand/data/acereasoning-sft100k/scripts/audit_pool.py", line 142, in main
+    extract_answer, _, strip_string = import_eval_grader()
+                                      ^^^^^^^^^^^^^^^^^^^^
+  File "/home/manasganti/ondemand/data/acereasoning-sft100k/scripts/common.py", line 62, in import_eval_grader
+    from utils.parser import extract_answer, strip_string  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/manasganti/ondemand/data/acereasoning-sft100k/eval/utils/parser.py", line 5, in <module>
+    from latex2sympy2 import latex2sympy
+ModuleNotFoundError: No module named 'latex2sympy2'

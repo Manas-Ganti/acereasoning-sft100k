@@ -1,0 +1,32 @@
+=================== CONDA_ENV=evalenv
+source activate rc=0
+command -v python: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Python 3.13.11
+sys.executable: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import vllm; from latex2sympy2 import latex2sympy; print('evalenv sentinel OK, vllm', vllm.__version__)
+    ^^^^^^^^^^^
+ModuleNotFoundError: No module named 'vllm'
+=================== CONDA_ENV=/home/manasganti/.conda/envs/evalenv
+source activate rc=0
+command -v python: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Python 3.13.11
+sys.executable: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import vllm; from latex2sympy2 import latex2sympy; print('evalenv sentinel OK, vllm', vllm.__version__)
+    ^^^^^^^^^^^
+ModuleNotFoundError: No module named 'vllm'
+=================== CONDA_ENV=myenv
+source activate rc=0
+command -v python: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Python 3.13.11
+sys.executable: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+ModuleNotFoundError: No module named 'llamafactory'
+=================== CONDA_ENV=/home/manasganti/.conda/envs/myenv
+source activate rc=0
+command -v python: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+Python 3.13.11
+sys.executable: /apps/common/software/Miniconda3/25.11.1-1/bin/python
+ModuleNotFoundError: No module named 'llamafactory'

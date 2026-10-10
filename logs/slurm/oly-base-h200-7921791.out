@@ -1,0 +1,4 @@
+== olympiadbench
+correct cnt / total cnt: 332/675
+Acc: 0.4919
+Pass@1: 186.625/675 = 0.2765

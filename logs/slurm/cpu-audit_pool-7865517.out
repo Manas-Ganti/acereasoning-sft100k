@@ -1,0 +1,38 @@
+WARNING 10-05 19:31:38 _custom_ops.py:18] Failed to import from vllm._C with ImportError('libcuda.so.1: cannot open shared object file: No such file or directory')
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+[arc_env] host=tc039 job=7865517 env=evalenv python=/home/manasganti/.conda/envs/evalenv/bin/python
+[arc_env] HF_HOME=/home/manasganti/hf_cache NCCL_SOCKET_IFNAME=ib0 CUDA_VISIBLE_DEVICES=unset
+[run] /home/manasganti/.conda/envs/evalenv/bin/python scripts/audit_pool.py
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+pool rows: 100000
+tokenizing prompts
+  tokenized 0/100000
+  tokenized 10240/100000
+  tokenized 20480/100000
+  tokenized 30720/100000
+  tokenized 40960/100000
+  tokenized 51200/100000
+  tokenized 61440/100000
+  tokenized 71680/100000
+  tokenized 81920/100000
+  tokenized 92160/100000
+tokenizing responses
+  tokenized 0/100000
+  tokenized 10240/100000
+  tokenized 20480/100000
+  tokenized 30720/100000
+  tokenized 40960/100000
+  tokenized 51200/100000
+  tokenized 61440/100000
+  tokenized 71680/100000
+  tokenized 81920/100000
+  tokenized 92160/100000
+answers + flags
+contamination vs eval/data
+wrote /home/manasganti/ondemand/data/acereasoning-sft100k/analysis/pool_audit.parquet and pool_audit.md

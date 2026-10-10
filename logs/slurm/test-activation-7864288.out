@@ -1,0 +1,24 @@
+=================== CONDA_ENV=evalenv
+source activate rc=0
+command -v python: /home/manasganti/.conda/envs/evalenv/bin/python
+Python 3.11.17
+sys.executable: /home/manasganti/.conda/envs/evalenv/bin/python
+evalenv sentinel OK, vllm 0.6.1
+=================== CONDA_ENV=/home/manasganti/.conda/envs/evalenv
+source activate rc=0
+command -v python: /home/manasganti/.conda/envs/evalenv/bin/python
+Python 3.11.17
+sys.executable: /home/manasganti/.conda/envs/evalenv/bin/python
+evalenv sentinel OK, vllm 0.6.1
+=================== CONDA_ENV=myenv
+source activate rc=0
+command -v python: /home/manasganti/.conda/envs/myenv/bin/python
+Python 3.10.22
+sys.executable: /home/manasganti/.conda/envs/myenv/bin/python
+myenv sentinel OK, transformers 4.55.0
+=================== CONDA_ENV=/home/manasganti/.conda/envs/myenv
+source activate rc=0
+command -v python: /home/manasganti/.conda/envs/myenv/bin/python
+Python 3.10.22
+sys.executable: /home/manasganti/.conda/envs/myenv/bin/python
+myenv sentinel OK, transformers 4.55.0
