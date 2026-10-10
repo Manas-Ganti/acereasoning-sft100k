@@ -91,3 +91,9 @@ The selection rule needs only that. The "drop 0/8 rows with low R1 agreement" ru
 "Aborted due to the lack of CPU swap space" at vLLM's 4 GiB default, and scoring also samples n>1 per prompt.
 This affects memory only, not sampling. The frozen `eval/` is untouched; for evals the workaround is 2 GPUs (tensor parallel).
 
+### 2026-10-10: Trained-model evals run on 2 GPUs
+`launch/eval_model.sh` requests `EVAL_GPUS` GPUs per benchmark job: 1 for the base model, **2 for every trained model**.
+eval.py runs tensor-parallel over every visible GPU. 2 GPUs give vLLM twice the KV cache and 8 GiB of CPU swap, which
+avoids the crash seen on base OlympiadBench. `eval/` is unchanged, and so are sampling and grading. The setting is the
+same for every trained run, so comparisons stay fair. Base numbers came from 1 GPU (7 benchmarks) and 2 GPUs (OlympiadBench).
+

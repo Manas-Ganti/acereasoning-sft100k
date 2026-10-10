@@ -98,7 +98,7 @@ def main():
         keep(df.pass_rate.notna(), "scored")
         keep(df.pass_rate.between(lo - 1e-9, hi + 1e-9), f"pass_rate in [{lo}, {hi}]")
         noisy = (df.pass_rate == 0) & df.r1_agreement.notna() & ~df.r1_in_majority.fillna(False).astype(bool)
-        keep(~noisy, "drop 0/8 rows whose R1 answer is not the R1 majority")
+        keep(~noisy, "drop pass_rate-0 rows whose R1 answer is not the R1 majority")
     if cfg["stratify"] and "cluster_id" not in df:
         raise SystemExit("pool_scores.parquet has no cluster_id -- run scripts/embed_cluster.py")
     if "cluster_id" not in df:

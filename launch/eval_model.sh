@@ -53,13 +53,17 @@ if [ -n "${LOCAL:-}" ]; then
     exit 0
 fi
 
+# EVAL_GPUS: eval.py runs tensor-parallel over every visible GPU. With 1 GPU, long n=8 traces overflow vLLM's
+# 4 GiB default CPU swap ("Aborted due to the lack of CPU swap space", base OlympiadBench 2026-10-09); 2 GPUs
+# double the KV cache and the swap. Trained models write long traces, so they default to 2.
+if [ "$RUN" = base ]; then EVAL_GPUS="${EVAL_GPUS:-1}"; else EVAL_GPUS="${EVAL_GPUS:-2}"; fi
 for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa}; do
     h=$(hours_h200 "$B") || exit 1
     [ "$GPU" = a100 ] && h=$(( h * 2 > 24 ? 24 : h * 2 ))
     # The base model writes ~1K-token answers: minutes per benchmark. Short limits backfill much sooner.
     [ "$RUN" = base ] && { h=1; [ "$B" = olympiadbench ] || [ "$B" = math ] && h=2; }
     # --chdir=eval: eval_single.sh does `cd $SLURM_SUBMIT_DIR`, so submit from inside eval/ (README).
-    jid=$(cd "$REPO/eval" && SB_CHDIR="$REPO/eval" sb --job-name="eval-$RUN-$B" $(gpu_flags 1) --mem=96G \
+    jid=$(cd "$REPO/eval" && SB_CHDIR="$REPO/eval" sb --job-name="eval-$RUN-$B" $(gpu_flags "$EVAL_GPUS") --mem=96G \
           --time="$h:00:00" $(dep_flag "${AFTER:-}") eval_single.sh "$B")
-    echo "$B: $jid (${h}h)"
+    echo "$B: $jid (${h}h, $EVAL_GPUS GPU)"
 done
