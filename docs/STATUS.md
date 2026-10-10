@@ -1,7 +1,7 @@
 ---
 title: STATUS
 current_step: 3
-phase: Step 3 next (random baselines); Step 4 scoring running
+phase: Step 3 queued (random_s1/s2 training); Step 4 scoring running
 last_updated: 2026-10-10
 updated_by: Mrunmay + Claude
 tags: [status]
@@ -19,7 +19,8 @@ tags: [status]
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
 Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Step 4 scoring is running.
-**Step 3 is next:** nothing generated or submitted yet (no `data_subsets/`, no `random_s*.yaml`).
+**Step 3 queued (2026-10-10):** `random_s1` / `random_s2` training submitted from Mrunmay's account (jobs 7934168 /
+7934178, 8× A100, evals + dev eval chained). Subset hashes are in the [Step 3 note](steps/03-random-baselines.md).
 
 **Base model (Qwen2.5-3B-Instruct), final 2026-10-10:**
 
@@ -40,10 +41,10 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 > not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
 **Resume here:**
-1. **Step 3** (Mrunmay's account; all teammates race it): verify setup (`env/check_envs.sh`,
-   `launch/test_activation.sh`, `fetch_data.py`, `build_dev_set.py`, `quota`), then `make_random_subsets.py --seeds 1 2`
-   and `make_config.py random_s1 random_s2`. Commit `data_subsets/` + YAMLs first so the others can match the
-   `pool_idx_sha256`, then `EVAL=1 launch/train.sh random_s{1,2}`. See [Step 3](steps/03-random-baselines.md).
+1. **Step 3:** Mrunmay's copies are queued (7934168 / 7934178). Subsets + YAMLs are on `main` (`6332a08`).
+   Other teammates racing: `git pull`, generate, check your hashes against the
+   [Step 3 note](steps/03-random-baselines.md), submit. When one copy finishes training, cancel the others.
+   Time the first run and `du -sh` a checkpoint (disk plan).
 2. **Step 4:** watch jobs 7927684 / 7927689 / 7927690; fill in the Step 4 results when grading and clustering finish.
 3. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
 4. Manas: decide on the one-sided Step 2 gate (not blocking).
@@ -55,7 +56,7 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
 | 2 | Base eval + gate | ✅ eval done (gate decision open) | all 8 in; LB6 pass@8 0.544 vs 0.503; FAIL only from scores *above* ref (Minerva, CN Math) | [02-base-eval](steps/02-base-eval.md) |
-| 3 | Random ×2 | ⏭️ next | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
+| 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | 🔄 running (k=4, 16 shards) | shard sanity check healthy; ~18 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
@@ -74,6 +75,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | after all shards | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
+| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
+| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
+| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
+| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
 
 ## Next actions
 
@@ -81,7 +86,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
 - [x] Step 2: all 8 base benchmarks done (one-sided gate decision still open)
 - [x] Step 4: submitted 2026-10-09 (jobs 7927684 / 7927689 / 7927690)
-- [ ] Step 3: generate + commit `random_s1`/`random_s2`, then submit training (racing rules in the decision log)
+- [x] Step 3: `random_s1`/`random_s2` generated (15,000 rows each, YAML check ok) and submitted (Mrunmay)
+- [x] Step 3: subset commit `6332a08` pushed from ARC (SSH key set up on Mrunmay's ARC account)
 - [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
 
 ## Blockers / open questions
@@ -96,6 +102,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-10**: Step 3 submitted from Mrunmay's account: `random_s1` train 7934168 (evals 7934169–76, dev 7934177),
+  `random_s2` train 7934178 (evals 7934179–86, dev 7934187); 8× A100, ≤~184 A100 GPU-h each for training. Hashes
+  s1 `6212267e…`, s2 `b55e6eaa…`. Mrunmay's setup finished: `check_envs` ALL CHECKS PASSED, pool 100,000 rows, dev
+  set built (GPQA needed `HF_HOME=/home/$USER/hf_cache` exported in the login shell).
 
 - **2026-10-10**: Mrunmay's evalenv: activation test passes for both envs, but pyarrow 26 (pulled in by unpinned
   `datasets` 5.0.1) needs NumPy 2 next to vllm's 1.26.4, so `fetch_data.py`, `build_dev_set.py` and `eval/` fail.

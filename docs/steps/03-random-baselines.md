@@ -1,7 +1,7 @@
 ---
 step: 3
 title: Random baselines, two seeds
-status: next
+status: running
 depends_on: [2]
 outputs: [LLaMA-Factory/data/random_s1.json, LLaMA-Factory/data/random_s2.json, saves/qwen25_3b_instruct/random_s{1,2}]
 cost: per run, training (time the first one) + ~3 GPU-h eval
@@ -39,6 +39,13 @@ to everyone else's:
 grep pool_idx_sha256 data_subsets/random_s1.meta.json data_subsets/random_s2.meta.json
 git diff --stat -- data_subsets/ LLaMA-Factory/data/dataset_info.json LLaMA-Factory/yamls/   # empty once someone has committed them
 ```
+
+Reference hashes (Mrunmay, 2026-10-10; your copy is valid only if it matches):
+
+| run | `pool_idx_sha256` |
+|---|---|
+| random_s1 | `6212267ef1b14125d03a1c2b982eefcf65d75e25666e8c3a1c69d1a345aa8898` |
+| random_s2 | `b55e6eaa731d444c11b0499ed294c8379673beee34c018edb5f02acab89f9a31` |
 
 When a winner exists, everyone else runs `scancel` on their `sft-random_sN`, `eval-random_sN-*` and `dev-random_sN` jobs.
 
