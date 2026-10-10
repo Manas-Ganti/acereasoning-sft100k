@@ -94,6 +94,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-10**: Team decision: all three teammates race each training run from their own ARC accounts and keep the
+  first copy that finishes training (rules in the [decision log](reference/decision-log.md)). Mrunmay is setting up
+  their account (Step 0), then submitting `random_s1`/`random_s2` (Step 3).
+
 - **2026-10-10**: Disk plan. `/home` 522.4 / 640 GB (~118 GB free; Manas can't free much). Per training run: final model
   ~6.2 GB, ZeRO-3 checkpoint ~43–50 GB, **peak ~90–100 GB** (save_total_limit 1 keeps two briefly). One run at a time
   barely fits; two concurrent runs (~200 GB) don't. Two teammates with more quota are joining; options: train from their

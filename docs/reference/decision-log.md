@@ -17,6 +17,24 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-10: Training runs are raced across the three teammates' ARC accounts
+GPU allocation is the bottleneck, so each of the three teammates submits the same training run from their own ARC
+login (all on account `tml_2026`), and the team keeps whichever copy is usable first. Rules, so that the result
+stays valid:
+1. **Identical inputs.** Everyone generates the subset with the same script and seed. The `pool_idx_sha256` in
+   `data_subsets/<run>.meta.json` must match the committed one, and `make_config.py --check` must pass. A copy whose
+   hash differs is invalid.
+2. **The winner is the first copy whose training finishes** (a `DONE` marker), decided before any eval score exists.
+   We never keep the copy with the better scores: that would select on the test benchmarks.
+3. **Same hardware class as the other comparison runs:** 8× A100 (the default), global batch 64. `hardware.txt`
+   records it.
+4. As soon as a winner exists, the others `scancel` their copy of that run *and* its chained eval/dev-eval jobs.
+   The winner's owner records the job ID and account in `docs/runs/<run>.md`.
+5. Racing copies share `tml_2026`'s fair-share, so they also lower the priority of the team's other jobs. Cancel
+   losers promptly.
+
+*Decided by: the team (recorded by Mrunmay).*
+
 ### 2026-10-05: The leaderboard metric is pass@8; the gate compares Acc
 The base AIME run gave Acc 0.167 (last year 0.200, one problem apart) but Pass@1 0.067 (Qwen reports ~6.7%), and
 GPQA's 0.742 can't be Pass@1 for a 3B model. So last year's table, the 0.446 baseline and the 0.451/0.492 random

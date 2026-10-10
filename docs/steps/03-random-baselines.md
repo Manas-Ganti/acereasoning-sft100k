@@ -29,6 +29,19 @@ EVAL=1 launch/train.sh random_s2                    # in parallel only if disk a
 
 Create a run note for each run from the [run template](../templates/run.md), in [runs/](../runs/).
 
+### Racing across teammates (decided 2026-10-10)
+
+All three teammates submit both runs from their own accounts; the first copy whose training finishes wins
+(rules: [decision log](../reference/decision-log.md)). Before submitting, check that your subset is identical
+to everyone else's:
+
+```bash
+grep pool_idx_sha256 data_subsets/random_s1.meta.json data_subsets/random_s2.meta.json
+git diff --stat -- data_subsets/ LLaMA-Factory/data/dataset_info.json LLaMA-Factory/yamls/   # empty once someone has committed them
+```
+
+When a winner exists, everyone else runs `scancel` on their `sft-random_sN`, `eval-random_sN-*` and `dev-random_sN` jobs.
+
 ## Frozen setup (the README YAML, never changed after this step)
 
 | Setting | Value |
