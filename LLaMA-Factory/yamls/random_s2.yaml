@@ -1,0 +1,41 @@
+# sft_config.yaml -- the upstream README section 4 YAML, verbatim (its `//` comments, which are
+# invalid YAML, converted to `#`). Per-run files yamls/<run>.yaml are generated from this by
+# scripts/make_config.py and differ ONLY in the two "Edit" fields: dataset and output_dir.
+# One addition, which does not affect training: save_total_limit (see below).
+### model
+model_name_or_path: Qwen/Qwen2.5-3B-Instruct
+
+### method
+stage: sft
+do_train: true
+finetuning_type: full
+deepspeed: examples/deepspeed/ds_z3_offload_config.json
+flash_attn: fa2
+
+### dataset
+dataset: random_s2  # Edit if needed
+cutoff_len: 16384
+overwrite_cache: true
+preprocessing_num_workers: 16
+template: qwen
+
+### output
+output_dir: saves/qwen25_3b_instruct/random_s2      # Edit accordingly
+logging_steps: 1
+# save_strategy: epoch
+save_steps: 100
+save_total_limit: 1   # ADDED: ZeRO-3 checkpoints with optimizer state are ~40 GB; keep only the latest
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 1      # Edit if needed (Tweak as needed)
+gradient_accumulation_steps: 8      # Edit if needed (Tweak as needed)
+learning_rate: 5.0e-6               # Edit if needed (Tweak as needed)
+num_train_epochs: 3                # Edit if needed (Tweak as needed)
+lr_scheduler_type: cosine
+warmup_ratio: 0.0                   # Edit if needed (Tweak as needed)
+bf16: true
+ddp_timeout: 180000000
+
+report_to: wandb

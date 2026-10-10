@@ -1,0 +1,8 @@
+{
+  "name": "random_s2",
+  "n": 15000,
+  "pool_idx_sha256": "b55e6eaa731d444c11b0499ed294c8379673beee34c018edb5f02acab89f9a31",
+  "rows_with_system_not_eval_prompt": 0,
+  "method": "uniform random over the 100K pool",
+  "seed": 2
+}

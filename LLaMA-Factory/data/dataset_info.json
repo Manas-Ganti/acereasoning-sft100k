@@ -714,5 +714,11 @@
       "prompt": "content"
     },
     "folder": "python"
+  },
+  "random_s1": {
+    "file_name": "random_s1.json"
+  },
+  "random_s2": {
+    "file_name": "random_s2.json"
   }
 }
