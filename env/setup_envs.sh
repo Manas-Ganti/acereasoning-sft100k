@@ -42,6 +42,8 @@ make_env() {  # make_env <name> <python version> -> prints prefix
         conda create -y -q -n "$name" "python=$ver" >&2
         prefix=$(env_prefix "$name")
     fi
+    # An empty prefix would test /bin/python (the system's 3.9) below and report a bogus "exists with python 3.9".
+    [ -n "$prefix" ] || { echo "conda create -n $name failed -- see the conda error above" >&2; exit 1; }
     [ -x "$prefix/bin/python" ] || { echo "env $name has no python at $prefix" >&2; exit 1; }
     local have; have=$("$prefix/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])')
     [ "$have" = "$ver" ] || { echo "env $name exists with python $have, expected $ver -- remove it: conda env remove -n $name" >&2; exit 1; }
