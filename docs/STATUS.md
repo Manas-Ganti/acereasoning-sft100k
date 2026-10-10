@@ -92,7 +92,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Blockers / open questions
 
-- **Disk for training (2026-10-10):** ~118 GB free on Manas's `/home` vs ~100 GB peak per run. Decide where training
+- **Disk for training, eased (2026-10-10):** Mrunmay's `/home` has a 640 GB quota and is nearly empty (only setup files),
+  enough for `random_s1` + `random_s2` at once (~200 GB peak). Still open for runs on Manas's account:
+  ~118 GB free on Manas's `/home` vs ~100 GB peak per run. Decide where training
   runs live (teammates' quota / scratch / `save_only_model`). Two teammates are joining the project.
 
 - **GPU scarcity:** on 2026-10-05, 1-GPU A100 batch jobs were estimated 4–5 days out, and H200 was worse. 8-GPU training
