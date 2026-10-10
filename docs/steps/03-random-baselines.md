@@ -1,7 +1,7 @@
 ---
 step: 3
 title: Random baselines, two seeds
-status: not-started
+status: next
 depends_on: [2]
 outputs: [LLaMA-Factory/data/random_s1.json, LLaMA-Factory/data/random_s2.json, saves/qwen25_3b_instruct/random_s{1,2}]
 cost: per run, training (time the first one) + ~3 GPU-h eval

@@ -1,7 +1,7 @@
 ---
 step: 4
 title: Score every prompt in the pool
-status: not-started
+status: running
 depends_on: [1]
 outputs: [analysis/pool_scores.parquet, analysis/pool_grades.parquet, analysis/pool_clusters.parquet, analysis/clusters_spotcheck.md]
 cost: ~6-10 GPU-h generation + CPU grading + <1 GPU-h embeddings

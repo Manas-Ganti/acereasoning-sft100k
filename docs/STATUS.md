@@ -1,9 +1,9 @@
 ---
 title: STATUS
-current_step: 1
-phase: setup done, starting Step 1
-last_updated: 2026-10-08
-updated_by: Manas + Claude
+current_step: 3
+phase: Step 3 next (random baselines); Step 4 scoring running
+last_updated: 2026-10-10
+updated_by: Mrunmay + Claude
 tags: [status]
 ---
 
@@ -19,6 +19,7 @@ tags: [status]
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
 Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Step 4 scoring is running.
+**Step 3 is next:** nothing generated or submitted yet (no `data_subsets/`, no `random_s*.yaml`).
 
 **Base model (Qwen2.5-3B-Instruct), final 2026-10-10:**
 
@@ -34,17 +35,18 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | gpqa | 0.289 | 0.707 | 0.742 | ok (−0.035, tol ±0.093) |
 
 > [!NOTE]
-> The gate prints FAIL only because two benchmarks are missing (LB avg = `nan`) and Minerva is *above* the reference.
+> The gate prints FAIL only because scores land *above* the reference (Minerva, CN Math).
 > The eval environment looks sound: logs are clean and MATH matches within 0.01. Manas: matching last year's base is
 > not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
 **Resume here:**
-1. Finish OlympiadBench and GPQA: check `squeue -u $USER`; if still queued, run
-   `BENCHES="olympiadbench gpqa" LOCAL=1 launch/eval_model.sh base` in an interactive A100 session
-   (`srun -A tml_2026 -p a100_normal_q --qos=tc_a100_normal_int --gres=gpu:a100:1 -c 8 --mem=64G -t 2:00:00 --pty bash`, inside tmux).
-2. Rerun `scripts/collect_results.py --gate base`; decide on the one-sided gate.
-3. Submit Step 4 (`launch/score_pool.sh`).
-4. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
+1. **Step 3** (Mrunmay's account; all teammates race it): verify setup (`env/check_envs.sh`,
+   `launch/test_activation.sh`, `fetch_data.py`, `build_dev_set.py`, `quota`), then `make_random_subsets.py --seeds 1 2`
+   and `make_config.py random_s1 random_s2`. Commit `data_subsets/` + YAMLs first so the others can match the
+   `pool_idx_sha256`, then `EVAL=1 launch/train.sh random_s{1,2}`. See [Step 3](steps/03-random-baselines.md).
+2. **Step 4:** watch jobs 7927684 / 7927689 / 7927690; fill in the Step 4 results when grading and clustering finish.
+3. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
+4. Manas: decide on the one-sided Step 2 gate (not blocking).
 
 ## Step board
 
@@ -53,7 +55,7 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
 | 2 | Base eval + gate | ✅ eval done (gate decision open) | all 8 in; LB6 pass@8 0.544 vs 0.503; FAIL only from scores *above* ref (Minerva, CN Math) | [02-base-eval](steps/02-base-eval.md) |
-| 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
+| 3 | Random ×2 | ⏭️ next | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | 🔄 running (k=4, 16 shards) | shard sanity check healthy; ~18 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
@@ -68,7 +70,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7865518–25 | base eval on H200 | 2026-10-05 | cancelled (4-day queue) | — |
 | (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
 | 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
-| 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | not finished as of 2026-10-08 | — |
+| 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | superseded: GPQA done interactively, OlympiadBench by 7921791 (1× H200) | — |
 | 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | after all shards | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
@@ -77,8 +79,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 - [x] Step 1: audit, see [results](steps/01-audit-pool.md#results)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
-- [ ] Step 2: finish OlympiadBench + GPQA (`LOCAL=1`), then `scripts/collect_results.py --gate base` (Acc vs last year)
-- [ ] Step 4: after the audit finishes, `launch/score_pool.sh`
+- [x] Step 2: all 8 base benchmarks done (one-sided gate decision still open)
+- [x] Step 4: submitted 2026-10-09 (jobs 7927684 / 7927689 / 7927690)
+- [ ] Step 3: generate + commit `random_s1`/`random_s2`, then submit training (racing rules in the decision log)
 - [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
 
 ## Blockers / open questions
@@ -93,6 +96,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-10**: Docs synced to the real state: current step is 3 (next, nothing submitted yet); Step 2 note `done`,
+  Step 4 note `running`; stale "finish OlympiadBench/GPQA" actions removed. Mrunmay's ARC envs + HF login are set up;
+  verification (`check_envs`, activation test) still to run.
 
 - **2026-10-10**: Team decision: all three teammates race each training run from their own ARC accounts and keep the
   first copy that finishes training (rules in the [decision log](reference/decision-log.md)). Mrunmay is setting up

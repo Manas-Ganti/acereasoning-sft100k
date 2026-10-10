@@ -1,7 +1,7 @@
 ---
 step: 2
 title: Evaluate the base model (gate)
-status: running
+status: done
 depends_on: [0]
 outputs: [eval/outputs/base/, results/results.md]
 cost: ~1 GPU-h (8 parallel 1-GPU jobs)
