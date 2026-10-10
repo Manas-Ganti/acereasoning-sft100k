@@ -17,6 +17,18 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-10: evalenv pyarrow walked down to a NumPy-1.26-compatible release
+A fresh evalenv build (Mrunmay's account) got `datasets` 5.0.1, pandas 3.0.6 and pyarrow 26.0.0 from the unpinned
+`datasets` in `eval/requirements.txt`. pyarrow 26 needs NumPy 2, but vllm 0.6.1 keeps numpy 1.26.4, so `import
+pyarrow` fails. That breaks parquet I/O, `build_dev_set.py` and **`eval/` itself, which imports `datasets`**.
+`env/fix_evalenv_arrow.sh` keeps numpy/torch/transformers/tokenizers/vllm frozen and lowers pyarrow one major at a
+time (pip moves `datasets`, and pandas<3 only if needed) until imports and a parquet round trip pass. `setup_envs.sh`
+now runs it. Manas could not be reached to copy his exact versions. Teammates' evalenvs may therefore differ in these
+three packages. They don't touch sampling or grading, and subset identity is checked by `pool_idx_sha256`.
+*Decided by: Mrunmay.*
+
+---
+
 ### 2026-10-10: Training runs are raced across the three teammates' ARC accounts
 GPU allocation is the bottleneck, so each of the three teammates submits the same training run from their own ARC
 login (all on account `tml_2026`), and the team keeps whichever copy is usable first. Rules, so that the result

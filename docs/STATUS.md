@@ -97,6 +97,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-10**: Mrunmay's evalenv: activation test passes for both envs, but pyarrow 26 (pulled in by unpinned
+  `datasets` 5.0.1) needs NumPy 2 next to vllm's 1.26.4, so `fetch_data.py`, `build_dev_set.py` and `eval/` fail.
+  Fix: `bash env/fix_evalenv_arrow.sh` (decision log). `check_envs.sh` now catches it.
+
 - **2026-10-10**: Docs synced to the real state: current step is 3 (next, nothing submitted yet); Step 2 note `done`,
   Step 4 note `running`; stale "finish OlympiadBench/GPQA" actions removed. Mrunmay's ARC envs + HF login are set up;
   verification (`check_envs`, activation test) still to run.

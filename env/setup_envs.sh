@@ -99,6 +99,8 @@ if [ "$WHICH" = all ] || [ "$WHICH" = eval ]; then
         || echo "!! flash_attn not installed in evalenv (no prebuilt wheel); eval does not use it -- continuing"
     rm -rf "$HOME/.cache/pip-tmp"
     add_constrained "$PY" pandas pyarrow
+    # unpinned `datasets` can pull a pyarrow built for NumPy 2 next to vllm's numpy 1.26 (2026-10-10)
+    PY="$PY" bash "$REPO/env/fix_evalenv_arrow.sh" || { echo "!! pyarrow/datasets broken in evalenv"; exit 1; }
     "$PY" -c "import transformers; assert transformers.__version__ == '4.44.2', 'transformers moved to ' + transformers.__version__"
     # eval/utils/parser.py imports latex2sympy2 at module load: if this fails, every eval job dies.
     "$PY" -c "from latex2sympy2 import latex2sympy; print('latex2sympy2 OK:', latex2sympy(r'\frac{1}{2}'))" \
