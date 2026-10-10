@@ -18,10 +18,9 @@ tags: [status]
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
-Step 1 audit done. Step 2: 6 of 8 base-eval benchmarks done (batch jobs 7865700–05). OlympiadBench and GPQA
-(7865706–07) have not finished.
+Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Step 4 scoring is running.
 
-**Base model (Qwen2.5-3B-Instruct), as of 2026-10-08:**
+**Base model (Qwen2.5-3B-Instruct), final 2026-10-10:**
 
 | benchmark | Pass@1 | Acc (pass@8) | last year (pass@8) | gate |
 |---|---|---|---|---|
@@ -31,7 +30,7 @@ Step 1 audit done. Step 2: 6 of 8 base-eval benchmarks done (batch jobs 7865700�
 | kaoyan | 0.220 | 0.528 | 0.513 | ok |
 | amc | 0.412 | 0.650 | 0.700 | ok |
 | minerva | 0.303 | 0.489 | 0.338 | OFF (+0.151, *above* ref) |
-| olympiadbench | — | — | 0.495 | crashed (vLLM CPU swap), rerun on 2 GPUs |
+| olympiadbench | 0.277 | 0.492 | 0.495 | ok (1× H200 rerun) |
 | gpqa | 0.289 | 0.707 | 0.742 | ok (−0.035, tol ±0.093) |
 
 > [!NOTE]
@@ -53,9 +52,9 @@ Step 1 audit done. Step 2: 6 of 8 base-eval benchmarks done (batch jobs 7865700�
 |---|---|---|---|---|
 | 0 | Setup | ✅ done | `check_envs` + batch activation test pass | [00-setup](steps/00-setup.md) |
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
-| 2 | Base eval + gate | 🔄 running (6/8 done) | 6/8 done; all within tolerance except Minerva, which is *above* ref; OlympiadBench + GPQA pending | [02-base-eval](steps/02-base-eval.md) |
+| 2 | Base eval + gate | ✅ eval done (gate decision open) | all 8 in; LB6 pass@8 0.544 vs 0.503; FAIL only from scores *above* ref (Minerva, CN Math) | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | ⬜ not started | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
-| 4 | Score pool | ⏭️ next (unblocked) | — | [04-score-pool](steps/04-score-pool.md) |
+| 4 | Score pool | 🔄 running (k=4, 16 shards) | shard sanity check healthy; ~18 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
@@ -100,7 +99,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   barely fits; two concurrent runs (~200 GB) don't. Two teammates with more quota are joining; options: train from their
   accounts/space, use /scratch, or `save_only_model: true` (peak ~15 GB, no exact resume). Undecided.
 
-- **2026-10-10**: Base OlympiadBench done on 2 GPUs: Acc 0.492 (ref 0.495), Pass@1 0.277; all 8 base benchmarks in.
+- **2026-10-10**: Base OlympiadBench done on 1× H200 (job 7921791): Acc 0.492 (ref 0.495), Pass@1 0.277; all 8 base benchmarks in.
   Step 4 launched (k=4). Sanity check on shard 0 chunk 0 (2000 prompts): median 750 gen tokens, p90 1314, 1.8% hit the
   8K cap, 1.8% empty answers. Healthy. ~1.1 A100-h per shard, ~18 A100 GPU-h total (above the 5–12 estimate).
 

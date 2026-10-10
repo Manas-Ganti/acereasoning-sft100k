@@ -95,5 +95,5 @@ This affects memory only, not sampling. The frozen `eval/` is untouched; for eva
 `launch/eval_model.sh` requests `EVAL_GPUS` GPUs per benchmark job: 1 for the base model, **2 for every trained model**.
 eval.py runs tensor-parallel over every visible GPU. 2 GPUs give vLLM twice the KV cache and 8 GiB of CPU swap, which
 avoids the crash seen on base OlympiadBench. `eval/` is unchanged, and so are sampling and grading. The setting is the
-same for every trained run, so comparisons stay fair. Base numbers came from 1 GPU (7 benchmarks) and 2 GPUs (OlympiadBench).
+same for every trained run, so comparisons stay fair. Base numbers all came from 1 GPU: 1× A100 for 7 benchmarks, 1× H200 for OlympiadBench, whose 141 GB fit where 1× A100 crashed.
 

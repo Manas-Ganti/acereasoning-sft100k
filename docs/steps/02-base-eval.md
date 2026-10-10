@@ -46,8 +46,12 @@ The **Acc (pass@8)** numbers must land near last year's baseline row (these are 
 | kaoyan | 0.220 (43.9/199) | 0.528 (105/199) | 0.513 | ok | 7865703 |
 | amc | 0.412 (16.5/40) | 0.650 (26/40) | 0.700 | ok | 7865704 |
 | minerva | 0.303 (82.4/272) | 0.489 (133/272) | 0.338 | OFF (+0.151, *above* ref) | 7865705 |
-| olympiadbench | — | — | 0.495 | missing | — |
-| gpqa | — | — | 0.742 | missing | — |
+| olympiadbench | 0.277 (186.6/675) | 0.492 (332/675) | 0.495 | ok | 7921791 (1× H200) |
+| gpqa | 0.289 (57.25/198) | 0.707 (140/198) | 0.742 | ok | interactive (1× A100) |
+
+Update 2026-10-10: **all 8 done.** LB6 avg pass@8 = 0.544 vs ref 0.503 (+0.041, tolerance 0.03), so the gate still prints
+FAIL, only because Minerva and CN Math score *above* last year. OlympiadBench first crashed on 1× A100 (vLLM CPU swap,
+4 GiB default) and was rerun on 1× H200 (job 7921791), where it fit. The eval itself is complete.
 
 Gate (2026-10-08, 6/8 done): **FAIL**, for two reasons: the LB average is `nan` because OlympiadBench and GPQA
 have not run yet, and Minerva is flagged OFF because it is 0.151 *above* the reference. A broken eval would lower
