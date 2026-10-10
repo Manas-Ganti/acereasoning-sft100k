@@ -79,3 +79,15 @@ Any change to thresholds must be justified on the **dev set**.
 ### 2026-10-05: "Seed" means the subset-sampling seed
 The training seed is the HF default for every run. `random_s1` vs `random_s2` measures data-sampling noise plus
 training nondeterminism.
+
+### 2026-10-09: Step 4 scores with k=4 base-model attempts per prompt, not 8
+CLAUDE.md specifies k=8. With 1-GPU jobs waiting days, k=4 halves generation (about 5–12 instead of 10–25 A100
+GPU-h). pass_rate then takes values 0, 0.25, 0.5, 0.75, 1, which still separates never / sometimes / always solved.
+The selection rule needs only that. The "drop 0/8 rows with low R1 agreement" rule becomes "drop 0/4 rows".
+`SAMPLES=8 launch/score_pool.sh` restores k=8. *Decided by: Manas.*
+
+### 2026-10-09: vLLM CPU swap space raised in our scoring script
+`scripts/score_pool_generate.py` passes `swap_space=32` (GiB; `--swap-gb`). The base OlympiadBench eval aborted with
+"Aborted due to the lack of CPU swap space" at vLLM's 4 GiB default, and scoring also samples n>1 per prompt.
+This affects memory only, not sampling. The frozen `eval/` is untouched; for evals the workaround is 2 GPUs (tensor parallel).
+

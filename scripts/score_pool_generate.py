@@ -32,6 +32,9 @@ def main():
     ap.add_argument("--domains", nargs="+", default=["math"])
     ap.add_argument("--save-text", action="store_true")
     ap.add_argument("--gpu-mem", type=float, default=0.90)
+    # n=8 sequence groups are preempted by swapping to CPU; vLLM's 4 GiB default overflowed on the base
+    # OlympiadBench eval ("Aborted due to the lack of CPU swap space"). The job has --mem=96G.
+    ap.add_argument("--swap-gb", type=float, default=32)
     args = ap.parse_args()
     assert 0 <= args.shard < args.num_shards, "pass --shard or run as a SLURM array task"
 
@@ -55,7 +58,7 @@ def main():
     extract_answer, _, _ = import_eval_grader()
     tok = AutoTokenizer.from_pretrained(BASE_MODEL)
     llm = LLM(model=BASE_MODEL, gpu_memory_utilization=args.gpu_mem, max_model_len=args.max_tokens + 4096,
-              seed=args.seed, enable_prefix_caching=True)
+              seed=args.seed, enable_prefix_caching=True, swap_space=args.swap_gb)
     sp = SamplingParams(n=args.k, temperature=0.6, top_p=0.95, max_tokens=args.max_tokens, seed=args.seed)
 
     for c, ch in pending:
