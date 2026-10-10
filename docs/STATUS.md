@@ -70,6 +70,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
 | 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
 | 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | not finished as of 2026-10-08 | — |
+| 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
+| 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | after all shards | — |
+| 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
 
 ## Next actions
 
@@ -88,6 +91,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-10**: Base OlympiadBench done on 2 GPUs: Acc 0.492 (ref 0.495), Pass@1 0.277; all 8 base benchmarks in.
+  Step 4 launched (k=4). Sanity check on shard 0 chunk 0 (2000 prompts): median 750 gen tokens, p90 1314, 1.8% hit the
+  8K cap, 1.8% empty answers. Healthy. ~1.1 A100-h per shard, ~18 A100 GPU-h total (above the 5–12 estimate).
 
 - **2026-10-09**: Step 4 ready to launch with k=4 attempts per prompt (decision log), ~5–12 A100 GPU-h. Scoring script
   gets 32 GiB vLLM swap to avoid the OlympiadBench-style crash. Launch: `git pull && launch/score_pool.sh`.
