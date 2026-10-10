@@ -23,6 +23,11 @@ export PYTHONUNBUFFERED=1
 mkdir -p "$WANDB_DIR" "$REPO/logs/slurm"
 SECRETS_FILE="${SECRETS_FILE:-$HOME/.config/vrr/secrets.env}"   # WANDB_API_KEY etc., outside the repo
 [ -f "$SECRETS_FILE" ] && source "$SECRETS_FILE"
+# report_to: wandb is in the README YAML. Without a W&B login, wandb.init crashes a batch job (no tty),
+# so log offline instead (runs land in $WANDB_DIR; `wandb sync` uploads them later). Training is unaffected.
+if [ -z "${WANDB_MODE:-}" ] && [ -z "${WANDB_API_KEY:-}" ] && ! grep -qs api.wandb.ai ~/.netrc; then
+    export WANDB_MODE=offline
+fi
 
 if command -v module &>/dev/null; then
     module load Miniconda3
@@ -61,4 +66,4 @@ if [ -z "${NCCL_SOCKET_IFNAME:-}" ] && command -v ip &>/dev/null; then
     done
 fi
 echo "[arc_env] host=$(hostname) job=${SLURM_JOB_ID:-none} env=$SFT_ENV python=$PY"
-echo "[arc_env] HF_HOME=$HF_HOME NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME:-unset} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
+echo "[arc_env] HF_HOME=$HF_HOME WANDB_MODE=${WANDB_MODE:-online} NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME:-unset} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
