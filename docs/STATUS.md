@@ -1,9 +1,9 @@
 ---
 title: STATUS
-current_step: 3
-phase: Step 3 queued (random_s1/s2 training); Step 4 scoring running
+current_step: 6
+phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); filter_only_s1 to submit
 last_updated: 2026-10-12
-updated_by: Mrunmay + Claude
+updated_by: Manas + Claude
 tags: [status]
 ---
 
@@ -40,14 +40,19 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 > The eval environment looks sound: logs are clean and MATH matches within 0.01. Manas: matching last year's base is
 > not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
-**Resume here:**
-1. **Step 3:** Mrunmay's copies are queued (7934168 / 7934178). Subsets + YAMLs are on `main` (`6332a08`).
-   Other teammates racing: `git pull`, generate, check your hashes against the
-   [Step 3 note](steps/03-random-baselines.md), submit. When one copy finishes training, cancel the others.
-   Time the first run and `du -sh` a checkpoint (disk plan).
-2. **Step 4:** watch jobs 7927684 / 7927689 / 7927690; fill in the Step 4 results when grading and clustering finish.
-3. Decide the training GPU plan (8 vs 4 GPUs per run) from `sinfo`/`sshare`/Owl/Falcon availability.
-4. Manas: decide on the one-sided Step 2 gate (not blocking).
+**Resume here (2026-10-12):**
+1. **Step 3 (Mrunmay):** `random_s1` 7934168 / `random_s2` 7934178 queued (est. start Oct 12 22:23 / Oct 13 02:51).
+   When one finishes, time it and `du -sh` a checkpoint; fill in the run note.
+2. **Step 6, needs a teammate with ~110 GB free:** submit **`filter_only_s1`** (the high-value ablation: "is the gain just
+   from dropping code + cleaning?"). On your account:
+   `git pull && ~/.conda/envs/evalenv/bin/python scripts/subset_from_idx.py filter_only_s1 && DRY_RUN=1 EVAL=1 launch/train.sh filter_only_s1`,
+   check the preview, then submit without `DRY_RUN`. Push the job IDs here and create `docs/runs/filter_only_s1.md`.
+3. **`filter_difficulty_s1`: proposed to skip** (Manas to confirm). Its data barely differs from `filter_only` (78% of
+   filter_only is already in the difficulty band), so the effect would likely be within noise. Submit it only if GPUs are free.
+   The subset is built and committed either way.
+4. **Step 6 (Manas):** `full_method_s1` queued (train 7958393, evals 7958394–401, dev 7958402).
+5. When runs finish: `scripts/collect_results.py`, fill in the run notes, push `results/` + logs.
+6. Manas: decide on the one-sided Step 2 gate (not blocking).
 
 ## Step board
 
@@ -85,16 +90,21 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 ## Next actions
 
 - [x] Step 1: audit, see [results](steps/01-audit-pool.md#results)
-- [ ] Spot-check near-miss contamination (contam_score 0.3–0.5) before Step 5
 - [x] Step 2: all 8 base benchmarks done (one-sided gate decision still open)
-- [x] Step 4: submitted 2026-10-09 (jobs 7927684 / 7927689 / 7927690)
-- [x] Step 3: `random_s1`/`random_s2` generated (15,000 rows each, YAML check ok) and submitted (Mrunmay)
-- [x] Step 3: subset commit `6332a08` pushed from ARC (SSH key set up on Mrunmay's ARC account)
-- [ ] Check `quota` before any training: each run peaks at about 100 GB of checkpoints
+- [x] Step 3: `random_s1`/`random_s2` generated and submitted (Mrunmay)
+- [x] Step 4: scoring, grading and clustering done, see [results](steps/04-score-pool.md#results)
+- [x] Step 5: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built and committed, see [results](steps/05-selection.md#results)
+- [x] Step 6: `full_method_s1` submitted (Manas, 7958393)
+- [ ] Step 6: `filter_only_s1` to submit (teammate with ~110 GB free)
+- [ ] Step 6: `filter_difficulty_s1`: skip unless GPUs free (Manas to confirm)
+- [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
+- [ ] Step 7: results table, report, HF uploads (deadline **Oct 20**)
 
 ## Blockers / open questions
 
-- **Disk for training, eased (2026-10-10):** Mrunmay's `/home` has a 640 GB quota and is nearly empty (only setup files),
+- **Disk for training (updated 2026-10-12):** Manas's account holds `full_method_s1` (~118 GB free, one run).
+  Mrunmay's holds `random_s1` + `random_s2`. `filter_only_s1` needs a third account or space freed after a run finishes.
+  Earlier note (2026-10-10): Mrunmay's `/home` has a 640 GB quota and is nearly empty (only setup files),
   enough for `random_s1` + `random_s2` at once (~200 GB peak). Still open for runs on Manas's account:
   ~118 GB free on Manas's `/home` vs ~100 GB peak per run. Decide where training
   runs live (teammates' quota / scratch / `save_only_model`). Two teammates are joining the project.
@@ -106,6 +116,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-12**: Plan for the remaining ablations: `filter_only_s1` high value (submit from a teammate's account);
+  `filter_difficulty_s1` proposed to skip unless GPUs are free (small expected effect). Step board, resume list and next
+  actions brought up to date.
 
 - **2026-10-12**: Step 6: `full_method_s1` submitted from Manas's account: train 7958393 (8× A100), evals 7958394–401
   (2× A100 each), dev 7958402. `filter_only_s1` / `filter_difficulty_s1` still to submit (teammate with ~220 GB free).
