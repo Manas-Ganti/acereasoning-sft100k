@@ -720,5 +720,14 @@
   },
   "random_s2": {
     "file_name": "random_s2.json"
+  },
+  "filter_only_s1": {
+    "file_name": "filter_only_s1.json"
+  },
+  "filter_difficulty_s1": {
+    "file_name": "filter_difficulty_s1.json"
+  },
+  "full_method_s1": {
+    "file_name": "full_method_s1.json"
   }
 }

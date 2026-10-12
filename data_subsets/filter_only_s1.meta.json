@@ -1,0 +1,76 @@
+{
+  "name": "filter_only_s1",
+  "n": 15000,
+  "pool_idx_sha256": "b0e8d9597507faa13ef8e398687733b65e85484c51a043f0256a62b7a2f071b0",
+  "rows_with_system_not_eval_prompt": 0,
+  "method": "filter_only",
+  "seed": 1,
+  "config": {
+    "difficulty": false,
+    "stratify": false,
+    "band": null
+  },
+  "keep_proof": false,
+  "funnel": [
+    [
+      "pool",
+      100000
+    ],
+    [
+      "math",
+      67432
+    ],
+    [
+      "not truncated (<=16384 tokens)",
+      64907
+    ],
+    [
+      "balanced \\boxed{} in final answer",
+      64712
+    ],
+    [
+      "not proof-like / prose answer",
+      60648
+    ],
+    [
+      "not contaminated (test)",
+      60586
+    ],
+    [
+      "not contaminated (dev)",
+      60508
+    ],
+    [
+      "no repetition / lang-mix / malformed flag",
+      60504
+    ],
+    [
+      "unique prompts (1 response each)",
+      53695
+    ],
+    [
+      "selected",
+      15000
+    ]
+  ],
+  "composition": {
+    "mean_total_tokens": 7159.770466666667,
+    "sum_total_tokens": 107396557,
+    "unique_prompts": 15000,
+    "fill_rows": 0,
+    "source": {
+      "OpenMathReasoning": 12211,
+      "NuminaMath-CoT": 2789
+    },
+    "pass_rate_hist": {
+      "0.0": 8392,
+      "0.25": 2035,
+      "0.5": 1338,
+      "0.75": 1240,
+      "1.0": 1995
+    },
+    "cluster_entropy_bits": 6.5316880174045275,
+    "n_clusters": 100,
+    "max_cluster_frac": 0.021
+  }
+}
