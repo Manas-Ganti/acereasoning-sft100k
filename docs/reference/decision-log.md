@@ -136,3 +136,10 @@ switched off rather than tuned. Only the account that holds `analysis/pool_score
 commits `data_subsets/<name>.idx.txt` + `.meta.json`. Teammates rebuild the training JSON with
 `scripts/subset_from_idx.py <name>`, which refuses to write if the sha256 differs. *Decided by: Manas.*
 
+### 2026-10-12: Focus on the required runs; ablations are not trained
+GPU queue time is the bottleneck and the deadline is Oct 20, so we train only what the deliverables need: `random_s1`,
+`random_s2` (both kept: one random run can't separate a real gain from noise) and `full_method_s1` (the smart
+model). `filter_only_s1` and `filter_difficulty_s1` are built and committed but **not trained**. If GPUs free up
+late, `filter_only_s1` goes first. The report describes the method's components and the funnel, says the ablations were
+not run for compute reasons, and doesn't attribute any gain to a specific component. *Decided by: Manas.*
+
