@@ -57,8 +57,8 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 1 | Audit pool | ✅ done | 67% math / 33% code; 3.7% truncated; 91 contaminated rows (AMC 4/40) | [01-audit-pool](steps/01-audit-pool.md) |
 | 2 | Base eval + gate | ✅ eval done (gate decision open) | all 8 in; LB6 pass@8 0.544 vs 0.503; FAIL only from scores *above* ref (Minerva, CN Math) | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
-| 4 | Score pool | 🔄 running (k=4, 16 shards) | shard sanity check healthy; ~18 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
-| 5 | Selection | ⬜ not started (needs Step 4) | — | [05-selection](steps/05-selection.md) |
+| 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
+| 5 | Selection | ⏭️ next (unblocked) | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
@@ -104,6 +104,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-12**: Step 4 done: all 16 score-gen shards, score-grade (7927689, 1h35) and embed (7927690, 4.5 min)
+  COMPLETED. pass_rate median 0, mean 0.26 over 67,432 math rows; r1_agreement median 0.5 (28,372 rows; spot-check
+  pending); clusters are clean topics. Step 5 unblocked: band stays [0, 0.5] (decision log). New `scripts/subset_from_idx.py`
+  lets teammates rebuild subsets without `pool_scores.parquet`.
 
 - **2026-10-12**: Step 3 still pending (Priority). Start estimates slipped: `random_s1` 7934168 → Oct 12 22:23 (tc-gpu001),
   `random_s2` 7934178 → Oct 13 02:51 (tc-gpu004). Step 4 jobs 7927684/89/90 no longer in `squeue`; outcome unknown

@@ -127,3 +127,12 @@ eval.py runs tensor-parallel over every visible GPU. 2 GPUs give vLLM twice the 
 avoids the crash seen on base OlympiadBench. `eval/` is unchanged, and so are sampling and grading. The setting is the
 same for every trained run, so comparisons stay fair. Base numbers all came from 1 GPU: 1× A100 for 7 benchmarks, 1× H200 for OlympiadBench, whose 141 GB fit where 1× A100 crashed.
 
+### 2026-10-12: Selection uses the planned design as-is (no tuning); subsets travel as row lists
+Step 4 results: on 67,432 math rows, pass_rate (k=4) has median 0 and mean 0.26 (more than half are 0/4 for the 3B
+model), and the median r1_agreement is 0.5 over 28,372 multi-response rows. The project is a data-selection study, so
+we keep the band [0, 0.5] from the 2026-10-05 proposal rather than tuning it. The 0/4 dominance is reported as a
+finding. If a quick spot-check shows the R1 disagreements are grader formatting artefacts, the R1-majority filter is
+switched off rather than tuned. Only the account that holds `analysis/pool_scores.parquet` runs `select_subset.py`; it
+commits `data_subsets/<name>.idx.txt` + `.meta.json`. Teammates rebuild the training JSON with
+`scripts/subset_from_idx.py <name>`, which refuses to write if the sha256 differs. *Decided by: Manas.*
+
