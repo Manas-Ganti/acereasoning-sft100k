@@ -116,6 +116,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-12**: Report draft started: `report/report.md` (setup, base results, pool findings, selection method +
+  funnel, experiments, findings, limitations, reproducibility). Results and abstract are TODO until the evals land.
+
 - **2026-10-12**: Decided to focus on required parts: train random_s1, random_s2 and full_method_s1 only; ablations built
   but not trained. Next while training queues: Step 7 prep (report draft, README, HF dataset uploads).
 
