@@ -38,7 +38,27 @@ sane.
 
 ## Results
 
-*(fill in: pass_rate histogram, # prompts at 0/8, r1_agreement summary, cluster size range, spot-check verdict)*
+Run 2026-10-09 → 10-10 (Manas's account): score-gen array 7927684 (16 × 1 A100, k=4, all COMPLETED; ~1.1 h per
+shard, shard 2 2h50; **≈20.5 A100 GPU-h**), score-grade 7927689 (CPU, 1h35), embed 7927690 (1 A100, 4.5 min).
+Sanity check (shard 0, chunk 0, 2,000 prompts): median 750 generated tokens, p90 1,314, 1.8% hit the 8K cap, 1.8% empty.
+
+| pass_rate (k=4), 67,432 math rows | value |
+|---|---|
+| mean | 0.257 |
+| median | **0** (more than half the rows: 0/4) |
+| 75th percentile | 0.5 |
+
+**The pool is hard for a 3B model**: most of it is AoPS-style OpenMathReasoning. This is a finding, not something we tune.
+
+**r1_agreement.** The summary in the grade log (median 0.5, 28,372 rows) **includes code rows**, whose empty answers
+never compare equal. Use the math-only numbers: 14,758 answered math rows with >1 R1 response, mean 0.917, median
+1.0. Spot-check of 15 disagreeing prompts: about 6 are genuine (`40 | 140`, `14 | 10`, `184 | 93`), about 7 are
+notation (`n≥4 and n≠5` vs `n=4 or n≥6`, `a√3` vs `A√3`, `60°,60°,60°` vs `60°`), and 2 are partial-vs-full
+answers. The R1-majority filter is kept as planned (decision log 2026-10-12); it removes 1,435 rows.
+
+**Clusters.** k=100 over 59,702 unique math prompts (bge-base-en-v1.5): sizes 181–1,242 (median 568). The largest are
+clean topics: functional equations, probability, triangle geometry, smallest-integer problems, max/min inequalities,
+conics, angle chasing, sets, grids/tilings, circles. No formatting-artefact clusters. Geometry spans several clusters.
 
 ## Notes
 

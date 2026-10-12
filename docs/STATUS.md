@@ -58,7 +58,7 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 2 | Base eval + gate | ✅ eval done (gate decision open) | all 8 in; LB6 pass@8 0.544 vs 0.503; FAIL only from scores *above* ref (Minerva, CN Math) | [02-base-eval](steps/02-base-eval.md) |
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
-| 5 | Selection | ⏭️ next (unblocked) | — | [05-selection](steps/05-selection.md) |
+| 5 | Selection | ✅ done | 3 subsets × 15,000 (seed 1); difficulty band leaves 41,626 unique prompts; full_method uniform over 100 clusters | — | [05-selection](steps/05-selection.md) |
 | 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
@@ -104,6 +104,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-12**: Step 5 done: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built on Manas's account (funnels in
+  the Step 5 note). R1-agreement spot-check: math-only mean 0.917 / median 1.0; disagreements are about half genuine,
+  half notation; filter kept. Next: Step 6 training (3 runs × 8 A100; ~100 GB peak disk each).
 
 - **2026-10-12**: Step 4 done: all 16 score-gen shards, score-grade (7927689, 1h35) and embed (7927690, 4.5 min)
   COMPLETED. pass_rate median 0, mean 0.26 over 67,432 math rows; r1_agreement median 0.5 (28,372 rows; spot-check
