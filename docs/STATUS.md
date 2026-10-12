@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 3
 phase: Step 3 queued (random_s1/s2 training); Step 4 scoring running
-last_updated: 2026-10-10
+last_updated: 2026-10-12
 updated_by: Mrunmay + Claude
 tags: [status]
 ---
@@ -73,11 +73,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
 | 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | superseded: GPQA done interactively, OlympiadBench by 7921791 (1× H200) | — |
 | 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
-| 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | after all shards | — |
+| 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | all three Step 4 jobs gone from the queue by Oct 12: finished or failed; results not pushed, Manas to confirm | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
-| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 15:44 (tc-dgx005); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
+| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 22:23 (tc-gpu001; slipped from 15:44); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
 | 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
-| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 17:20 (tc-gpu002); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
+| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 13 02:51 (tc-gpu004; slipped from Oct 12 17:20); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
 
 ## Next actions
@@ -104,6 +104,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-12**: Step 3 still pending (Priority). Start estimates slipped: `random_s1` 7934168 → Oct 12 22:23 (tc-gpu001),
+  `random_s2` 7934178 → Oct 13 02:51 (tc-gpu004). Step 4 jobs 7927684/89/90 no longer in `squeue`; outcome unknown
+  (outputs are on Manas's account, nothing committed).
 
 - **2026-10-10**: Step 3 submitted from Mrunmay's account: `random_s1` train 7934168 (evals 7934169–76, dev 7934177),
   `random_s2` train 7934178 (evals 7934179–86, dev 7934187); 8× A100, ≤~184 A100 GPU-h each for training. Hashes
