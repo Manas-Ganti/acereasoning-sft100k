@@ -59,7 +59,7 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ✅ done | 3 subsets × 15,000 (seed 1); difficulty band leaves 41,626 unique prompts; full_method uniform over 100 clusters | — | [05-selection](steps/05-selection.md) |
-| 6 | Ablations | ⬜ not started | — | [06-ablations](steps/06-ablations.md) |
+| 6 | Ablations | 🔄 `full_method_s1` queued (7958393); filter_only / filter_difficulty to submit | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
 Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocked / gate failed
@@ -79,6 +79,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 13 02:51 (tc-gpu004; slipped from Oct 12 17:20); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
+| 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | queued; ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
+| 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | after training | [run note](runs/full_method_s1.md) |
 
 ## Next actions
 
@@ -104,6 +106,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-12**: Step 6: `full_method_s1` submitted from Manas's account: train 7958393 (8× A100), evals 7958394–401
+  (2× A100 each), dev 7958402. `filter_only_s1` / `filter_difficulty_s1` still to submit (teammate with ~220 GB free).
 
 - **2026-10-12**: Step 5 done: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built on Manas's account (funnels in
   the Step 5 note). R1-agreement spot-check: math-only mean 0.917 / median 1.0; disagreements are about half genuine,

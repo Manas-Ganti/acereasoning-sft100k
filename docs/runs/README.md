@@ -16,4 +16,4 @@ Obsidian, use *Insert template*; anywhere else, copy the file. Add a row below w
 | random_s2 | 3 | queued (7934178) | | [random_s2](random_s2.md) |
 | filter_only_s1 | 6 | not started | | |
 | filter_difficulty_s1 | 6 | not started | | |
-| full_method_s1 | 6 | not started | | |
+| full_method_s1 | 6 | queued (7958393) | | [full_method_s1](full_method_s1.md) |
