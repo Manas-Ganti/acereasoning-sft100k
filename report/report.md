@@ -12,7 +12,7 @@ last_updated: 2026-10-12
 > Every number here comes from the repo: `docs/steps/*`, `docs/reference/decision-log.md`,
 > `data_subsets/*.meta.json`, `results/`.
 
-**Team:** Manas Ganti, Mrunmay Paratwar, *TODO: third teammate*
+**Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
 **Code:** https://github.com/Manas-Ganti/acereasoning-sft100k · **Models / datasets:** *TODO: HF links*
 
 ## Abstract
