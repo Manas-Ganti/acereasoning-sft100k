@@ -18,7 +18,7 @@ tags: [status]
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
-Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Step 4 scoring is running.
+Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Steps 4 and 5 done (2026-10-12).
 **Step 3 queued (2026-10-10):** `random_s1` / `random_s2` training submitted from Mrunmay's account (jobs 7934168 /
 7934178, 8× A100, evals + dev eval chained). Subset hashes are in the [Step 3 note](steps/03-random-baselines.md).
 
@@ -77,12 +77,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
 | 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
 | 7865706–07 | base eval olympiadbench, gpqa | 2026-10-05 | superseded: GPQA done interactively, OlympiadBench by 7921791 (1× H200) | — |
-| 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | shards 0–1 done (~1.1 h each → ~18 A100 GPU-h total) | `work/scores/gen/` |
-| 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | all three Step 4 jobs gone from the queue by Oct 12: finished or failed; results not pushed, Manas to confirm | — |
-| 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | queued | `analysis/clusters_spotcheck.md` |
-| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 12 22:23 (tc-gpu001; slipped from 15:44); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
+| 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | ✅ done (~20.5 A100 GPU-h) | `work/scores/gen/` |
+| 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | ✅ done | — |
+| 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | ✅ done | `analysis/clusters_spotcheck.md` |
+| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | still pending Oct 13 (est. Oct 12 22:23 passed); ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
 | 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
-| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | est. start Oct 13 02:51 (tc-gpu004; slipped from Oct 12 17:20); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
+| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | still pending Oct 13 (est. Oct 13 02:51 passed); ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | queued; ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | after training | [run note](runs/full_method_s1.md) |
@@ -115,6 +115,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-13**: `random_s1` / `random_s2` (7934168 / 7934178) still PENDING (Priority); both start estimates passed.
+  Stale Step 4 rows in Running jobs marked done.
 
 - **2026-10-12**: Report draft started: `report/report.md` (setup, base results, pool findings, selection method +
   funnel, experiments, findings, limitations, reproducibility). Results and abstract are TODO until the evals land.
