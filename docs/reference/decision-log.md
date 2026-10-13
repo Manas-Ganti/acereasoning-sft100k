@@ -17,6 +17,17 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-13: A second smart method, `longest_s1`, is trained; the smart model is chosen on the dev set
+Manas approved trying another smart selection, which reverses part of the 2026-10-12 "required runs only" entry.
+The new method (`scripts/select_longest.py`; no existing script changed) keeps `full_method`'s quality filter and
+R1-majority rule, takes one response per prompt, then the 15,000 longest traces. It's motivated by LIMO and s1 (long,
+hard traces carry the most signal for small-model reasoning SFT) and differs clearly from `full_method`, which picks
+by difficulty and topic balance. **Rule fixed before any result exists:** the smart model we keep, report as "the
+smart model" and submit, is the one with the higher **mean dev Pass@1** over the four dev sets. If the gap is under 1
+point, keep `full_method_s1` (the pre-planned method). Test-benchmark scores never decide it. Both smart runs are
+reported against random. `longest_s1` trains on more tokens than random; the report states the ratio.
+*Decided by: Manas (approval relayed by Sahasree).*
+
 ### 2026-10-10: evalenv pyarrow walked down to a NumPy-1.26-compatible release
 A fresh evalenv build (Mrunmay's account) got `datasets` 5.0.1, pandas 3.0.6 and pyarrow 26.0.0 from the unpinned
 `datasets` in `eval/requirements.txt`. pyarrow 26 needs NumPy 2, but vllm 0.6.1 keeps numpy 1.26.4, so `import

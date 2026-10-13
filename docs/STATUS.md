@@ -2,8 +2,8 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-12
-updated_by: Manas + Claude
+last_updated: 2026-10-13
+updated_by: Sahasree + Claude
 tags: [status]
 ---
 
@@ -51,8 +51,11 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
    filter_only is already in the difficulty band), so the effect would likely be within noise. Submit it only if GPUs are free.
    The subset is built and committed either way.
 4. **Step 6 (Manas):** `full_method_s1` queued (train 7958393, evals 7958394–401, dev 7958402).
-5. When runs finish: `scripts/collect_results.py`, fill in the run notes, push `results/` + logs.
-6. Manas: decide on the one-sided Step 2 gate (not blocking).
+5. **Second smart method `longest_s1` (new 2026-10-13, approved by Manas):** script `scripts/select_longest.py`
+   is ready. The account holding `analysis/pool_scores.parquet` builds it, commits the idx + meta and submits it
+   (steps in the [run note](runs/longest_s1.md)). The kept smart model is chosen on the **dev set** (decision log 2026-10-13).
+6. When runs finish: `scripts/collect_results.py`, fill in the run notes, push `results/` + logs.
+7. Manas: decide on the one-sided Step 2 gate (not blocking).
 
 ## Step board
 
@@ -64,7 +67,7 @@ Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1×
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ✅ done | 3 subsets × 15,000 (seed 1); difficulty band leaves 41,626 unique prompts; full_method uniform over 100 clusters | — | [05-selection](steps/05-selection.md) |
-| 6 | Smart model (ablations skipped) | 🔄 `full_method_s1` queued (7958393); ablations not trained (decision log) | — | [06-ablations](steps/06-ablations.md) |
+| 6 | Smart model (ablations skipped) | 🔄 `full_method_s1` queued (7958393); `longest_s1` script ready, not built; ablations not trained (decision log) | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
 Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocked / gate failed
@@ -96,6 +99,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [x] Step 5: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built and committed, see [results](steps/05-selection.md#results)
 - [x] Step 6: `full_method_s1` submitted (Manas, 7958393)
 - [x] Step 6: ablations not trained (decision log 2026-10-12); `filter_only_s1` only if GPUs free up late
+- [ ] Step 6: build + submit `longest_s1` ([run note](runs/longest_s1.md); needs `pool_scores.parquet`)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
 - [ ] Step 7: results table, report, HF uploads (deadline **Oct 20**)
 
@@ -115,6 +119,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-13**: Second smart method approved by Manas: `longest_s1` = `full_method`'s quality filter + R1-majority rule,
+  then the 15,000 longest traces (`scripts/select_longest.py`, new; existing scripts unchanged; logic checked on
+  synthetic data). The smart model is picked on the dev set, by a rule fixed in advance (decision log). Not built or submitted
+  yet: needs `pool_scores.parquet`. Expect more training tokens than random, so a longer run.
 
 - **2026-10-13**: `random_s1` / `random_s2` (7934168 / 7934178) still PENDING (Priority); both start estimates passed.
   Stale Step 4 rows in Running jobs marked done.
