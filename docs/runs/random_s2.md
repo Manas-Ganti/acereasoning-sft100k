@@ -29,7 +29,7 @@ tags: [run]
 
 ## Training
 - wall time: 5 h 28 min (2026-10-14 07:37 → 13:05, tc-dgx010); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
-- final train loss:
+- final train loss: 0.6305 (avg over 3 epochs; `all_results.json`), train_runtime 19,442 s, 2.315 samples/s, ~705 steps. ~40% faster than random_s1 on the same data size: node difference (tc-dgx010 vs tc-gpu003), not a config difference
 - checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
 - anything unusual: tokenizer.json swapped for the base one before its evals started (2026-10-15, fix_tokenizer_for_eval.py).
 

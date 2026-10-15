@@ -29,7 +29,7 @@ tags: [run]
 
 ## Training
 - wall time: 7 h 44 min (2026-10-13 16:02 → 23:46, tc-gpu003); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
-- final train loss:
+- final train loss: 0.6331 (avg over 3 epochs; `all_results.json`), train_runtime 27,547 s, 1.634 samples/s, ~705 steps
 - checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
 - anything unusual: all 8 test evals (7934169–76) crashed at tokenizer load ("untagged enum ModelWrapper"; SLURM showed COMPLETED because of `tee`). Fixed 2026-10-15 with `scripts/fix_tokenizer_for_eval.py`; evals resubmitted as 7999722–29.
 
