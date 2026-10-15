@@ -17,54 +17,36 @@ tags: [status]
 ## Now
 
 > [!IMPORTANT]
-> **GPU time vs the Oct 20 deadline. Team decision needed today (Mrunmay, 2026-10-15 17:30).** All eval blockers are
-> fixed (tokenizer + chat template, spawn, swap), and random_s1 has real scores on 3/8 benchmarks. But the Tinkercliffs
-> A100 queue is full. `sbatch --test-only` for *any* new A100 shape (1 or 2 GPUs, 1.5–8 h, short or interactive QOS)
-> gives **Oct 24**. Mrunmay's waiting interactive request 8003894 (2 GPUs, 4 h) is estimated for Oct 18 15:49. Eval
+> **Eval status and GPU queue (Mrunmay, 2026-10-15 17:30).** Three eval blockers were found and fixed (tokenizer +
+> chat template, spawn, swap), and random_s1 has real scores on 3/8 benchmarks. The Tinkercliffs A100 queue is full:
+> `sbatch --test-only` for every new A100 shape tried (1 or 2 GPUs, 1.5–8 h, short or interactive QOS) gave
+> **Oct 24**. Mrunmay's waiting interactive request 8003894 (2 GPUs, 4 h) is estimated for Oct 18 15:49. Eval
 > progress:
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024 | math, kaoyan, minerva, olympiadbench, gpqa (batch 7999723/25/27/28/29, queued) |
-> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan crashed (fork, swap) and need resubmitting; math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
+> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan crashed (fork, swap) and need a rerun; math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
 > | full_method_s1 | none | all 8 (Manas) |
+
+> [!NOTE]
+> **Eval failures found on 2026-10-15 and their fixes** (details in the [decision log](reference/decision-log.md)).
+> All three hit trained models only, and SLURM still reports the job as **COMPLETED**, because `eval_single.sh`
+> pipes through `tee`. A trained-model eval that "finished" in a few minutes, or whose log has no `Acc:` line, crashed.
 >
-> **Proposed (Manas to confirm):** (1) keep every queued job; resubmitting only moves to the back of the queue.
-> (2) Whoever has the best fair-share (`sshare -A tml_2026 -u $USER`; Mrunmay used a lot of GPU on 2026-10-15) runs
-> interactive evals; Mrunmay can grant read access to the random models. (3) **Fix the benchmark priority order now,
-> before seeing more results:** the same benchmarks for random_s1, random_s2 and full_method_s1 first (the LB6 ones:
-> cn_math, kaoyan, amc, minerva, olympiadbench, gpqa). Anything not run by Oct 19 is reported as a limitation.
+> | failure | cause | fix (on each ARC account / model) |
+> |---|---|---|
+> | `untagged enum ModelWrapper` at tokenizer load | myenv writes a `tokenizer.json` that evalenv's transformers 4.44.2 can't parse | `scripts/fix_tokenizer_for_eval.py <run>` (also copies `chat_template.jinja` into `tokenizer_config.json` since `ed20bc5`); `train.slurm` runs it for jobs submitted after `64219e1` |
+> | `Cannot re-initialize CUDA in forked subprocess`, or `DistStoreError ... 1/2 clients joined` | 2-GPU vLLM forks a worker after `eval.py` has initialised CUDA | `env/vllm_spawn_hook.sh`, once per account (applies to queued jobs too) |
+> | `Aborted due to the lack of CPU swap space` | long traces overflow vLLM's 4 GiB/GPU swap default | `env/vllm_swap_hook.sh`, once per account (applies to queued jobs too) |
+>
+> Status: both hooks are installed on mrunmayp and manasganti. The tokenizer fix has been applied to random_s1 and
+> random_s2. The random_s2 smoke test (`scripts/smoke_eval.py`) passed on 2× A100 with these fixes.
 
-> [!CAUTION]
-> **Everyone, run this once on your ARC account now (2026-10-15):**
-> `git pull && bash env/vllm_spawn_hook.sh && bash env/vllm_swap_hook.sh`. The swap hook fixes long evals aborting
-> with `Aborted due to the lack of CPU swap space`: random_s1 gpqa died at 94/198 on 2× A100 (decision log).
-> The spawn hook (below) was the first fix:
-> Without it, **every 2-GPU eval crashes** (`Cannot re-initialize CUDA in forked subprocess`), including jobs
-> already queued. The hook goes into your evalenv and covers queued jobs, so no resubmitting is needed. Details:
-> [decision log](reference/decision-log.md), 2026-10-15. `env/check_envs.sh` now checks for it.
-
-> [!WARNING]
-> **For every teammate and agent (2026-10-15): trained-model evals crash unless you run the tokenizer fix first.**
-> myenv saves a `tokenizer.json` that evalenv (transformers 4.44.2) can't parse
-> (`Exception: data did not match any variant of untagged enum ModelWrapper`). SLURM still reports the eval as
-> **COMPLETED**, because `eval_single.sh` pipes through `tee`. **An eval that "finished" in under a few minutes has
-> crashed.** For any trained model, as soon as its `DONE` marker exists and before its evals start:
-> ```bash
-> git pull && ~/.conda/envs/evalenv/bin/python scripts/fix_tokenizer_for_eval.py <run>   # must end with "-- ok" or "loads now: True"
-> ```
-> If its evals already ran: `mv eval/outputs/<run> eval/outputs/<run>_crashed_tokenizer && launch/eval_model.sh <run>`.
-> **Re-run it after pulling `ed20bc5`, even if you ran it before:** it now also copies `chat_template.jinja` into
-> `tokenizer_config.json` (4.44.2 ignores the .jinja file, so eval's `apply_chat_template` would fail). Both random
-> models needed this (2026-10-15). Only jobs submitted after commit `64219e1` run the fix automatically. `full_method_s1` (7958393) and any `longest_s1`
-> job submitted before it **need it run by hand**. Details: [decision log](reference/decision-log.md), 2026-10-15.
-
-> [!WARNING]
-> **Queue vs deadline (Oct 20):** 2× A100 eval jobs are estimated to start as late as **Oct 19** or show N/A. Submit
-> nothing to the A100 queue that isn't required. Before adding jobs, compare start times with
-> `sbatch --test-only ... --wrap=true`. If H200 is clearly earlier, race eval copies there with
-> `OUT_TAG=h200 GPU=h200 BENCHES="..." launch/eval_model.sh <run>`, keep the first copy that finishes and cancel the
-> other (same rule as the training race).
+> [!NOTE]
+> **Queue observations (2026-10-15):** `sbatch --test-only` gave a new 2× H200 8 h job **Nov 8**, and new A100 jobs
+> Oct 24. The 4 h interactive QOS (`tc_a100_normal_int`) allocated within minutes at ~13:50, but at 17:30 its estimate
+> was Oct 18.
 
 Setup is complete on ARC: both envs are built and verified, the pool and base model are downloaded, and the dev set
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
@@ -94,20 +76,15 @@ queued (7934179–87).
 **Resume here (updated 2026-10-15 by Mrunmay + Claude):**
 0. ✅ **Smoke test `random_s2` PASSED (Mrunmay, 2026-10-15 14:09, 2× A100 interactive, tc-gpu003)**, with the tokenizer +
    chat-template fix and the vLLM spawn hook: vLLM loaded with TP=2 in 57 s; 4/4 samples `finish=stop` (368–1901
-   tokens) and 4/4 have `\boxed{}`. **Manas:** for `full_method_s1`, run `bash env/vllm_spawn_hook.sh` (once per
-   account) + the tokenizer fix + the smoke test, then `scontrol release` its evals. Mrunmay is now running random_s1
-   aime/amc/cn_math in the interactive session (`LOCAL=1`) and will `scancel` the batch copies 7999722/24/26 as each finishes.
-1. **Manas (`full_method_s1`):** check whether 7958393 trained. If it has, run the tokenizer fix *now*. If its evals
-   (7958394–401) already "completed", check how long they ran; if they ran under a few minutes, set the outputs aside and
-   resubmit (see the warning above). Push what you find here.
-2. **Sahasree / whoever owns `longest_s1`:** if it was submitted before `64219e1`, run the tokenizer fix after training.
-   If not submitted yet, `git pull` first so `train.slurm` runs the fix automatically. Record job IDs in the
-   [run note](runs/longest_s1.md).
-3. **Mrunmay (Step 3):** wait for evals 7999722–29 (random_s1) and 7934179–87 (random_s2). The first to start is
-   random_s2 aime (est. Oct 15 21:54): check its log after ~10 min to confirm vLLM loads a trained model. Dev evals
-   7934177 / 7934187: lower their priority with `scontrol update jobid=7934177,7934187 nice=500` so test evals come first.
-4. **Ablations, only if GPUs free up (unlikely now):** do not add A100 jobs before the required evals have run.
-   **Ablations are not trained** (decision log 2026-10-12: focus on required parts). Only if GPUs free up late: submit **`filter_only_s1`** (the high-value ablation: "is the gain just
+   tokens) and 4/4 have `\boxed{}`. random_s1 aime/amc/cn_math then ran in that session (`LOCAL=1`); their batch
+   copies 7999722/24/26 were cancelled.
+1. **`full_method_s1`** (Manas's account): see its [run note](runs/full_method_s1.md).
+2. **`longest_s1`:** see its [run note](runs/longest_s1.md). Jobs submitted before `64219e1` don't run the tokenizer fix
+   automatically.
+3. **Step 3 (Mrunmay):** random_s1 evals 7999723/25/27/28/29 and random_s2 evals 7934180/84/85/86 are queued (with
+   both hooks). random_s2 aime/amc/cn_math/kaoyan need a rerun; interactive request 8003894 is waiting (est. Oct 18).
+   Dev evals 7934177 / 7934187 are lowered in priority (`nice=500`).
+4. **Ablations are not trained** (decision log 2026-10-12: focus on required parts). Only if GPUs free up late: submit **`filter_only_s1`** (the high-value ablation: "is the gain just
    from dropping code + cleaning?"). On your account:
    `git pull && ~/.conda/envs/evalenv/bin/python scripts/subset_from_idx.py filter_only_s1 && DRY_RUN=1 EVAL=1 launch/train.sh filter_only_s1`,
    check the preview, then submit without `DRY_RUN`. Push the job IDs here and create `docs/runs/filter_only_s1.md`.
@@ -186,8 +163,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 ## Change log (newest first)
 
 - **2026-10-15 17:30**: A100 queue full: every new A100 shape is estimated for Oct 24; interactive 8003894 for Oct 18.
-  Team decision requested at the top of Now (keep queued jobs, best-fair-share teammate runs interactive evals,
-  benchmark priority fixed before results). random_s2: 0/8 benchmarks scored.
+  random_s2: 0/8 benchmarks scored. Top of Now rewritten as status only: eval progress table, failure/fix table,
+  queue observations.
 
 - **2026-10-15**: Manas's account: vLLM spawn + swap hooks installed in evalenv (swap default 24 GiB/GPU);
   `check_envs.sh` ALL CHECKS PASSED. `full_method_s1` evals (held) will start with both hooks.
