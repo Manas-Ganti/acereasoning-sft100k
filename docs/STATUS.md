@@ -166,6 +166,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-15**: random_s2 batch evals aime/amc/cn_math (started 12:17–13:51, before the spawn hook) died with
+  `DistStoreError ... 1/2 clients joined` (forked worker crash); kaoyan (14:18, after the spawn hook) died on CPU swap.
+  random_s1 gpqa (interactive) also died on swap at 94/198. Swap hook installed 16:38 on mrunmayp (`env/vllm_swap_hook.sh`).
+  All five reruns pending; crashed logs moved to `eval/outputs/random_s{1,2}_crashed*/`. Batch evals still queued now get
+  both hooks at start. random_s2 short benchmarks + kaoyan to run in a new interactive session.
+
 - **2026-10-15**: Smoke test `random_s2` PASS on 2× A100 (TP=2, spawn hook): loads in 57 s; 4/4 samples stop with a
   `\boxed{}` answer. The 2-GPU fork crash (`Cannot re-initialize CUDA in forked subprocess`) is fixed by
   `env/vllm_spawn_hook.sh` (run once per account). random_s1 short benchmarks are running interactively.
