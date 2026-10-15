@@ -64,6 +64,10 @@ queued (7934179–87).
 > not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
 **Resume here (updated 2026-10-15 by Mrunmay + Claude):**
+0. **Mrunmay, when back (2026-10-15):** Manas can't read your home directory, so the eval smoke test on `random_s2` is
+   yours. In a 2-GPU interactive session: `~/.conda/envs/evalenv/bin/python scripts/smoke_eval.py random_s2` (command in
+   the change log). If a random_s2 eval already started, check that its log ends with `Acc:` / `Pass@1:` instead of
+   finishing in minutes. Manas smoke-tests `full_method_s1` after it trains (its evals 7958394–402 are on hold until then).
 1. **Manas (`full_method_s1`):** check whether 7958393 trained. If it has, run the tokenizer fix *now*. If its evals
    (7958394–401) already "completed", check how long they ran; if they ran under a few minutes, set the outputs aside and
    resubmit (see the warning above). Push what you find here.
