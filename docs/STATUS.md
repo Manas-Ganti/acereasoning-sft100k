@@ -17,7 +17,10 @@ tags: [status]
 ## Now
 
 > [!CAUTION]
-> **Everyone, run this once on your ARC account now (2026-10-15):** `git pull && bash env/vllm_spawn_hook.sh`.
+> **Everyone, run this once on your ARC account now (2026-10-15):**
+> `git pull && bash env/vllm_spawn_hook.sh && bash env/vllm_swap_hook.sh`. The swap hook fixes long evals aborting
+> with `Aborted due to the lack of CPU swap space`: random_s1 gpqa died at 94/198 on 2× A100 (decision log).
+> The spawn hook (below) was the first fix:
 > Without it, **every 2-GPU eval crashes** (`Cannot re-initialize CUDA in forked subprocess`), including jobs
 > already queued. The hook goes into your evalenv and covers queued jobs, so no resubmitting is needed. Details:
 > [decision log](reference/decision-log.md), 2026-10-15. `env/check_envs.sh` now checks for it.

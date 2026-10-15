@@ -47,6 +47,8 @@ echo "== $EVAL_ENV_NAME: eval stack + frozen grader"
     && ok "eval grader: \\boxed{\\frac12} == 0.5" || bad "eval grader (latex2sympy2 / antlr4 -- see env/setup_envs.sh)"
 [ -f "$(dirname "$(dirname "$EPY")")/etc/conda/activate.d/vllm_spawn.sh" ] \
     && ok "vllm spawn hook (2-GPU evals)" || bad "no vllm spawn hook: bash env/vllm_spawn_hook.sh (2-GPU evals crash without it)"
+[ -f "$(dirname "$(dirname "$EPY")")/etc/conda/activate.d/vllm_swap.sh" ] \
+    && ok "vllm swap hook (long evals)" || bad "no vllm swap hook: bash env/vllm_swap_hook.sh (long evals abort on CPU swap)"
 "$EPY" -m pip list 2>/dev/null | grep -i -E '^(antlr4-python3-runtime|latex2sympy2|sympy) ' | sed 's/^/       /'
 
 echo "== HF token under HF_HOME=$HF_HOME (needed for GPQA)"

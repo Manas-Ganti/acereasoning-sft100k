@@ -17,6 +17,18 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-15: vLLM's default CPU swap raised to 24 GiB/GPU in evalenv
+`random_s1` gpqa on 2× A100 aborted at 94/198 after 54 min with `RuntimeError: Aborted due to the lack of CPU swap
+space`. This is the same error base OlympiadBench hit on 1× A100 on Oct 9. Trained models write long traces, and with
+n=8, vLLM preempts groups by swapping their KV cache to CPU. Its 4 GiB/GPU default runs out, and 2 GPUs (8 GiB) don't
+help enough. `eval.py` never passes `swap_space` (its `swap_space=60` is commented out), and `eval/` is frozen, so
+`env/vllm_swap_hook.sh` makes vLLM's *default* read `VLLM_EVAL_SWAP_GB`, set to 24 by an evalenv activate hook. Already
+queued `eval_single.sh` jobs pick it up through `source activate`. This changes memory only: sampling, prompts and
+grading are untouched. It's the same reasoning as `score_pool_generate.py`'s `swap_space=32` (2026-10-09).
+2 × 24 GiB fits the jobs' `--mem=96G`. *Decided by: Mrunmay.*
+
+---
+
 ### 2026-10-15: vLLM workers use "spawn" in evalenv (2-GPU evals crashed)
 The first 2-GPU trained-model eval died with `RuntimeError: Cannot re-initialize CUDA in forked subprocess`.
 `eval.py` calls `set_seed()`, which initialises CUDA, before it creates `vllm.LLM`. With tensor parallel 2, vLLM 0.6.1

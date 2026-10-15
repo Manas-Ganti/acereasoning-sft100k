@@ -34,6 +34,7 @@ export HF_HOME="${HF_HOME:-/home/$USER/hf_cache}" PYTHONNOUSERSITE=1
 # 2-GPU tensor parallel: fork after eval.py's set_seed() initialised CUDA crashes the worker (env/vllm_spawn_hook.sh)
 export VLLM_WORKER_MULTIPROC_METHOD=spawn
 [ -f "$CONDA_ENV/etc/conda/activate.d/vllm_spawn.sh" ] || echo "WARNING: run env/vllm_spawn_hook.sh (2-GPU evals crash without it)"
+[ -f "$CONDA_ENV/etc/conda/activate.d/vllm_swap.sh" ] || echo "WARNING: run env/vllm_swap_hook.sh (long evals abort on CPU swap without it)"
 mkdir -p "$OUTPUT_DIR"
 
 hours_h200() {  # post-SFT models write 5-15K-token traces x 8 samples; base model is far faster
