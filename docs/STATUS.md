@@ -123,8 +123,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa) | 2026-10-15 | pending, start N/A | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | tokenizer fixed; aime est. Oct 15 21:54, others Oct 19 03:25 or N/A | [run note](runs/random_s2.md) |
-| 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | queued; ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
-| 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | after training | [run note](runs/full_method_s1.md) |
+| 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
+| 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 
 ## Next actions
 
@@ -155,6 +155,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-15**: `full_method_s1` training 7958393 est. start Oct 15 18:29 (tc-gpu003). Its 9 eval/dev jobs are held
+  (`scontrol hold`) so they can't start before the tokenizer fix (the job predates `64219e1`). Training job untouched.
 
 - **2026-10-15**: New `scripts/smoke_eval.py <run>`: a ~10-min check that a trained model works in evalenv exactly as
   eval.py uses it (tokenizer + chat template with the eval system prompt, vLLM load with tensor parallel = visible GPUs,
