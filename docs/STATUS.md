@@ -70,10 +70,11 @@ queued (7934179–87).
 > not required. A one-sided gate is proposed but not adopted yet. Details: [Step 2](steps/02-base-eval.md#results).
 
 **Resume here (updated 2026-10-15 by Mrunmay + Claude):**
-0. **Mrunmay, when back (2026-10-15):** Manas can't read your home directory, so the eval smoke test on `random_s2` is
-   yours. In a 2-GPU interactive session: `~/.conda/envs/evalenv/bin/python scripts/smoke_eval.py random_s2` (command in
-   the change log). If a random_s2 eval already started, check that its log ends with `Acc:` / `Pass@1:` instead of
-   finishing in minutes. Manas smoke-tests `full_method_s1` after it trains (its evals 7958394–402 are on hold until then).
+0. ✅ **Smoke test `random_s2` PASSED (Mrunmay, 2026-10-15 14:09, 2× A100 interactive, tc-gpu003)**, with the tokenizer +
+   chat-template fix and the vLLM spawn hook: vLLM loaded with TP=2 in 57 s; 4/4 samples `finish=stop` (368–1901
+   tokens) and 4/4 have `boxed{}`. **Manas:** for `full_method_s1`, run `bash env/vllm_spawn_hook.sh` (once per
+   account) + the tokenizer fix + the smoke test, then `scontrol release` its evals. Mrunmay is now running random_s1
+   aime/amc/cn_math in the interactive session (`LOCAL=1`) and will `scancel` the batch copies 7999722/24/26 as each finishes.
 1. **Manas (`full_method_s1`):** check whether 7958393 trained. If it has, run the tokenizer fix *now*. If its evals
    (7958394–401) already "completed", check how long they ran; if they ran under a few minutes, set the outputs aside and
    resubmit (see the warning above). Push what you find here.
@@ -161,6 +162,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-15**: Smoke test `random_s2` PASS on 2× A100 (TP=2, spawn hook): loads in 57 s; 4/4 samples stop with a
+  `\boxed{}` answer. The 2-GPU fork crash (`Cannot re-initialize CUDA in forked subprocess`) is fixed by
+  `env/vllm_spawn_hook.sh` (run once per account). random_s1 short benchmarks are running interactively.
 
 - **2026-10-15**: `smoke_eval.py` gains login-node file checks (`--static-only`, no GPU, seconds): config.json fields
   vs base, `torch_dtype` = bfloat16 (vLLM 0.6.1 would otherwise fall back to fp16), generation_config eos incl. 151645,
