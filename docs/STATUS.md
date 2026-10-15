@@ -23,10 +23,12 @@ tags: [status]
 > **COMPLETED**, because `eval_single.sh` pipes through `tee`. **An eval that "finished" in under a few minutes has
 > crashed.** For any trained model, as soon as its `DONE` marker exists and before its evals start:
 > ```bash
-> git pull && ~/.conda/envs/evalenv/bin/python scripts/fix_tokenizer_for_eval.py <run>   # must print "loads now: True"
+> git pull && ~/.conda/envs/evalenv/bin/python scripts/fix_tokenizer_for_eval.py <run>   # must end with "-- ok" or "loads now: True"
 > ```
 > If its evals already ran: `mv eval/outputs/<run> eval/outputs/<run>_crashed_tokenizer && launch/eval_model.sh <run>`.
-> Only jobs submitted after commit `64219e1` run the fix automatically. `full_method_s1` (7958393) and any `longest_s1`
+> **Re-run it after pulling `ed20bc5`, even if you ran it before:** it now also copies `chat_template.jinja` into
+> `tokenizer_config.json` (4.44.2 ignores the .jinja file, so eval's `apply_chat_template` would fail). Both random
+> models needed this (2026-10-15). Only jobs submitted after commit `64219e1` run the fix automatically. `full_method_s1` (7958393) and any `longest_s1`
 > job submitted before it **need it run by hand**. Details: [decision log](reference/decision-log.md), 2026-10-15.
 
 > [!WARNING]
@@ -149,6 +151,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-15**: Second eval blocker found before it hit: myenv saves the chat template only to `chat_template.jinja`,
+  which eval's transformers 4.44.2 ignores. `fix_tokenizer_for_eval.py` (ed20bc5) copies it into
+  `tokenizer_config.json`; applied to random_s1 and random_s2 (both "ok"). Training curves healthy (s1 loss 0.99 → 0.56).
 
 - **2026-10-15**: Team alert added at the top of Now: run the tokenizer fix on every trained model before its evals start;
   evals "COMPLETED" in under a few minutes have crashed. A100 eval queue estimates reach Oct 19; check H200 with
