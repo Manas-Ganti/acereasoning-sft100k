@@ -3,7 +3,7 @@ run: random_s2
 step: 3
 status: trained (evals pending)
 train_job: 7934178 (account tml_2026, user mrunmayp)
-eval_jobs: 7934179–7934186 (8 × 2 A100, afterok on 7934178)
+eval_jobs: 7934180/84/85/86 (math, minerva, olympiadbench, gpqa); 8004201–04 (aime, amc, cn_math_2024, kaoyan, resubmitted 2026-10-15)
 dev_job: 7934187 (afterok on 7934178)
 gpu: a100 x8
 started: 2026-10-14T07:37

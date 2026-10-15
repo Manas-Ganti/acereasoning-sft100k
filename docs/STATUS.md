@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024 | math, kaoyan, minerva, olympiadbench, gpqa (batch 7999723/25/27/28/29, queued) |
-> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan crashed (fork, swap) and need a rerun; math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
+> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan resubmitted after crashing (8004201–04); math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
 > | full_method_s1 | none | all 8 (Manas) |
 
 > [!NOTE]
@@ -82,7 +82,7 @@ queued (7934179–87).
 2. **`longest_s1`:** see its [run note](runs/longest_s1.md). Jobs submitted before `64219e1` don't run the tokenizer fix
    automatically.
 3. **Step 3 (Mrunmay):** random_s1 evals 7999723/25/27/28/29 and random_s2 evals 7934180/84/85/86 are queued (with
-   both hooks). random_s2 aime/amc/cn_math/kaoyan need a rerun; interactive request 8003894 is waiting (est. Oct 18).
+   both hooks). random_s2 aime/amc/cn_math/kaoyan resubmitted as 8004201–04; interactive request 8003894 is also waiting (est. Oct 18).
    Dev evals 7934177 / 7934187 are lowered in priority (`nice=500`).
 4. **Ablations are not trained** (decision log 2026-10-12: focus on required parts). Only if GPUs free up late: submit **`filter_only_s1`** (the high-value ablation: "is the gain just
    from dropping code + cleaning?"). On your account:
@@ -129,6 +129,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa) | 2026-10-15 | pending, start N/A | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | tokenizer fixed; aime est. Oct 15 21:54, others Oct 19 03:25 or N/A | [run note](runs/random_s2.md) |
+| 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | queued |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 
