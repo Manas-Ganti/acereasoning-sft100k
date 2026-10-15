@@ -16,6 +16,25 @@ tags: [status]
 
 ## Now
 
+> [!IMPORTANT]
+> **GPU time vs the Oct 20 deadline. Team decision needed today (Mrunmay, 2026-10-15 17:30).** All eval blockers are
+> fixed (tokenizer + chat template, spawn, swap), and random_s1 has real scores on 3/8 benchmarks. But the Tinkercliffs
+> A100 queue is full. `sbatch --test-only` for *any* new A100 shape (1 or 2 GPUs, 1.5–8 h, short or interactive QOS)
+> gives **Oct 24**. Mrunmay's waiting interactive request 8003894 (2 GPUs, 4 h) is estimated for Oct 18 15:49. Eval
+> progress:
+>
+> | model | test benchmarks with scores | still to run |
+> |---|---|---|
+> | random_s1 | aime, amc, cn_math_2024 | math, kaoyan, minerva, olympiadbench, gpqa (batch 7999723/25/27/28/29, queued) |
+> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan crashed (fork, swap) and need resubmitting; math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
+> | full_method_s1 | none | all 8 (Manas) |
+>
+> **Proposed (Manas to confirm):** (1) keep every queued job; resubmitting only moves to the back of the queue.
+> (2) Whoever has the best fair-share (`sshare -A tml_2026 -u $USER`; Mrunmay used a lot of GPU on 2026-10-15) runs
+> interactive evals; Mrunmay can grant read access to the random models. (3) **Fix the benchmark priority order now,
+> before seeing more results:** the same benchmarks for random_s1, random_s2 and full_method_s1 first (the LB6 ones:
+> cn_math, kaoyan, amc, minerva, olympiadbench, gpqa). Anything not run by Oct 19 is reported as a limitation.
+
 > [!CAUTION]
 > **Everyone, run this once on your ARC account now (2026-10-15):**
 > `git pull && bash env/vllm_spawn_hook.sh && bash env/vllm_swap_hook.sh`. The swap hook fixes long evals aborting
@@ -165,6 +184,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-15 17:30**: A100 queue full: every new A100 shape is estimated for Oct 24; interactive 8003894 for Oct 18.
+  Team decision requested at the top of Now (keep queued jobs, best-fair-share teammate runs interactive evals,
+  benchmark priority fixed before results). random_s2: 0/8 benchmarks scored.
 
 - **2026-10-15**: Manas's account: vLLM spawn + swap hooks installed in evalenv (swap default 24 GiB/GPU);
   `check_envs.sh` ALL CHECKS PASSED. `full_method_s1` evals (held) will start with both hooks.
