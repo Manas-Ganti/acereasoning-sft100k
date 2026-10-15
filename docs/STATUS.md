@@ -166,6 +166,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-15**: Manas's account: vLLM spawn + swap hooks installed in evalenv (swap default 24 GiB/GPU);
+  `check_envs.sh` ALL CHECKS PASSED. `full_method_s1` evals (held) will start with both hooks.
+
 - **2026-10-15**: random_s2 batch evals aime/amc/cn_math (started 12:17–13:51, before the spawn hook) died with
   `DistStoreError ... 1/2 clients joined` (forked worker crash); kaoyan (14:18, after the spawn hook) died on CPU swap.
   random_s1 gpqa (interactive) also died on swap at 94/198. Swap hook installed 16:38 on mrunmayp (`env/vllm_swap_hook.sh`).
