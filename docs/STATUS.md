@@ -72,7 +72,7 @@ queued (7934179–87).
 **Resume here (updated 2026-10-15 by Mrunmay + Claude):**
 0. ✅ **Smoke test `random_s2` PASSED (Mrunmay, 2026-10-15 14:09, 2× A100 interactive, tc-gpu003)**, with the tokenizer +
    chat-template fix and the vLLM spawn hook: vLLM loaded with TP=2 in 57 s; 4/4 samples `finish=stop` (368–1901
-   tokens) and 4/4 have `boxed{}`. **Manas:** for `full_method_s1`, run `bash env/vllm_spawn_hook.sh` (once per
+   tokens) and 4/4 have `\boxed{}`. **Manas:** for `full_method_s1`, run `bash env/vllm_spawn_hook.sh` (once per
    account) + the tokenizer fix + the smoke test, then `scontrol release` its evals. Mrunmay is now running random_s1
    aime/amc/cn_math in the interactive session (`LOCAL=1`) and will `scancel` the batch copies 7999722/24/26 as each finishes.
 1. **Manas (`full_method_s1`):** check whether 7958393 trained. If it has, run the tokenizer fix *now*. If its evals
