@@ -24,7 +24,9 @@ evalenv (transformers 4.44.2, pinned for vllm 0.6.1) can't read it. SFT doesn't 
 `scripts/fix_tokenizer_for_eval.py` compares the trained file with the base model's field by field: vocab, merges,
 added tokens, normalizer, pre-tokenizer, decoder and post-processor. Only if they're identical does it swap in the
 base file, keeping the original as `tokenizer.json.trained`. `tokenizer_config.json` (the chat template) stays as
-trained. `eval/` is untouched, and the text-to-token mapping is the same. `slurm/train.slurm` now runs the fix
+trained, except that if it has no `chat_template` (newer transformers writes it to `chat_template.jinja`, which 4.44.2
+ignores, so `eval.py`'s `apply_chat_template` would fail), the trained model's own `chat_template.jinja` is copied in
+unchanged. `eval/` is untouched, and the text-to-token mapping is the same. `slurm/train.slurm` now runs the fix
 before its job exits. Jobs submitted earlier ran an older copy of the script, so their models need the fix run by
 hand. *Decided by: Mrunmay.*
 
