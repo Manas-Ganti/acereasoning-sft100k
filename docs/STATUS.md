@@ -84,9 +84,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | ✅ done | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | ✅ done | `analysis/clusters_spotcheck.md` |
 | 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 13, 7 h 44 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
-| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ⚠️ 8 evals "COMPLETED" in 19–66 s each = likely crashed; dev 7934177 pending | [run note](runs/random_s1.md) |
+| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ❌ 8 evals crashed (tokenizer; outputs in `eval/outputs/random_s1_crashed_tokenizer/`); dev 7934177 pending, est. Oct 19 |
+| 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa) | 2026-10-15 | pending, start N/A | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
-| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | pending (est. Oct 15 – Oct 19+) | [run note](runs/random_s2.md) |
+| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | tokenizer fixed; aime est. Oct 15 21:54, others Oct 19 03:25 or N/A | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | queued; ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | after training | [run note](runs/full_method_s1.md) |
 

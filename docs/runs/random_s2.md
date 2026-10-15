@@ -31,7 +31,7 @@ tags: [run]
 - wall time: 5 h 28 min (2026-10-14 07:37 → 13:05, tc-dgx010); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
 - final train loss:
 - checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
-- anything unusual:
+- anything unusual: tokenizer.json swapped for the base one before its evals started (2026-10-15, fix_tokenizer_for_eval.py).
 
 ## Test results (Pass@1)
 

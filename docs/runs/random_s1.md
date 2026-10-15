@@ -3,7 +3,7 @@ run: random_s1
 step: 3
 status: trained (evals pending)
 train_job: 7934168 (account tml_2026, user mrunmayp)
-eval_jobs: 7934169–7934176 (8 × 2 A100, afterok on 7934168)
+eval_jobs: 7999722–7999729 (resubmitted 2026-10-15; first set 7934169–76 crashed on the tokenizer)
 dev_job: 7934177 (afterok on 7934168)
 gpu: a100 x8
 started: 2026-10-13T16:02
@@ -31,7 +31,7 @@ tags: [run]
 - wall time: 7 h 44 min (2026-10-13 16:02 → 23:46, tc-gpu003); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
 - final train loss:
 - checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
-- anything unusual: all 8 test evals (7934169–76) ended COMPLETED in 19–66 s each, far too fast: almost certainly crashed (eval_single.sh pipes through `tee`, so SLURM sees exit 0). Logs being checked 2026-10-15.
+- anything unusual: all 8 test evals (7934169–76) crashed at tokenizer load ("untagged enum ModelWrapper"; SLURM showed COMPLETED because of `tee`). Fixed 2026-10-15 with `scripts/fix_tokenizer_for_eval.py`; evals resubmitted as 7999722–29.
 
 ## Test results (Pass@1)
 
