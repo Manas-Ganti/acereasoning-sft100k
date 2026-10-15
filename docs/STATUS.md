@@ -120,6 +120,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-15**: Eval crash diagnosed: myenv saves a `tokenizer.json` that evalenv (transformers 4.44.2) cannot parse
+  ("untagged enum ModelWrapper"). **Affects every trained model** (random_s1/s2, full_method_s1, longest_s1). Fix:
+  `~/.conda/envs/evalenv/bin/python scripts/fix_tokenizer_for_eval.py <run>` on each trained model before its evals
+  start (decision log). `train.slurm` now does it automatically for newly submitted jobs only.
+
 - **2026-10-15**: `random_s1` trained (7 h 44 min) and `random_s2` trained (5 h 28 min), both 8× A100-80GB, 5.8 GB each.
   **All 8 `random_s1` test evals ended "COMPLETED" in 19–66 s: almost certainly crashed** (`tee` hides the exit code).
   Logs being checked before anything is resubmitted; the same failure may hit `random_s2` and `full_method_s1` evals.

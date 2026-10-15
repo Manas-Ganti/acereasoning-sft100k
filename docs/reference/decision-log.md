@@ -17,6 +17,19 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-15: Trained models get the base model's tokenizer.json for eval
+All 8 `random_s1` evals crashed at load: `Exception: data did not match any variant of untagged enum ModelWrapper`.
+myenv (transformers 4.55) saves `tokenizer.json` in the newer `tokenizers` format, with merges as [a, b] pairs.
+evalenv (transformers 4.44.2, pinned for vllm 0.6.1) can't read it. SFT doesn't change the tokenizer, so
+`scripts/fix_tokenizer_for_eval.py` compares the trained file with the base model's field by field: vocab, merges,
+added tokens, normalizer, pre-tokenizer, decoder and post-processor. Only if they're identical does it swap in the
+base file, keeping the original as `tokenizer.json.trained`. `tokenizer_config.json` (the chat template) stays as
+trained. `eval/` is untouched, and the text-to-token mapping is the same. `slurm/train.slurm` now runs the fix
+before its job exits. Jobs submitted earlier ran an older copy of the script, so their models need the fix run by
+hand. *Decided by: Mrunmay.*
+
+---
+
 ### 2026-10-13: A second smart method, `longest_s1`, is trained; the smart model is chosen on the dev set
 Manas approved trying another smart selection, which reverses part of the 2026-10-12 "required runs only" entry.
 The new method (`scripts/select_longest.py`; no existing script changed) keeps `full_method`'s quality filter and

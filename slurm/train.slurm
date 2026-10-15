@@ -34,3 +34,7 @@ echo "$NGPU x $(nvidia-smi --query-gpu=name --format=csv,noheader | head -1)" > 
 rm -rf "$OUT"/checkpoint-*      # optimizer-state checkpoints; the final model is kept
 date > "$OUT/DONE"
 echo "[train] $RUN done -> LLaMA-Factory/$OUT"
+# myenv's tokenizers writes a tokenizer.json that evalenv (transformers 4.44.2) cannot parse; swap in the
+# base model's identical one before the chained evals start (scripts/fix_tokenizer_for_eval.py, 2026-10-15).
+"$HOME/.conda/envs/evalenv/bin/python" "$REPO/scripts/fix_tokenizer_for_eval.py" "$RUN" \
+    || echo "[train] WARNING: tokenizer fix failed -- evals will crash; run scripts/fix_tokenizer_for_eval.py $RUN"
