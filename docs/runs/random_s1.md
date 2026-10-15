@@ -37,7 +37,10 @@ tags: [run]
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |
 |---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
+| 0.0625 | | 0.0917 | | 0.3719 | | | | | |
+
+Acc (pass@8) so far: aime 0.2333, cn_math_2024 0.3333, amc 0.6750. aime, amc and cn_math_2024 ran 2026-10-15 in a 2× A100
+interactive session (job 8000314, tc-gpu003, `LOCAL=1`); their batch copies were cancelled.
 
 ## Dev results
 
