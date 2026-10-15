@@ -152,6 +152,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-15**: New `scripts/smoke_eval.py <run>`: a ~10-min check that a trained model works in evalenv exactly as
+  eval.py uses it (tokenizer + chat template with the eval system prompt, vLLM load with tensor parallel = visible GPUs,
+  generation stops at EOS, answers contain `\boxed{}`). No trained model has completed an eval yet, so run it once on
+  `random_s2` (already trained + fixed) in a 2-GPU interactive session before the real evals start.
+
 - **2026-10-15**: Second eval blocker found before it hit: myenv saves the chat template only to `chat_template.jinja`,
   which eval's transformers 4.44.2 ignores. `fix_tokenizer_for_eval.py` (ed20bc5) copies it into
   `tokenizer_config.json`; applied to random_s1 and random_s2 (both "ok"). Training curves healthy (s1 loss 0.99 → 0.56).
