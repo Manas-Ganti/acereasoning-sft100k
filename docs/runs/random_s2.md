@@ -1,13 +1,13 @@
 ---
 run: random_s2
 step: 3
-status: queued
+status: trained (evals pending)
 train_job: 7934178 (account tml_2026, user mrunmayp)
 eval_jobs: 7934179–7934186 (8 × 2 A100, afterok on 7934178)
 dev_job: 7934187 (afterok on 7934178)
 gpu: a100 x8
-started:
-finished:
+started: 2026-10-14T07:37
+finished: 2026-10-14T13:05 (training)
 wandb:
 hf_model:
 tags: [run]
@@ -28,9 +28,9 @@ tags: [run]
 > teammate's copy finishes training first, `scancel` all of these ([decision log](../reference/decision-log.md)).
 
 ## Training
-- wall time:
+- wall time: 5 h 28 min (2026-10-14 07:37 → 13:05, tc-dgx010); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
 - final train loss:
-- checkpoint size (`du -sh`):
+- checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
 - anything unusual:
 
 ## Test results (Pass@1)

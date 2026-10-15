@@ -83,10 +83,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927684_[0-15] | Step 4 score-gen, k=4, 16 × 1 A100 | 2026-10-09 | ✅ done (~20.5 A100 GPU-h) | `work/scores/gen/` |
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | ✅ done | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | ✅ done | `analysis/clusters_spotcheck.md` |
-| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | still pending Oct 13 (est. Oct 12 22:23 passed); ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
-| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | after training | [run note](runs/random_s1.md) |
-| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | still pending Oct 13 (est. Oct 13 02:51 passed); ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
-| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | after training | [run note](runs/random_s2.md) |
+| 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 13, 7 h 44 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
+| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ⚠️ 8 evals "COMPLETED" in 19–66 s each = likely crashed; dev 7934177 pending | [run note](runs/random_s1.md) |
+| 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
+| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | pending (est. Oct 15 – Oct 19+) | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | queued; ≤23 h once started | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | after training | [run note](runs/full_method_s1.md) |
 
@@ -119,6 +119,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-15**: `random_s1` trained (7 h 44 min) and `random_s2` trained (5 h 28 min), both 8× A100-80GB, 5.8 GB each.
+  **All 8 `random_s1` test evals ended "COMPLETED" in 19–66 s: almost certainly crashed** (`tee` hides the exit code).
+  Logs being checked before anything is resubmitted; the same failure may hit `random_s2` and `full_method_s1` evals.
 
 - **2026-10-13**: Second smart method approved by Manas: `longest_s1` = `full_method`'s quality filter + R1-majority rule,
   then the 15,000 longest traces (`scripts/select_longest.py`, new; existing scripts unchanged; logic checked on

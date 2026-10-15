@@ -12,8 +12,8 @@ Obsidian, use *Insert template*; anywhere else, copy the file. Add a row below w
 
 | Run | Step | Status | avg(LB6) | Note |
 |---|---|---|---|---|
-| random_s1 | 3 | queued (7934168) | | [random_s1](random_s1.md) |
-| random_s2 | 3 | queued (7934178) | | [random_s2](random_s2.md) |
+| random_s1 | 3 | trained; evals crashed? (checking) | | [random_s1](random_s1.md) |
+| random_s2 | 3 | trained; evals queued | | [random_s2](random_s2.md) |
 | filter_only_s1 | 6 | built, not trained (decision 2026-10-12) | | |
 | filter_difficulty_s1 | 6 | built, not trained (decision 2026-10-12) | | |
 | full_method_s1 | 6 | queued (7958393) | | [full_method_s1](full_method_s1.md) |

@@ -1,13 +1,13 @@
 ---
 run: random_s1
 step: 3
-status: queued
+status: trained (evals pending)
 train_job: 7934168 (account tml_2026, user mrunmayp)
 eval_jobs: 7934169–7934176 (8 × 2 A100, afterok on 7934168)
 dev_job: 7934177 (afterok on 7934168)
 gpu: a100 x8
-started:
-finished:
+started: 2026-10-13T16:02
+finished: 2026-10-13T23:46 (training)
 wandb:
 hf_model:
 tags: [run]
@@ -28,10 +28,10 @@ tags: [run]
 > teammate's copy finishes training first, `scancel` all of these ([decision log](../reference/decision-log.md)).
 
 ## Training
-- wall time:
+- wall time: 7 h 44 min (2026-10-13 16:02 → 23:46, tc-gpu003); hardware.txt: 8 x NVIDIA A100-SXM4-80GB
 - final train loss:
-- checkpoint size (`du -sh`):
-- anything unusual:
+- checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
+- anything unusual: all 8 test evals (7934169–76) ended COMPLETED in 19–66 s each, far too fast: almost certainly crashed (eval_single.sh pipes through `tee`, so SLURM sees exit 0). Logs being checked 2026-10-15.
 
 ## Test results (Pass@1)
 
