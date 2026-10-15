@@ -156,6 +156,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-15**: `smoke_eval.py` gains login-node file checks (`--static-only`, no GPU, seconds): config.json fields
+  vs base, `torch_dtype` = bfloat16 (vLLM 0.6.1 would otherwise fall back to fp16), generation_config eos incl. 151645,
+  tokenizer eos `<|im_end|>`, chat template present. Tested against the base model's files (passes). Tip from another
+  agent: on ARC, `ib0` has no IPv4 on A100 nodes too. If a 2-GPU smoke test dies in NCCL init, resubmit evals with
+  `NCCL_SOCKET_IFNAME=eth0` exported.
+
 - **2026-10-15**: `full_method_s1` training 7958393 est. start Oct 15 18:29 (tc-gpu003). Its 9 eval/dev jobs are held
   (`scontrol hold`) so they can't start before the tokenizer fix (the job predates `64219e1`). Training job untouched.
 
