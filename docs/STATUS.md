@@ -16,6 +16,12 @@ tags: [status]
 
 ## Now
 
+> [!CAUTION]
+> **Everyone, run this once on your ARC account now (2026-10-15):** `git pull && bash env/vllm_spawn_hook.sh`.
+> Without it, **every 2-GPU eval crashes** (`Cannot re-initialize CUDA in forked subprocess`), including jobs
+> already queued. The hook goes into your evalenv and covers queued jobs, so no resubmitting is needed. Details:
+> [decision log](reference/decision-log.md), 2026-10-15. `env/check_envs.sh` now checks for it.
+
 > [!WARNING]
 > **For every teammate and agent (2026-10-15): trained-model evals crash unless you run the tokenizer fix first.**
 > myenv saves a `tokenizer.json` that evalenv (transformers 4.44.2) can't parse

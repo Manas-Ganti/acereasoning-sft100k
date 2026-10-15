@@ -17,6 +17,19 @@ something; don't silently change behaviour.** Format: what was decided, why, and
 
 ---
 
+### 2026-10-15: vLLM workers use "spawn" in evalenv (2-GPU evals crashed)
+The first 2-GPU trained-model eval died with `RuntimeError: Cannot re-initialize CUDA in forked subprocess`.
+`eval.py` calls `set_seed()`, which initialises CUDA, before it creates `vllm.LLM`. With tensor parallel 2, vLLM 0.6.1
+forks a worker, and the fork can't use CUDA. 1-GPU evals have no worker, so the base evals never hit this. The
+2026-10-10 "2 GPUs for trained models" setting had never actually run: the 2× A100 OlympiadBench copy lost its race
+to H200. Fix: `VLLM_WORKER_MULTIPROC_METHOD=spawn`, installed as a conda activate hook in evalenv
+(`env/vllm_spawn_hook.sh`). `eval_single.sh` runs `source activate`, so the hook also covers eval jobs **already
+queued**. `eval_model.sh` exports it too. `eval.py` keeps its main code under `if __name__ == "__main__"`, so spawn
+is safe. This only changes how processes start: sampling and grading are untouched, and `eval/` is unchanged.
+*Decided by: Mrunmay.*
+
+---
+
 ### 2026-10-15: Trained models get the base model's tokenizer.json for eval
 All 8 `random_s1` evals crashed at load: `Exception: data did not match any variant of untagged enum ModelWrapper`.
 myenv (transformers 4.55) saves `tokenizer.json` in the newer `tokenizers` format, with merges as [a, b] pairs.
