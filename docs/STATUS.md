@@ -25,7 +25,7 @@ tags: [status]
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
-> | random_s1 | aime, amc, cn_math_2024, math | kaoyan 7999725 + minerva 7999727 running (2026-10-17); olympiadbench 7999728, gpqa 7999729 queued |
+> | random_s1 | aime, amc, cn_math_2024, math, kaoyan | minerva 7999727 running (2026-10-17); olympiadbench 7999728, gpqa 7999729 queued |
 > | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa resubmitted 2026-10-17 as 8039875/76/77 (first copies 7934180/85/86 crashed on the vLLM scheduler assert) |
 > | full_method_s1 | none | all 8 (Manas) |
 
@@ -169,6 +169,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - **2026-10-17**: Manas's account: vLLM preempt hook installed (`preemption_mode = swap`); `check_envs.sh` ALL CHECKS PASSED
   with all three hooks (spawn, swap, preempt). `full_method_s1` evals (held) will start with all three.
 
+- **2026-10-17 (Mrunmay)**: random_s1 kaoyan done (7999725, 1 h 58 min): Pass@1 0.2563, Acc 0.6382 (base 0.220 / 0.528).
 - **2026-10-17 (Mrunmay)**: random_s1 math done (Pass@1 0.6492, Acc 0.8640; base 0.646 / 0.854). random_s2 minerva
   done (Pass@1 0.2767, Acc 0.4522; base 0.303 / 0.489). random_s2 math/olympiadbench/gpqa (7934180/85/86) show
   COMPLETED after 1.3–2 h with no `Acc:` line: vLLM 0.6.1 scheduler `assert len(seqs) == 1` (preemption by recompute
