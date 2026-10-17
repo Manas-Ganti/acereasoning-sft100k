@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, gpqa | minerva 7999727 running; olympiadbench 7999728 queued |
-> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa | kaoyan 8004204 running; math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
+> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
 > | full_method_s1 | none | all 8 (Manas) |
 
 > [!NOTE]
@@ -169,6 +169,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - **2026-10-17**: Manas's account: vLLM preempt hook installed (`preemption_mode = swap`); `check_envs.sh` ALL CHECKS PASSED
   with all three hooks (spawn, swap, preempt). `full_method_s1` evals (held) will start with all three.
 
+- **2026-10-17 (Mrunmay)**: random_s2 kaoyan done (8004204, 2 h 26 min): Pass@1 0.2563, Acc 0.6080.
 - **2026-10-17 (Mrunmay)**: random_s2 gpqa done (8039877, 1 h 32 min): Pass@1 0.2689, Acc 0.7677. Eval logs of finished benchmarks pushed (567ebdd).
 - **2026-10-17 (Mrunmay)**: random_s1 gpqa done (7999729, 1 h 48 min): Pass@1 0.2645, Acc 0.7626 (base 0.289 / 0.707).
 - **2026-10-17 (Mrunmay)**: random_s2 cn_math_2024 done (8004203): Pass@1 0.1333, Acc 0.3667.
