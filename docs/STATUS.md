@@ -2,8 +2,8 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-13
-updated_by: Sahasree + Claude
+last_updated: 2026-10-17
+updated_by: Mrunmay + Claude
 tags: [status]
 ---
 
@@ -54,8 +54,8 @@ Setup is complete on ARC: both envs are built and verified, the pool and base mo
 is built. Activation inside batch jobs was verified with `launch/test_activation.sh`, which passed for both envs.
 Step 1 audit done. Step 2: all 8 base-eval benchmarks done (OlympiadBench on 1× H200, job 7921791). Steps 4 and 5 done (2026-10-12).
 **Step 3 (2026-10-15):** `random_s1` and `random_s2` are **trained** (7 h 44 min / 5 h 28 min, 8× A100-80GB) and
-tokenizer-fixed. **No eval results yet.** random_s1's evals were resubmitted (7999722–29), and random_s2's are
-queued (7934179–87).
+tokenizer-fixed. **Evals (2026-10-17): 6/8 test benchmarks done for each**; left: s1 minerva + olympiadbench,
+s2 math + olympiadbench, and both dev evals (see the progress table above and the run notes).
 
 **Base model (Qwen2.5-3B-Instruct), final 2026-10-10:**
 
@@ -127,12 +127,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927689 | Step 4 score-grade (CPU, afterok on 7927684) | 2026-10-09 | ✅ done | — |
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | ✅ done | `analysis/clusters_spotcheck.md` |
 | 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 13, 7 h 44 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
-| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ❌ 8 evals crashed (tokenizer; outputs in `eval/outputs/random_s1_crashed_tokenizer/`); dev 7934177 pending, est. Oct 19 |
-| 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa) | 2026-10-15 | pending, start N/A | [run note](runs/random_s1.md) |
+| 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ❌ 8 evals crashed (tokenizer; outputs in `eval/outputs/random_s1_crashed_tokenizer/`); dev 7934177 queued |
+| 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix | 2026-10-15 | aime/amc/cn_math via interactive 8000314 (batch copies 22/24/26 cancelled); ✅ math 23, kaoyan 25, gpqa 29; 🔄 minerva 27 (started before preempt hook); ⏳ olympiadbench 28 | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
-| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | tokenizer fixed; aime est. Oct 15 21:54, others Oct 19 03:25 or N/A | [run note](runs/random_s2.md) |
-| 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | queued |
-| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert); preempt hook installed | 2026-10-17 | queued | [run note](runs/random_s2.md) |
+| 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | ✅ minerva 84; ❌ aime 79, amc 83, cn_math 81 (fork), kaoyan 82 (swap), math 80, olympiad 85, gpqa 86 (scheduler assert), all resubmitted; ⏳ dev 87 | [run note](runs/random_s2.md) |
+| 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | ✅ all four done 2026-10-17 | [run note](runs/random_s2.md) |
+| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ⏳ math 75, olympiadbench 76 | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 
