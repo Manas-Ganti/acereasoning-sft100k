@@ -64,6 +64,8 @@ if [ "$RUN" = base ]; then EVAL_GPUS="${EVAL_GPUS:-1}"; else EVAL_GPUS="${EVAL_G
 for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa}; do
     h=$(hours_h200 "$B") || exit 1
     [ "$GPU" = a100 ] && h=$(( h * 2 > 24 ? 24 : h * 2 ))
+    # L40S/A30 have ~0.4-0.5x the A100's memory bandwidth (decode-bound): give 3x the H200 budget, 1-day QOS cap.
+    case "$GPU" in l40s|a30) h=$(( h * 3 > 24 ? 24 : h * 3 )) ;; esac
     # The base model writes ~1K-token answers: minutes per benchmark. Short limits backfill much sooner.
     [ "$RUN" = base ] && { h=1; [ "$B" = olympiadbench ] || [ "$B" = math ] && h=2; }
     # --chdir=eval: eval_single.sh does `cd $SLURM_SUBMIT_DIR`, so submit from inside eval/ (README).

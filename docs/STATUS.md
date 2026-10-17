@@ -163,6 +163,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-17**: Launchers accept `GPU=l40s|a30` (Falcon) for evals; see the decision log. Untested: validate with a
+  base AIME run on 2× L40S before trusting it.
+
 - **2026-10-15 17:30**: A100 queue full: every new A100 shape is estimated for Oct 24; interactive 8003894 for Oct 18.
   random_s2: 0/8 benchmarks scored. Top of Now rewritten as status only: eval progress table, failure/fix table,
   queue observations.

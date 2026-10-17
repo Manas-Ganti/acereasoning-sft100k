@@ -16,7 +16,14 @@ CPU_PARTITION="${CPU_PARTITION:-normal_q}"
 case "$GPU" in
     h200) PARTITION=h200_normal_q; DEFAULT_QOS=tc_h200_normal_short ;;
     a100) PARTITION=a100_normal_q; DEFAULT_QOS=tc_a100_normal_short ;;
-    *) echo "GPU must be h200 or a100" >&2; exit 2 ;;
+    # Falcon cluster (submit from falcon1/falcon2; /home is shared, so the repo, envs and models are the same).
+    # Eval only: bf16-capable GPUs. V100/T4 lack bf16 (the frozen eval can't change dtype); B200 needs newer torch/vLLM.
+    l40s) PARTITION=l40s_normal_q; DEFAULT_QOS=fal_l40s_normal_short ;;
+    a30)  PARTITION=a30_normal_q;  DEFAULT_QOS=fal_a30_normal_short ;;
+    *) echo "GPU must be h200, a100, l40s or a30" >&2; exit 2 ;;
+esac
+case "$GPU" in
+    l40s|a30) case "$(hostname)" in falcon*) ;; *) echo "GPU=$GPU is on Falcon: submit from falcon1.arc.vt.edu" >&2; exit 2 ;; esac ;;
 esac
 QOS="${QOS:-$DEFAULT_QOS}"
 mkdir -p "$REPO/logs/slurm"

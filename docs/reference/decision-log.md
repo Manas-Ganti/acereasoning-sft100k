@@ -3,6 +3,17 @@ title: Decision log
 tags: [reference, decisions]
 ---
 
+### 2026-10-17: Evals may also run on Falcon L40S (A100/H200 queues too slow)
+`launch/common.sh` accepts `GPU=l40s|a30` (Falcon partitions `l40s_normal_q` / `a30_normal_q`, QOS `fal_*_normal_short`),
+submitted from `falcon1`. `/home` is shared, so the repo, envs and trained models are the same files. Eval only:
+V100/T4 lack bf16, which the frozen eval can't switch away from, and Owl's B200 needs newer torch/vLLM than ours.
+`eval_model.sh` gives L40S/A30 jobs 3× the H200 time budget (capped at 24 h). Copies on another GPU type race the
+Tinkercliffs copy with their own `OUT_TAG`; the first copy to finish is kept, chosen before any score is seen. Sampling
+and grading are identical, but hardware numerics can differ slightly; the run notes record each benchmark's GPU.
+Validate first: a base-model AIME run on 2× L40S should land near our base Acc of 0.167. *Proposed by Claude for Manas.*
+
+---
+
 # Decision log
 
 ← [Home](../00-home.md) · [STATUS](../STATUS.md)
