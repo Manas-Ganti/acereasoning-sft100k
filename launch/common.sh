@@ -22,9 +22,12 @@ case "$GPU" in
     a30)  PARTITION=a30_normal_q;  DEFAULT_QOS=fal_a30_normal_short ;;
     *) echo "GPU must be h200, a100, l40s or a30" >&2; exit 2 ;;
 esac
-case "$GPU" in
-    l40s|a30) case "$(hostname)" in falcon*) ;; *) echo "GPU=$GPU is on Falcon: submit from falcon1.arc.vt.edu" >&2; exit 2 ;; esac ;;
-esac
+# Submitting to a Falcon partition only works from a Falcon login node (inside an allocation, LOCAL=1, it doesn't matter).
+if [ -z "${SLURM_JOB_ID:-}" ] && [ -z "${DRY_RUN:-}" ]; then
+    case "$GPU" in
+        l40s|a30) case "$(hostname)" in falcon*) ;; *) echo "GPU=$GPU is on Falcon: submit from falcon1.arc.vt.edu" >&2; exit 2 ;; esac ;;
+    esac
+fi
 QOS="${QOS:-$DEFAULT_QOS}"
 mkdir -p "$REPO/logs/slurm"
 source "$REPO/env/clean_conda.sh"
