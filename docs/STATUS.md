@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math | kaoyan 7999725 + minerva 7999727 running (2026-10-17); olympiadbench 7999728, gpqa 7999729 queued |
-> | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa (7934180/85/86) ran 1.3–2 h but logged no `Acc:` line, cause under investigation |
+> | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa (7934180/85/86) crashed after 1.3–2 h on a vLLM scheduler assert (fix: `env/vllm_preempt_hook.sh`); need resubmitting |
 > | full_method_s1 | none | all 8 (Manas) |
 
 > [!NOTE]
@@ -39,6 +39,7 @@ tags: [status]
 > | `untagged enum ModelWrapper` at tokenizer load | myenv writes a `tokenizer.json` that evalenv's transformers 4.44.2 can't parse | `scripts/fix_tokenizer_for_eval.py <run>` (also copies `chat_template.jinja` into `tokenizer_config.json` since `ed20bc5`); `train.slurm` runs it for jobs submitted after `64219e1` |
 > | `Cannot re-initialize CUDA in forked subprocess`, or `DistStoreError ... 1/2 clients joined` | 2-GPU vLLM forks a worker after `eval.py` has initialised CUDA | `env/vllm_spawn_hook.sh`, once per account (applies to queued jobs too) |
 > | `Aborted due to the lack of CPU swap space` | long traces overflow vLLM's 4 GiB/GPU swap default | `env/vllm_swap_hook.sh`, once per account (applies to queued jobs too) |
+> | `assert len(seqs) == 1` (`AssertionError` in `vllm/core/scheduler.py`) after 1–2 h | vLLM 0.6.1 bug: an n=8 group preempted by RECOMPUTE returns as a prefill holding 8 sequences | `env/vllm_preempt_hook.sh`, once per account (swap-only preemption; applies to queued jobs too) |
 >
 > Status: both hooks are installed on mrunmayp and manasganti. The tokenizer fix has been applied to random_s1 and
 > random_s2. The random_s2 smoke test (`scripts/smoke_eval.py`) passed on 2× A100 with these fixes.
@@ -165,7 +166,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 - **2026-10-17 (Mrunmay)**: random_s1 math done (Pass@1 0.6492, Acc 0.8640; base 0.646 / 0.854). random_s2 minerva
   done (Pass@1 0.2767, Acc 0.4522; base 0.303 / 0.489). random_s2 math/olympiadbench/gpqa (7934180/85/86) show
-  COMPLETED after 1.3–2 h with no `Acc:` line; cause not yet identified. Interactive 8003894 ended FAILED after
+  COMPLETED after 1.3–2 h with no `Acc:` line: vLLM 0.6.1 scheduler `assert len(seqs) == 1` (preemption by recompute
+  with n=8); `env/vllm_preempt_hook.sh` added (decision log). Interactive 8003894 ended FAILED after
   2 h 48 min. random_s1 kaoyan (7999725) and minerva (7999727) are running.
 - **2026-10-17**: Launchers accept `GPU=l40s|a30` (Falcon) for evals; see the decision log. Untested: validate with a
   base AIME run on 2× L40S before trusting it.

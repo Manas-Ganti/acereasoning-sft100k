@@ -49,6 +49,8 @@ echo "== $EVAL_ENV_NAME: eval stack + frozen grader"
     && ok "vllm spawn hook (2-GPU evals)" || bad "no vllm spawn hook: bash env/vllm_spawn_hook.sh (2-GPU evals crash without it)"
 [ -f "$(dirname "$(dirname "$EPY")")/etc/conda/activate.d/vllm_swap.sh" ] \
     && ok "vllm swap hook (long evals)" || bad "no vllm swap hook: bash env/vllm_swap_hook.sh (long evals abort on CPU swap)"
+[ -f "$(dirname "$(dirname "$EPY")")/etc/conda/activate.d/vllm_preempt.sh" ] \
+    && ok "vllm preempt hook (swap-only preemption)" || bad "no vllm preempt hook: bash env/vllm_preempt_hook.sh (long evals hit scheduler assert len(seqs) == 1)"
 "$EPY" -m pip list 2>/dev/null | grep -i -E '^(antlr4-python3-runtime|latex2sympy2|sympy) ' | sed 's/^/       /'
 
 echo "== HF token under HF_HOME=$HF_HOME (needed for GPQA)"

@@ -103,6 +103,8 @@ if [ "$WHICH" = all ] || [ "$WHICH" = eval ]; then
     bash "$REPO/env/vllm_spawn_hook.sh" "$P"
     # long trained-model traces overflow vLLM's 4 GiB/GPU CPU swap default, see env/vllm_swap_hook.sh (2026-10-15)
     bash "$REPO/env/vllm_swap_hook.sh" "$P"
+    # n=8 groups preempted by RECOMPUTE trip vLLM 0.6.1's scheduler assert, see env/vllm_preempt_hook.sh (2026-10-17)
+    bash "$REPO/env/vllm_preempt_hook.sh" "$P"
     # unpinned `datasets` can pull a pyarrow built for NumPy 2 next to vllm's numpy 1.26 (2026-10-10)
     PY="$PY" bash "$REPO/env/fix_evalenv_arrow.sh" || { echo "!! pyarrow/datasets broken in evalenv"; exit 1; }
     "$PY" -c "import transformers; assert transformers.__version__ == '4.44.2', 'transformers moved to ' + transformers.__version__"

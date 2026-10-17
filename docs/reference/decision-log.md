@@ -3,6 +3,21 @@ title: Decision log
 tags: [reference, decisions]
 ---
 
+### 2026-10-17: vLLM preempts by swap only in evalenv (scheduler assert on long evals)
+random_s2 math (7934180), olympiadbench (7934185) and gpqa (7934186), on 2× A100, ran 1 h 21 min to 2 h 03 min.
+gpqa got to 111/198 and olympiadbench to 137/675 (math not checked) before dying in `vllm/core/scheduler.py`
+`schedule()` with `assert len(seqs) == 1` / `AssertionError`. SLURM shows COMPLETED (exit 0) because of `tee`, and
+no `Acc:` line or jsonl was written. This is a vLLM 0.6.1 bug with n>1. When a group of 8 samples is down to one running
+sequence, the default policy preempts it by RECOMPUTE. The group then returns as a "prefill", and `schedule()`
+asserts one sequence, while `get_seqs()` still holds all 8. Trained models' long traces fill the KV cache, so
+preemption is common. Fix: `env/vllm_preempt_hook.sh` makes vLLM's `EngineArgs.preemption_mode` default read
+`VLLM_EVAL_PREEMPTION_MODE`, set to `swap` by an evalenv activate hook (queued `eval_single.sh` jobs pick it up through
+`source activate`). With swap-only preemption that path is never taken. Swap space is 24 GiB/GPU (2026-10-15 entry).
+This changes scheduling and memory only: sampling, prompts and grading are untouched, and `eval/` is unchanged.
+*Decided by: Mrunmay.*
+
+---
+
 ### 2026-10-17: Evals may also run on Falcon L40S (A100/H200 queues too slow)
 `launch/common.sh` accepts `GPU=l40s|a30` (Falcon partitions `l40s_normal_q` / `a30_normal_q`, QOS `fal_*_normal_short`),
 submitted from `falcon1`. `/home` is shared, so the repo, envs and trained models are the same files. Eval only:
