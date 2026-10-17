@@ -1,0 +1,109 @@
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+current stop list: None
+Random seed set as 0
+current eval model: /home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2
+use n = 8, generation epoch is: 1
+available_gpus: ['0', '1']
+  0%|          | 0/30 [00:00<?, ?it/s] 67%|██████▋   | 20/30 [00:00<00:00, 199.57it/s]100%|██████████| 30/30 [00:00<00:00, 285.49it/s]
+<|im_start|>system
+Please reason step by step, and put your final answer within \boxed{}.<|im_end|>
+<|im_start|>user
+Every morning Aya goes for a $9$-kilometer-long walk and stops at a coffee shop afterwards. When she walks at a constant speed of $s$ kilometers per hour, the walk takes her 4 hours, including $t$ minutes spent in the coffee shop. When she walks $s+2$ kilometers per hour, the walk takes her 2 hours and 24 minutes, including $t$ minutes spent in the coffee shop. Suppose Aya walks at $s+\frac{1}{2}$ kilometers per hour. Find the number of minutes the walk takes her, including the $t$ minutes spent in the coffee shop.<|im_end|>
+<|im_start|>assistant
+
+INFO 10-17 14:41:44 config.py:897] Defaulting to use mp for distributed inference
+INFO 10-17 14:41:44 llm_engine.py:232] Initializing an LLM engine (v0.6.1) with config: model='/home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2', speculative_config=None, tokenizer='/home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=2, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2, use_v2_block_manager=False, num_scheduler_steps=1, enable_prefix_caching=False, use_async_output_proc=True)
+WARNING 10-17 14:41:44 multiproc_gpu_executor.py:56] Reducing Torch parallelism from 16 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 10-17 14:41:44 custom_cache_manager.py:17] Setting Triton cache manager to: vllm.triton_utils.custom_cache_manager:CustomCacheManager
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:41:50 multiproc_worker_utils.py:215] Worker ready; awaiting tasks
+INFO 10-17 14:41:51 utils.py:977] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:41:51 utils.py:977] Found nccl from library libnccl.so.2
+INFO 10-17 14:41:51 pynccl.py:63] vLLM is using nccl==2.20.5
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:41:51 pynccl.py:63] vLLM is using nccl==2.20.5
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:41:51 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/mrunmayp/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+INFO 10-17 14:41:51 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/mrunmayp/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+INFO 10-17 14:41:51 shm_broadcast.py:235] vLLM message queue communication handle: Handle(connect_ip='127.0.0.1', local_reader_ranks=[1], buffer=<vllm.distributed.device_communicators.shm_broadcast.ShmRingBuffer object at 0x155442bd1d50>, local_subscribe_port=51119, remote_subscribe_port=None)
+INFO 10-17 14:41:51 model_runner.py:997] Starting to load model /home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2...
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:41:51 model_runner.py:997] Starting to load model /home/mrunmayp/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/random_s2...
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:09<00:09,  9.54s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:11<00:00,  5.23s/it]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:11<00:00,  5.88s/it]
+
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:42:03 model_runner.py:1008] Loading model weights took 2.9347 GB
+INFO 10-17 14:42:03 model_runner.py:1008] Loading model weights took 2.9347 GB
+INFO 10-17 14:42:04 distributed_gpu_executor.py:57] # GPU blocks: 252660, # CPU blocks: 87381
+INFO 10-17 14:42:30 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 10-17 14:42:30 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:42:31 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:42:31 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:42:53 custom_all_reduce.py:223] Registering 2555 cuda graph addresses
+INFO 10-17 14:42:53 custom_all_reduce.py:223] Registering 2555 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=695161)[0;0m INFO 10-17 14:42:53 model_runner.py:1428] Graph capturing finished in 22 secs.
+INFO 10-17 14:42:53 model_runner.py:1428] Graph capturing finished in 22 secs.
+Processed prompts:   0%|          | 0/30 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   3%|▎         | 1/30 [00:47<23:11, 48.00s/it, est. speed input: 3.17 toks/s, output: 170.34 toks/s]Processed prompts:   7%|▋         | 2/30 [01:10<15:22, 32.94s/it, est. speed input: 3.42 toks/s, output: 277.80 toks/s]Processed prompts:  10%|█         | 3/30 [01:17<09:36, 21.33s/it, est. speed input: 4.65 toks/s, output: 400.00 toks/s]Processed prompts:  13%|█▎        | 4/30 [01:46<10:29, 24.22s/it, est. speed input: 4.42 toks/s, output: 451.01 toks/s]Processed prompts:  17%|█▋        | 5/30 [01:57<08:07, 19.52s/it, est. speed input: 4.70 toks/s, output: 491.48 toks/s]Processed prompts:  20%|██        | 6/30 [02:50<12:18, 30.78s/it, est. speed input: 3.69 toks/s, output: 433.53 toks/s]Processed prompts:  23%|██▎       | 7/30 [27:41<3:14:50, 508.26s/it, est. speed input: 0.63 toks/s, output: 80.40 toks/s]Processed prompts:  27%|██▋       | 8/30 [27:56<2:08:43, 351.08s/it, est. speed input: 0.76 toks/s, output: 217.35 toks/s]Processed prompts:  30%|███       | 9/30 [27:57<1:24:36, 241.75s/it, est. speed input: 0.88 toks/s, output: 259.09 toks/s]Processed prompts:  33%|███▎      | 10/30 [27:59<55:53, 167.68s/it, est. speed input: 0.99 toks/s, output: 304.61 toks/s] Processed prompts:  37%|███▋      | 11/30 [27:59<36:52, 116.46s/it, est. speed input: 1.09 toks/s, output: 344.76 toks/s]Processed prompts:  40%|████      | 12/30 [28:00<24:20, 81.11s/it, est. speed input: 1.19 toks/s, output: 372.89 toks/s] Processed prompts:  43%|████▎     | 13/30 [28:00<16:02, 56.61s/it, est. speed input: 1.29 toks/s, output: 459.86 toks/s]Processed prompts:  47%|████▋     | 14/30 [28:00<10:34, 39.63s/it, est. speed input: 1.39 toks/s, output: 488.00 toks/s]Processed prompts:  50%|█████     | 15/30 [28:01<06:59, 27.98s/it, est. speed input: 1.47 toks/s, output: 539.11 toks/s]Processed prompts:  53%|█████▎    | 16/30 [28:01<04:35, 19.65s/it, est. speed input: 1.55 toks/s, output: 567.73 toks/s]Processed prompts:  57%|█████▋    | 17/30 [28:02<02:59, 13.82s/it, est. speed input: 1.63 toks/s, output: 646.67 toks/s]Processed prompts:  60%|██████    | 18/30 [28:02<01:56,  9.70s/it, est. speed input: 1.70 toks/s, output: 674.58 toks/s]Processed prompts:  63%|██████▎   | 19/30 [28:02<01:15,  6.82s/it, est. speed input: 1.78 toks/s, output: 704.26 toks/s]Processed prompts:  67%|██████▋   | 20/30 [28:02<00:48,  4.89s/it, est. speed input: 1.84 toks/s, output: 731.69 toks/s]Processed prompts:  70%|███████   | 21/30 [28:02<00:31,  3.46s/it, est. speed input: 1.91 toks/s, output: 760.55 toks/s]Processed prompts:  73%|███████▎  | 22/30 [28:03<00:20,  2.50s/it, est. speed input: 1.97 toks/s, output: 811.50 toks/s]Processed prompts:  83%|████████▎ | 25/30 [28:03<00:05,  1.15s/it, est. speed input: 2.15 toks/s, output: 921.57 toks/s]Processed prompts:  87%|████████▋ | 26/30 [28:03<00:03,  1.06it/s, est. speed input: 2.21 toks/s, output: 1007.47 toks/s]Processed prompts:  90%|█████████ | 27/30 [28:03<00:02,  1.31it/s, est. speed input: 2.26 toks/s, output: 1033.84 toks/s]Processed prompts:  97%|█████████▋| 29/30 [28:04<00:00,  1.96it/s, est. speed input: 2.36 toks/s, output: 1125.11 toks/s]Processed prompts: 100%|██████████| 30/30 [28:04<00:00, 56.14s/it, est. speed input: 2.41 toks/s, output: 1155.31 toks/s]
+llm generate done
+30
+check correct...:   0%|          | 0/30 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:   7%|▋         | 2/30 [00:00<00:08,  3.39it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  27%|██▋       | 8/30 [00:03<00:09,  2.36it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  43%|████▎     | 13/30 [00:04<00:04,  3.52it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  63%|██████▎   | 19/30 [00:04<00:01,  5.54it/s]check correct...: 100%|██████████| 30/30 [00:04<00:00,  6.77it/s]
+writing generation to jsonl file...:   0%|          | 0/30 [00:00<?, ?it/s]writing generation to jsonl file...: 100%|██████████| 30/30 [00:00<00:00, 822.81it/s]
+correct cnt / total cnt: 7/30
+Acc: 0.2333
+Pass@1: 2.375/30 = 0.0792
+ERROR 10-17 15:11:08 multiproc_worker_utils.py:120] Worker VllmWorkerProcess pid 695161 died, exit code: -15
+INFO 10-17 15:11:08 multiproc_worker_utils.py:123] Killing local vLLM worker processes
+[rank0]:[W1017 15:11:12.527743581 CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/mrunmayp/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/mrunmayp/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
