@@ -41,7 +41,8 @@ tags: [status]
 > | `Aborted due to the lack of CPU swap space` | long traces overflow vLLM's 4 GiB/GPU swap default | `env/vllm_swap_hook.sh`, once per account (applies to queued jobs too) |
 > | `assert len(seqs) == 1` (`AssertionError` in `vllm/core/scheduler.py`) after 1–2 h | vLLM 0.6.1 bug: an n=8 group preempted by RECOMPUTE returns as a prefill holding 8 sequences | `env/vllm_preempt_hook.sh`, once per account (swap-only preemption; applies to queued jobs too) |
 >
-> Status: both hooks are installed on mrunmayp and manasganti. The tokenizer fix has been applied to random_s1 and
+> Status: the spawn and swap hooks are installed on mrunmayp and manasganti. The preempt hook is installed on mrunmayp
+> (2026-10-17 13:17; `EngineArgs` default `preemption_mode = swap`, `check_envs.sh` ALL CHECKS PASSED). The tokenizer fix has been applied to random_s1 and
 > random_s2. The random_s2 smoke test (`scripts/smoke_eval.py`) passed on 2× A100 with these fixes.
 
 > [!NOTE]
