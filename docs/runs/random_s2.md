@@ -32,13 +32,14 @@ tags: [run]
 - final train loss: 0.6305 (avg over 3 epochs; `all_results.json`), train_runtime 19,442 s, 2.315 samples/s, ~705 steps. ~40% faster than random_s1 on the same data size: node difference (tc-dgx010 vs tc-gpu003), not a config difference
 - checkpoint size (`du -sh`): 5.8 GB final model (optimizer checkpoints deleted after DONE)
 - anything unusual: tokenizer.json swapped for the base one before its evals started (2026-10-15, fix_tokenizer_for_eval.py). Batch evals aime/amc/cn_math (7934179/83/81) crashed on the 2-GPU fork bug and kaoyan (7934182) on CPU swap; both fixed 2026-10-15, rerun pending.
+- 2026-10-17: aime (8004201, 30 min) Pass@1 0.0792, Acc 0.2333 (base 0.067 / 0.167); amc (8004202, 20 min) Pass@1 0.3594, Acc 0.7000 (base 0.412 / 0.650). First jobs to run with the preempt hook.
 - 2026-10-17: minerva (7934184, 2 h 28 min, tc-gpu004) finished: Pass@1 0.2767, Acc 0.4522 (base: 0.303 / 0.489). math (7934180, 1 h 21 min), olympiadbench (7934185, 1 h 41 min) and gpqa (7934186, 2 h 03 min) show COMPLETED, but their logs have no `Acc:` line: they crashed on the vLLM scheduler `assert len(seqs) == 1` (gpqa at 111/198, olympiadbench at 137/675); fix `env/vllm_preempt_hook.sh`; resubmitted as 8039875/76/77, logs moved to `eval/outputs/random_s2_crashed/log_*_schedassert.txt`.
 
 ## Test results (Pass@1)
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |
 |---|---|---|---|---|---|---|---|---|---|
-| | | | | | 0.2767 | | | | |
+| 0.0792 | | | | 0.3594 | 0.2767 | | | | |
 
 ## Dev results
 
