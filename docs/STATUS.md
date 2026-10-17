@@ -25,8 +25,8 @@ tags: [status]
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
-> | random_s1 | aime, amc, cn_math_2024 | math, kaoyan, minerva, olympiadbench, gpqa (batch 7999723/25/27/28/29, queued) |
-> | random_s2 | none | all 8: aime/amc/cn_math/kaoyan resubmitted after crashing (8004201–04); math/minerva/olympiad/gpqa queued (7934180/84/85/86) |
+> | random_s1 | aime, amc, cn_math_2024, math | kaoyan 7999725 + minerva 7999727 running (2026-10-17); olympiadbench 7999728, gpqa 7999729 queued |
+> | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa (7934180/85/86) ran 1.3–2 h but logged no `Acc:` line, cause under investigation |
 > | full_method_s1 | none | all 8 (Manas) |
 
 > [!NOTE]
@@ -163,6 +163,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-17 (Mrunmay)**: random_s1 math done (Pass@1 0.6492, Acc 0.8640; base 0.646 / 0.854). random_s2 minerva
+  done (Pass@1 0.2767, Acc 0.4522; base 0.303 / 0.489). random_s2 math/olympiadbench/gpqa (7934180/85/86) show
+  COMPLETED after 1.3–2 h with no `Acc:` line; cause not yet identified. Interactive 8003894 ended FAILED after
+  2 h 48 min. random_s1 kaoyan (7999725) and minerva (7999727) are running.
 - **2026-10-17**: Launchers accept `GPU=l40s|a30` (Falcon) for evals; see the decision log. Untested: validate with a
   base AIME run on 2× L40S before trusting it.
 
