@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math | kaoyan 7999725 + minerva 7999727 running (2026-10-17); olympiadbench 7999728, gpqa 7999729 queued |
-> | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa (7934180/85/86) crashed after 1.3–2 h on a vLLM scheduler assert (fix: `env/vllm_preempt_hook.sh`); need resubmitting |
+> | random_s2 | minerva | aime/amc/cn_math/kaoyan queued (8004201–04); math/olympiad/gpqa resubmitted 2026-10-17 as 8039875/76/77 (first copies 7934180/85/86 crashed on the vLLM scheduler assert) |
 > | full_method_s1 | none | all 8 (Manas) |
 
 > [!NOTE]
@@ -132,6 +132,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | tokenizer fixed; aime est. Oct 15 21:54, others Oct 19 03:25 or N/A | [run note](runs/random_s2.md) |
 | 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | queued |
+| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert); preempt hook installed | 2026-10-17 | queued | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 
@@ -170,6 +171,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   COMPLETED after 1.3–2 h with no `Acc:` line: vLLM 0.6.1 scheduler `assert len(seqs) == 1` (preemption by recompute
   with n=8); `env/vllm_preempt_hook.sh` added (decision log). Interactive 8003894 ended FAILED after
   2 h 48 min. random_s1 kaoyan (7999725) and minerva (7999727) are running.
+- **2026-10-17 (Mrunmay)**: preempt hook installed on mrunmayp; random_s2 math/olympiadbench/gpqa resubmitted as 8039875/76/77
+  (2× A100; 12/16/8 h limits). Crashed logs in `eval/outputs/random_s2_crashed/log_*_schedassert.txt`.
 - **2026-10-17**: Launchers accept `GPU=l40s|a30` (Falcon) for evals; see the decision log. Untested: validate with a
   base AIME run on 2× L40S before trusting it.
 
