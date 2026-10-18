@@ -27,7 +27,7 @@ tags: [status]
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051762 (4 h limit) queued; 8051529 (10 h) to cancel once 8051762 has an earlier start |
 > | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
-> | full_method_s1 | none | all 8 (Manas) |
+> | full_method_s1 | none | trained 2026-10-18 06:34; tokenizer fix + static check passed; evals 7958394–401 released |
 
 > [!NOTE]
 > **Eval failures found on 2026-10-15 and their fixes** (details in the [decision log](reference/decision-log.md)).
@@ -165,6 +165,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-18**: `full_method_s1` trained (7958393, 20 h 04 min on tc-gpu004, ~2.5× slower per step than random_s1;
+  train loss 0.5694). Tokenizer + chat-template fix applied ("loads now: True"), `smoke_eval.py --static-only` PASS,
+  evals released. All three vLLM hooks were already installed on manasganti.
 
 - **2026-10-18 (Mrunmay + Claude)**: `launch/eval_model.sh` gains `HOURS=` (wall-time override). Resubmitted with short limits
   to backfill: random_s1 minerva 8051762 (4 h; old 8051529 est. Oct 21), random_s2 olympiadbench 8051763 (9 h; old 8039876
