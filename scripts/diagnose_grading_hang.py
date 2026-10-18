@@ -12,8 +12,12 @@ This replays eval.py's grading loop with eval's own, unmodified functions (parse
 check_is_correct), each sample in a forked child with a wall-clock watchdog, and reports the samples that hang.
 If none hang it also prints Acc / Pass@1 computed exactly as eval.py does. It writes nothing under eval/.
 Diagnostic only: those numbers are NOT an official score until a human decides how to treat the hang.
+
+If the run already has an official per-sample jsonl, it also lists every sample whose correctness differs from it
+(grader.py marks a sympy check that takes > 3 s as wrong, so grading depends on how loaded the machine is).
 """
 import argparse
+import json
 import multiprocessing as mp
 import pickle
 import sys
@@ -52,8 +56,12 @@ def main():
             rounds.append(pickle.load(f))
     assert all(len(c) == len(examples) for c in rounds), "pickle / dataset length mismatch"
 
+    official = sorted((REPO / "eval" / "outputs" / args.run).glob(f"saves/**/{args.bench}/test_*.jsonl"))
+    official = [json.loads(line)["answers_correctness"] for line in open(official[0])] if official else None
+
     ctx = mp.get_context("fork")
-    hung, correct, pass1 = [], 0, []
+    hung, correct, pass1, diffs = [], 0, [], []
+    to_right = to_wrong = 0
     t0 = time.time()
     for i, ex in enumerate(examples):
         responses = [o.text for c in rounds for o in c[i].outputs]
@@ -74,12 +82,20 @@ def main():
                 print(f"      sample {j}: answer={a[:300]!r} (len {len(a)})")
             continue
         ok = q.get()
+        if official is not None and ok != official[i]:
+            diffs.append(i)
+            to_right += sum(h and not o for o, h in zip(official[i], ok))
+            to_wrong += sum(o and not h for o, h in zip(official[i], ok))
+            print(f"[{i}] differs from official: official={official[i]} here={ok}")
         correct += any(ok)
         pass1.append(sum(ok) / len(ok))
         if (i + 1) % 25 == 0:
             print(f"{i + 1}/{len(examples)} graded, {time.time() - t0:.0f} s")
 
     print(f"\n{len(hung)} of {len(examples)} samples hung or died: {hung}")
+    if official is not None:
+        print(f"{len(diffs)} samples differ from official; responses wrong there but right here: {to_right}, "
+              f"right there but wrong here: {to_wrong}")
     if not hung:
         print(f"Acc: {correct / len(examples):.4f}   Pass@1: {sum(pass1) / len(pass1):.4f}   (diagnostic, not official)")
 
