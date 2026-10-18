@@ -69,6 +69,8 @@ for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa
     case "$GPU" in l40s|a30) h=$(( h * 3 > 24 ? 24 : h * 3 )) ;; esac
     # The base model writes ~1K-token answers: minutes per benchmark. Short limits backfill much sooner.
     [ "$RUN" = base ] && { h=1; [ "$B" = olympiadbench ] || [ "$B" = math ] && h=2; }
+    # HOURS=N: override the wall-time limit (shorter limits backfill sooner when the queue is full).
+    h="${HOURS:-$h}"
     # --chdir=eval: eval_single.sh does `cd $SLURM_SUBMIT_DIR`, so submit from inside eval/ (README).
     jid=$(cd "$REPO/eval" && SB_CHDIR="$REPO/eval" sb --job-name="eval-$RUN-$B" $(gpu_flags "$EVAL_GPUS") --mem=96G \
           --time="$h:00:00" $(dep_flag "${AFTER:-}") eval_single.sh "$B")
