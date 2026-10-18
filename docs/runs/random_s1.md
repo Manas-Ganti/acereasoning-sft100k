@@ -37,10 +37,10 @@ tags: [run]
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |
 |---|---|---|---|---|---|---|---|---|---|
-| 0.0625 | 0.6492 | 0.0917 | 0.2563 | 0.3719 | | | 0.2645 | | |
+| 0.0625 | 0.6492 | 0.0917 | 0.2563 | 0.3719 | | 0.2715 | 0.2645 | | |
 
-Acc (pass@8) so far: aime 0.2333, math 0.8640, cn_math_2024 0.3333, kaoyan 0.6382, amc 0.6750, gpqa 0.7626. aime, amc and cn_math_2024 ran 2026-10-15 in a 2× A100
-interactive session (job 8000314, tc-gpu003, `LOCAL=1`); their batch copies were cancelled. math: batch job 7999723 (2 h 06 min, tc-gpu001, finished 2026-10-17 11:23). Base model math: Pass@1 0.646, Acc 0.854. kaoyan: batch job 7999725 (1 h 58 min, tc-dgx001, finished 2026-10-17; base 0.220 / 0.528). gpqa: batch job 7999729 (1 h 48 min, tc-gpu001; base 0.289 / 0.707), the rerun of the copy that crashed on swap.
+Acc (pass@8) so far: aime 0.2333, math 0.8640, cn_math_2024 0.3333, kaoyan 0.6382, amc 0.6750, olympiadbench 0.5067, gpqa 0.7626. aime, amc and cn_math_2024 ran 2026-10-15 in a 2× A100
+interactive session (job 8000314, tc-gpu003, `LOCAL=1`); their batch copies were cancelled. math: batch job 7999723 (2 h 06 min, tc-gpu001, finished 2026-10-17 11:23). Base model math: Pass@1 0.646, Acc 0.854. kaoyan: batch job 7999725 (1 h 58 min, tc-dgx001, finished 2026-10-17; base 0.220 / 0.528). gpqa: batch job 7999729 (1 h 48 min, tc-gpu001; base 0.289 / 0.707), the rerun of the copy that crashed on swap. olympiadbench: batch job 7999728 (6 h 42 min, finished 2026-10-18 04:49; base 0.277 / 0.492). **minerva: batch job 7999727 hit TIMEOUT at its 10 h limit (2026-10-17 21:48), no `Acc:` line**; it started before the preempt hook was installed (random_s2 minerva took 2 h 28 min). Needs a resubmit.
 
 ## Dev results
 

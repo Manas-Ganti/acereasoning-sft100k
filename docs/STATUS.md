@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-17
+last_updated: 2026-10-18
 updated_by: Mrunmay + Claude
 tags: [status]
 ---
@@ -25,7 +25,7 @@ tags: [status]
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
-> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, gpqa | minerva 7999727 running; olympiadbench 7999728 queued |
+> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva: 7999727 TIMEOUT at 10 h (2026-10-17), to resubmit |
 > | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
 > | full_method_s1 | none | all 8 (Manas) |
 
@@ -128,7 +128,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7927690 | Step 4 embed + k-means (1 A100) | 2026-10-09 | ✅ done | `analysis/clusters_spotcheck.md` |
 | 7934168 | Step 3 train `random_s1`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 13, 7 h 44 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s1/train.log` |
 | 7934169–77 | `random_s1` 8 evals (2× A100 each) + dev eval, afterok 7934168 | 2026-10-10 | ❌ 8 evals crashed (tokenizer; outputs in `eval/outputs/random_s1_crashed_tokenizer/`); dev 7934177 queued |
-| 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix | 2026-10-15 | aime/amc/cn_math via interactive 8000314 (batch copies 22/24/26 cancelled); ✅ math 23, kaoyan 25, gpqa 29; 🔄 minerva 27 (started before preempt hook); ⏳ olympiadbench 28 | [run note](runs/random_s1.md) |
+| 7999722–29 | `random_s1` 8 evals **resubmitted** after tokenizer fix | 2026-10-15 | aime/amc/cn_math via interactive 8000314 (batch copies 22/24/26 cancelled); ✅ math 23, kaoyan 25, gpqa 29; ✅ olympiadbench 28 (6 h 42 min); ❌ minerva 27 TIMEOUT at 10 h (started before preempt hook), to resubmit | [run note](runs/random_s1.md) |
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | ✅ minerva 84; ❌ aime 79, amc 83, cn_math 81 (fork), kaoyan 82 (swap), math 80, olympiad 85, gpqa 86 (scheduler assert), all resubmitted; ⏳ dev 87 | [run note](runs/random_s2.md) |
 | 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | ✅ all four done 2026-10-17 | [run note](runs/random_s2.md) |
@@ -165,6 +165,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-18 (Mrunmay)**: random_s1 olympiadbench done (7999728, 6 h 42 min): Pass@1 0.2715, Acc 0.5067 (base 0.277 / 0.492).
+  random_s1 minerva (7999727) TIMEOUT at its 10 h limit with no `Acc:` line; to resubmit. random_s2 math/olympiad (8039875/76)
+  and dev evals 7934177/87 still PENDING (Priority). full_method_s1 state on manasganti not yet checked.
 
 - **2026-10-17**: Manas's account: vLLM preempt hook installed (`preemption_mode = swap`); `check_envs.sh` ALL CHECKS PASSED
   with all three hooks (spawn, swap, preempt). `full_method_s1` evals (held) will start with all three.
