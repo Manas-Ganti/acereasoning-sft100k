@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051762 (4 h limit) queued; 8051529 (10 h) to cancel once 8051762 has an earlier start |
-> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
+> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
 > | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
 
 > [!NOTE]
@@ -132,7 +132,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | ✅ minerva 84; ❌ aime 79, amc 83, cn_math 81 (fork), kaoyan 82 (swap), math 80, olympiad 85, gpqa 86 (scheduler assert), all resubmitted; ⏳ dev 87 | [run note](runs/random_s2.md) |
 | 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | ✅ all four done 2026-10-17 | [run note](runs/random_s2.md) |
-| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ⏳ math 75 (est. Oct 18 14:30), olympiadbench 76 (est. Oct 20 11:04; 9 h copy 8051763 submitted, keep whichever starts first) | [run note](runs/random_s2.md) |
+| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ✅ math 75; olympiadbench: 76 cancelled, copies 8051763 (9 h) / 8052023 (8 h) pending | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 | 657900–657907 (Falcon) | `full_method_s1` 8 evals on 2× L40S (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa), `OUT_TAG=l40s` → `eval/outputs/full_method_s1_l40s/` | 2026-10-18 | first starts est. Oct 18 18:37–Oct 19 00:38; minerva/olympiad/gpqa N/A | racing the Tinkercliffs copies 7958394–401 (est. Oct 21) |
@@ -184,6 +184,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   train loss 0.5694). Tokenizer + chat-template fix applied ("loads now: True"), `smoke_eval.py --static-only` PASS,
   evals released. All three vLLM hooks were already installed on manasganti.
 
+- **2026-10-18 (Mrunmay)**: random_s2 math done (8039875): Pass@1 0.6502, Acc 0.8480 (base 0.646 / 0.854). random_s1 minerva
+  8051762 running (tc-gpu003). Dev evals 7934177/87 cancelled (not needed by the deadline). Left for the random baseline:
+  random_s2 olympiadbench only.
 - **2026-10-18 (Mrunmay + Claude)**: `launch/eval_model.sh` gains `HOURS=` (wall-time override). Resubmitted with short limits
   to backfill: random_s1 minerva 8051762 (4 h; old 8051529 est. Oct 21), random_s2 olympiadbench 8051763 (9 h; old 8039876
   est. Oct 20 11:04). Cancel whichever copy of each starts later; never let two copies run at once (same output dir).
