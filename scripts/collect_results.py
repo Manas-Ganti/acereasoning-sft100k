@@ -21,6 +21,7 @@ Noise accounting (printed whenever >= 2 random_* runs exist):
 import argparse
 import json
 import math
+import re
 import sys
 
 import numpy as np
@@ -41,6 +42,35 @@ def load_run(run_dir, benches):
         boxed = np.mean([np.mean([bool(a) for a in r["generated_answers"]]) for r in rows])
         out[b] = {"n": len(rows), "pass1": float(per_q.mean()), "pass8": float(per_q8.mean()),
                   "boxed_rate": float(boxed), "per_q": {"pass1": per_q, "pass8": per_q8}}
+    return out
+
+
+LOG_RE = {"acc": re.compile(r"^Acc:\s*([0-9.]+)", re.M),
+          "pass1": re.compile(r"^Pass@1:\s*([0-9.]+)/(\d+)\s*=\s*([0-9.]+)", re.M)}
+
+
+def load_run_from_logs(run_dirs, benches):
+    """Official Acc / Pass@1 from eval_single.sh's log_<bench>.txt (the small files that are in git).
+    run_dirs: the run's own dir first, then racing copies (OUT_TAG dirs); the first finished log per benchmark wins.
+    A log without an `Acc:` line is a crashed or unfinished run and is skipped. No per-question data, so no CI."""
+    out = {}
+    for d in run_dirs:  # per-question jsonl present on this machine wins (it is what the logs summarise)
+        for b, s in load_run(d, benches).items():
+            if b not in out:
+                out[b] = {**{k: v for k, v in s.items() if k != "per_q"}, "source": d.name}
+    for b in benches:
+        if b in out:
+            continue
+        for d in run_dirs:
+            f = d / f"log_{b}.txt"
+            if not f.exists():
+                continue
+            text = f.read_text(errors="ignore")
+            acc, p1 = LOG_RE["acc"].findall(text), LOG_RE["pass1"].findall(text)
+            if acc and p1:
+                out[b] = {"n": int(p1[-1][1]), "pass1": float(p1[-1][2]), "pass8": float(acc[-1]),
+                          "boxed_rate": float("nan"), "source": d.name}
+                break
     return out
 
 
@@ -89,6 +119,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dev", action="store_true")
     ap.add_argument("--gate", metavar="RUN", default=None)
+    ap.add_argument("--from-logs", action="store_true",
+                    help="build the table from eval/outputs/<run>/log_<bench>.txt (in git) instead of the jsonl; "
+                         "racing copies <run>_<tag>/ fill missing benchmarks; *crashed*/*test* dirs are ignored")
     args = ap.parse_args()
 
     root = WORK / "dev_eval" if args.dev else EVAL_DIR / "outputs"
@@ -98,7 +131,15 @@ def main():
         lb = benches
     else:
         benches, lb = BENCHMARKS, LB_VISIBLE
-    runs = {d.name: load_run(d, benches) for d in sorted(root.iterdir()) if d.is_dir()} if root.exists() else {}
+    if args.from_logs and not args.dev:
+        dirs = [d for d in sorted(root.iterdir()) if d.is_dir() and "crashed" not in d.name and "test" not in d.name]
+        names = {d.name for d in dirs}
+        # a racing copy is <run>_<tag> where <run> is another dir (OUT_TAG): fold it into <run>
+        main_runs = [d for d in dirs if not any(d.name.startswith(n + "_") for n in names if n != d.name)]
+        runs = {d.name: load_run_from_logs([d] + [x for x in dirs if x.name.startswith(d.name + "_")], benches)
+                for d in main_runs}
+    else:
+        runs = {d.name: load_run(d, benches) for d in sorted(root.iterdir()) if d.is_dir()} if root.exists() else {}
     runs = {k: v for k, v in runs.items() if v}
     if not runs:
         sys.exit(f"no results under {root}")
@@ -116,6 +157,13 @@ def main():
     order = sorted(runs, key=lambda r: (r != "base", not r.startswith("random"), r))
     n_s = "4" if args.dev else "8"
     L = [f"# {'Dev' if args.dev else 'Test'} results (temp 0.6, n={n_s})", ""]
+    if args.from_logs:
+        L += ["> Built with `--from-logs` from the official `Acc` / `Pass@1` lines of `eval/outputs/<run>/log_<bench>.txt`.",
+              "> `-` = no finished log in git yet. No per-question data, so no bootstrap CI and no boxed_rate.", ""]
+        src = [[r] + [runs[r][b]["source"] if b in runs[r] else "-" for b in benches] for r in order]
+        if any(c != r and c != "-" for row in src for r, c in [(row[0], x) for x in row[1:]]):
+            L += ["Benchmarks taken from a racing copy (OUT_TAG dir):", "",
+                  md_table(pd.DataFrame(src, columns=["run"] + benches)), ""]
     for metric, title in [("pass1", f"Pass@1 (mean over {n_s} samples) -- primary metric"),
                           ("pass8", f"Acc / pass@{n_s} (any sample correct) -- the leaderboard metric")]:
         table = []
@@ -131,8 +179,9 @@ def main():
         L += ["avg(LB6) = CN_MATH_24, KAOYAN, AMC, MINERVA, OLYMPIADBENCH, GPQA (leaderboard AVG minus "
               "AIME25, which is not in eval/data).", ""]
         bx = [[r] + [f"{runs[r][b]['boxed_rate']:.2f}" if b in runs[r] else "-" for b in benches] for r in order]
-        L += ["## boxed_rate (share of samples with a \\boxed{} answer)", "",
-              md_table(pd.DataFrame(bx, columns=["run"] + benches)), ""]
+        if not args.from_logs:
+            L += ["## boxed_rate (share of samples with a \\boxed{} answer)", "",
+                  md_table(pd.DataFrame(bx, columns=["run"] + benches)), ""]
 
     metric_benches = lb
     rand = [r for r in order if r.startswith("random") and all(b in runs[r] for b in metric_benches)]
@@ -148,8 +197,11 @@ def main():
             if r in rand or r == "base" or not all(b in runs[r] for b in metric_benches):
                 continue
             gap = avg(runs[r], metric_benches, metric) - mean_r
-            cis = [bootstrap_gap(runs[r], runs[x], metric_benches, metric) for x in rand]
-            ci = f"[{min(c[0] for c in cis):+.3f}, {max(c[1] for c in cis):+.3f}]"
+            if args.from_logs:
+                ci = "n/a (logs)"
+            else:
+                cis = [bootstrap_gap(runs[r], runs[x], metric_benches, metric) for x in rand]
+                ci = f"[{min(c[0] for c in cis):+.3f}, {max(c[1] for c in cis):+.3f}]"
             verdict = "exceeds seed spread" if gap > spread else ("within noise" if gap > -spread else "worse")
             rows.append([r, f"{avg(runs[r], metric_benches, metric):.3f}", f"{gap:+.3f}", ci, verdict])
         if rows:
