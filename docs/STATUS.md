@@ -25,7 +25,7 @@ tags: [status]
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
-> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051529 queued (7999727 hung in grading) |
+> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051762 (4 h limit) queued; 8051529 (10 h) to cancel once 8051762 has an earlier start |
 > | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
 > | full_method_s1 | none | all 8 (Manas) |
 
@@ -132,7 +132,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7934178 | Step 3 train `random_s2`, 8× A100 (mrunmayp) | 2026-10-10 | ✅ done Oct 14, 5 h 28 min | `LLaMA-Factory/saves/qwen25_3b_instruct/random_s2/train.log` |
 | 7934179–87 | `random_s2` 8 evals (2× A100 each) + dev eval, afterok 7934178 | 2026-10-10 | ✅ minerva 84; ❌ aime 79, amc 83, cn_math 81 (fork), kaoyan 82 (swap), math 80, olympiad 85, gpqa 86 (scheduler assert), all resubmitted; ⏳ dev 87 | [run note](runs/random_s2.md) |
 | 8004201–04 | `random_s2` aime, amc, cn_math_2024, kaoyan **resubmitted** (first copies crashed: fork ×3, swap ×1) | 2026-10-15 | ✅ all four done 2026-10-17 | [run note](runs/random_s2.md) |
-| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ⏳ math 75, olympiadbench 76 | [run note](runs/random_s2.md) |
+| 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ⏳ math 75 (est. Oct 18 14:30), olympiadbench 76 (est. Oct 20 11:04; 9 h copy 8051763 submitted, keep whichever starts first) | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 
@@ -166,12 +166,17 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-18 (Mrunmay + Claude)**: `launch/eval_model.sh` gains `HOURS=` (wall-time override). Resubmitted with short limits
+  to backfill: random_s1 minerva 8051762 (4 h; old 8051529 est. Oct 21), random_s2 olympiadbench 8051763 (9 h; old 8039876
+  est. Oct 20 11:04). Cancel whichever copy of each starts later; never let two copies run at once (same output dir).
 - **2026-10-18 (Mrunmay + Claude)**: random_s1 minerva 7999727 diagnosed: generation finished 12:46, then it hung in
   grading for 9 h. `scripts/diagnose_grading_hang.py` regrades the saved completions pickle with eval's own functions
   on CPU: no sample hangs (random_s1 diagnostic Acc 0.4522 / Pass@1 0.2767, not official), so the hang was environmental;
   rerun submitted as 8051529. Same script on random_s2 gives 0.4632 / 0.2790 vs official 0.4522 / 0.2767: grading is not
-  reproducible across machines (suspect grader.py's 3 s sympy timeout under load). Per-sample comparison pending; report
-  as a limitation. Crashed log in `eval/outputs/random_s1_crashed/` on ARC.
+  reproducible across machines (suspect grader.py's 3 s sympy timeout under load). Per-sample comparison (random_s2 minerva): 3 problems / 5 responses
+  differ, ALL official-wrong -> regrade-right, all near the end of grading (problems 243, 244, 252). The official
+  grader undercounts under load (sympy checks over grader.py's 3 s timeout count as wrong). Official numbers stay in the
+  results table; report as a limitation (~1 pt Acc / ~0.2 pt Pass@1 on Minerva). Crashed log in `eval/outputs/random_s1_crashed/` on ARC.
 
 - **2026-10-18 (Mrunmay)**: random_s1 olympiadbench done (7999728, 6 h 42 min): Pass@1 0.2715, Acc 0.5067 (base 0.277 / 0.492).
   random_s1 minerva (7999727) TIMEOUT at its 10 h limit with no `Acc:` line; to resubmit. random_s2 math/olympiad (8039875/76)
