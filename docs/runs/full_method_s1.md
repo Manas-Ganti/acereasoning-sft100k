@@ -3,7 +3,7 @@ run: full_method_s1
 step: 6
 status: trained
 train_job: 7958393 (account tml_2026, user manasganti)
-eval_jobs: 7958394–7958401 (8 × 2 A100, afterok on 7958393)
+eval_jobs: 7958394–7958401 (Tinkercliffs 8 × 2 A100); 657900–657907 (Falcon 8 × 2 L40S, OUT_TAG=l40s): racing, first finisher per benchmark kept
 dev_job: 7958402 (afterok on 7958393)
 gpu: a100 x8
 started: 2026-10-17 10:27 (tc-gpu004)

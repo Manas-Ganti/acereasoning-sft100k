@@ -27,7 +27,7 @@ tags: [status]
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051762 (4 h limit) queued; 8051529 (10 h) to cancel once 8051762 has an earlier start |
 > | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
-> | full_method_s1 | none | trained 2026-10-18 06:34; tokenizer fix + static check passed; evals 7958394–401 released |
+> | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
 
 > [!NOTE]
 > **Eval failures found on 2026-10-15 and their fixes** (details in the [decision log](reference/decision-log.md)).
@@ -135,6 +135,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 8039875–77 | `random_s2` math, olympiadbench, gpqa **resubmitted** (first copies 7934180/85/86 crashed: scheduler assert) | 2026-10-17 | ✅ gpqa 77; ⏳ math 75 (est. Oct 18 14:30), olympiadbench 76 (est. Oct 20 11:04; 9 h copy 8051763 submitted, keep whichever starts first) | [run note](runs/random_s2.md) |
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
+| 657900–657907 (Falcon) | `full_method_s1` 8 evals on 2× L40S (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa), `OUT_TAG=l40s` → `eval/outputs/full_method_s1_l40s/` | 2026-10-18 | first starts est. Oct 18 18:37–Oct 19 00:38; minerva/olympiad/gpqa N/A | racing the Tinkercliffs copies 7958394–401 (est. Oct 21) |
 
 ## Next actions
 
@@ -165,6 +166,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-18**: Tinkercliffs estimates for full_method_s1's evals were Oct 21 15:34 or N/A, after the deadline. A second copy
+  was submitted on Falcon 2× L40S (657900–907, `OUT_TAG=l40s`); first starts are estimated Oct 18 18:37. `check_envs.sh` run on falcon2.
+  First real L40S eval, so check the first log. The racing rule applies per benchmark. Dev eval 7958402 stays held.
 
 - **2026-10-18**: `full_method_s1` trained (7958393, 20 h 04 min on tc-gpu004, ~2.5× slower per step than random_s1;
   train loss 0.5694). Tokenizer + chat-template fix applied ("loads now: True"), `smoke_eval.py --static-only` PASS,
