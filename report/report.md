@@ -167,7 +167,7 @@ Pass@8 (any of 8 samples correct), the leaderboard metric, with the course's fix
 |---|---|---|---|---|---|---|---|---|---|
 | Base (Qwen2.5-3B-Instruct) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.544 |
 | Random 15K | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | *TODO* | 0.768 | *TODO* |
-| Advanced 15K (`full_method_s1`) | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | *TODO* | *TODO* | *TODO* |
+| Advanced 15K (`full_method_s1`) | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | *TODO* | 0.798 | *TODO* |
 
 We trained two random subsets (seeds 1 and 2) and report the better one (seed 2) as the random baseline, which
 makes it a harder bar to beat. On the benchmarks both finished, the two random seeds differ by up to 0.03–0.04

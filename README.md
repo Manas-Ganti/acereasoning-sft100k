@@ -46,7 +46,7 @@ Minerva, OlympiadBench, GPQA). Full write-up: [report/report.md](report/report.m
 |---|---|---|---|---|---|---|---|---|---|
 | Base (Qwen2.5-3B-Instruct) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.544 |
 | Random 15K | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | *TODO* | 0.768 | *TODO* |
-| Advanced 15K | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | *TODO* | *TODO* | *TODO* |
+| Advanced 15K | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | *TODO* | 0.798 | *TODO* |
 
 **Hugging Face**
 
