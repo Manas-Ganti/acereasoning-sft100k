@@ -42,11 +42,16 @@ tags: [run]
   CPU swap (24 GiB). Reruns of math/kaoyan at 40 GiB swap (658390/91) were OOM-killed at --mem=128G (power-of-two pinned
   rounding); resubmit math/kaoyan/gpqa/olympiadbench with `VLLM_EVAL_SWAP_GB=35 MEM=128G`.
 
+- 2026-10-19 00:39 (35 GiB swap, MEM=128G; no OOM, 127,431 CPU blocks): math 658477 (2 h 39 min) Pass@1 0.6683, Acc 0.8720;
+  kaoyan 658478 (2 h 38 min) Pass@1 0.2412, Acc 0.6030. gpqa 658479 running; olympiadbench 658480 est. start Oct 19 10:01.
+
 ## Test results (Pass@1)
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |
 |---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
+| 0.0542 | 0.6683 | 0.1125 | 0.2412 | 0.3969 | 0.2812 | | | | |
+
+Acc (pass@8): aime 0.1333, math 0.8720, cn_math_2024 0.3667, kaoyan 0.6030, amc 0.7000, minerva 0.4743. All on 2× L40S (Falcon).
 
 ## Dev results
 

@@ -168,6 +168,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-19 00:40**: 35 GiB swap works on L40S. full_method_s1 math 0.668 / 0.872 and kaoyan 0.241 / 0.603 (Pass@1 / Acc).
+  full_method_s1 now 6/8 (aime, math, cn_math, kaoyan, amc, minerva); gpqa running, olympiadbench est. start Oct 19 10:01
+  (~19 h on L40S → ~Oct 20 05:00). Tinkercliffs copies of the 4 finished benchmarks cancelled; math/kaoyan/gpqa/olympiad
+  copies kept with shorter limits.
+
 - **2026-10-18 21:30**: full_method_s1 L40S: minerva done (0.281 / 0.474). olympiadbench + gpqa aborted on swap (24 GiB);
   math/kaoyan at 40 GiB OOM-killed (pinned-memory power-of-two rounding). Use `VLLM_EVAL_SWAP_GB=35 MEM=128G` (decision log).
   4 benchmarks done on L40S (aime, cn_math, amc, minerva); math, kaoyan, gpqa, olympiadbench to resubmit.
