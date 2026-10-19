@@ -39,4 +39,18 @@ Then follow [STATUS](docs/STATUS.md) and the step notes linked from [Home](docs/
 
 ## Results
 
-*(filled in at Step 7: see [results/results.md](results/results.md))*
+Pass@8 with the course's fixed eval; AVG = mean of the six visible leaderboard benchmarks (CN-Math, Kaoyan, AMC,
+Minerva, OlympiadBench, GPQA). Full write-up: [report/report.md](report/report.md).
+
+| Model | AIME24 | MATH | CN-Math | Kaoyan | AMC | Minerva | Olympiad | GPQA | AVG |
+|---|---|---|---|---|---|---|---|---|---|
+| Base (Qwen2.5-3B-Instruct) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.544 |
+| Random 15K | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | *TODO* | 0.768 | *TODO* |
+| Advanced 15K | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | *TODO* | *TODO* | *TODO* |
+
+**Hugging Face**
+
+| | Model | Dataset |
+|---|---|---|
+| Random 15K | *TODO* | *TODO* |
+| Advanced 15K | *TODO* | *TODO* |
