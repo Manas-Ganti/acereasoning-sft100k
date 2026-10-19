@@ -25,8 +25,8 @@ tags: [status]
 >
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
-> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva rerun 8051762 (4 h limit) queued; 8051529 (10 h) to cancel once 8051762 has an earlier start |
-> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | math 8039875, olympiad 8039876 queued (resubmitted after the scheduler assert) |
+> | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva: hangs in grading every time (7999727, 8051762); **proposed: regrade from pickle (needs team OK)** |
+> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | olympiadbench 8051763 running (tc-gpu004, 9 h limit) |
 > | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
 
 > [!NOTE]
@@ -184,6 +184,14 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   train loss 0.5694). Tokenizer + chat-template fix applied ("loads now: True"), `smoke_eval.py --static-only` PASS,
   evals released. All three vLLM hooks were already installed on manasganti.
 
+- **2026-10-18 evening (Mrunmay + Claude)**: random_s1 minerva rerun 8051762 TIMEOUT at 4 h, hung in grading again, right
+  after sample 28/272. Regenerated pickle is byte-identical in size (60,862,951) to the first run's: fixed seed, so every rerun
+  regenerates the same outputs and will hang the same way. Do not resubmit. Likely cause: a sympy check on sample 28 exceeds
+  grader.py's 3 s timeout, and inside the post-vLLM eval process the terminated child never exits (`join()` blocks); on a
+  login node it exits and the sample counts wrong. **Proposed (awaiting Mrunmay + Manas OK):** report Minerva for every model
+  from `scripts/diagnose_grading_hang.py` regrades of the saved pickles (eval's own grading code; regrade is ~1 pt Acc above
+  official, seen on random_s2): random_s1 0.4522 / 0.2767, random_s2 0.4632 / 0.2790 (Acc / Pass@1). random_s2 olympiadbench
+  8051763 running; 8052023 cancelled.
 - **2026-10-18 (Mrunmay)**: random_s2 math done (8039875): Pass@1 0.6502, Acc 0.8480 (base 0.646 / 0.854). random_s1 minerva
   8051762 running (tc-gpu003). Dev evals 7934177/87 cancelled (not needed by the deadline). Left for the random baseline:
   random_s2 olympiadbench only.
