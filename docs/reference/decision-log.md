@@ -3,6 +3,19 @@ title: Decision log
 tags: [reference, decisions]
 ---
 
+### 2026-10-19: random_s2 is the primary random baseline; random_s1 is kept only as a seed-noise reference
+The course README (§8) asks for one random model and one advanced model. We keep the **better** of our two random
+seeds. random_s2 is ahead on every aggregate of the 6 benchmarks both seeds finished (AIME24, MATH, CN-Math, Kaoyan,
+AMC, GPQA): Pass@1 mean 0.291 vs 0.283, Acc mean 0.587 vs 0.584; leaderboard four (CN, Kaoyan, AMC, GPQA) Pass@1
+0.255 vs 0.246, Acc 0.611 vs 0.602. This choice uses test scores, but only to pick the **stronger baseline**, which
+can only make the comparison harder for `full_method_s1`, so it doesn't bias the claim in our favour. random_s2 is the
+random model and dataset uploaded to HF and the "random" row in the report. random_s1 stays in the report as a
+second-seed row, since it's our only measure of seed noise. Its Minerva (hangs in grading) is reported as not
+available, so the Minerva-regrade question (2026-10-19 00:50) no longer blocks anything. Remaining random eval:
+random_s2 olympiadbench (8051763). *Decided by: Manas.*
+
+---
+
 ### 2026-10-18: CPU swap and job memory become per-job settings (L40S evals aborted on swap)
 On 2× L40S, `full_method_s1` math (657901, at 238/500) and kaoyan (657903, at 43/199) aborted with "lack of CPU swap
 space" even with the 24 GiB/GPU hook. The logs show 135,371 GPU KV blocks against 87,381 CPU swap blocks, about 37 vs

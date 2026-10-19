@@ -21,8 +21,8 @@ PY=~/.conda/envs/evalenv/bin/python
 $PY scripts/collect_results.py          # results/results.md: table + gap vs random + seed spread + bootstrap CI
 $PY scripts/collect_results.py --dev    # results/dev_results.md
 # HF uploads (run in myenv):
-~/.conda/envs/myenv/bin/python scripts/push_to_hub.py model   random_s1      <hf_user>/<repo>
-~/.conda/envs/myenv/bin/python scripts/push_to_hub.py dataset random_s1      <hf_user>/<repo>
+~/.conda/envs/myenv/bin/python scripts/push_to_hub.py model   random_s2      <hf_user>/<repo>
+~/.conda/envs/myenv/bin/python scripts/push_to_hub.py dataset random_s2      <hf_user>/<repo>
 ~/.conda/envs/myenv/bin/python scripts/push_to_hub.py model   full_method_s1 <hf_user>/<repo>
 ~/.conda/envs/myenv/bin/python scripts/push_to_hub.py dataset full_method_s1 <hf_user>/<repo>
 ```
@@ -41,7 +41,7 @@ Checked against the course README at commit `4d31bfc` on 2026-10-13.
   - [ ] the hyperparameters used for the final model
   - [ ] a description of the data selection strategy
 
-*Not required by the README, but ours:* a second random seed (noise floor) and ablations. Ablations were dropped
+*Random deliverable = `random_s2`* (the better seed; decision log 2026-10-19). *Not required by the README, but ours:* a second random seed (noise floor) and ablations. Ablations were dropped
 (decision log 2026-10-12).
 
 **Other course rules worth knowing:** hyperparameters may be tweaked ("Tweak as needed" in the YAML); data from

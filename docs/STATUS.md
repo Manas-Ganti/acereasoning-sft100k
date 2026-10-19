@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-18
+last_updated: 2026-10-19
 updated_by: Mrunmay + Claude
 tags: [status]
 ---
@@ -15,6 +15,12 @@ tags: [status]
 > Protocol: [CLAUDE.md, "Start here"](../CLAUDE.md).
 
 ## Now
+
+> [!IMPORTANT]
+> **Decision 2026-10-19 (Manas):** `random_s2` is the primary random baseline (better seed on every aggregate);
+> `random_s1` is a seed-noise reference only, and its Minerva is not needed. Evals still needed for submission:
+> full_method_s1 gpqa (658479) + olympiadbench (658480, TC hedge 7958400), random_s2 olympiadbench (8051763).
+> See the [decision log](reference/decision-log.md).
 
 > [!IMPORTANT]
 > **Eval status and GPU queue (Mrunmay, 2026-10-15 17:30).** Three eval blockers were found and fixed (tokenizer +
@@ -167,6 +173,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-19 (Manas + Claude)**: random_s2 chosen as the primary random baseline (better seed); random_s1 kept as a
+  seed-noise row; random_s1 Minerva regrade dropped. HF random deliverable = random_s2. Report tables updated with
+  full_method_s1's 6 finished benchmarks.
 
 - **2026-10-19 00:50 (Manas + Claude)**: Open decision on Mrunmay's Minerva-regrade proposal. Claude recommends yes, with
   two conditions: (1) regrade Minerva for every model (base, random_s1/s2, full_method_s1) with `diagnose_grading_hang.py`
