@@ -1,0 +1,47 @@
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+current stop list: None
+Random seed set as 0
+current eval model: /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1
+use n = 8, generation epoch is: 1
+available_gpus: ['0', '1']
+  0%|          | 0/500 [00:00<?, ?it/s]  6%|▌         | 31/500 [00:00<00:01, 309.67it/s] 58%|█████▊    | 290/500 [00:00<00:00, 1650.06it/s]100%|██████████| 500/500 [00:00<00:00, 1797.44it/s]
+<|im_start|>system
+Please reason step by step, and put your final answer within \boxed{}.<|im_end|>
+<|im_start|>user
+Convert the point $(0,3)$ in rectangular coordinates to polar coordinates.  Enter your answer in the form $(r,\theta),$ where $r > 0$ and $0 \le \theta < 2 \pi.$<|im_end|>
+<|im_start|>assistant
+
+INFO 10-18 20:28:34 config.py:897] Defaulting to use mp for distributed inference
+INFO 10-18 20:28:34 llm_engine.py:232] Initializing an LLM engine (v0.6.1) with config: model='/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1', speculative_config=None, tokenizer='/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=2, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1, use_v2_block_manager=False, num_scheduler_steps=1, enable_prefix_caching=False, use_async_output_proc=True)
+WARNING 10-18 20:28:34 multiproc_gpu_executor.py:56] Reducing Torch parallelism from 16 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 10-18 20:28:34 custom_cache_manager.py:17] Setting Triton cache manager to: vllm.triton_utils.custom_cache_manager:CustomCacheManager
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:39 multiproc_worker_utils.py:215] Worker ready; awaiting tasks
+INFO 10-18 20:28:39 utils.py:977] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:39 utils.py:977] Found nccl from library libnccl.so.2
+INFO 10-18 20:28:39 pynccl.py:63] vLLM is using nccl==2.20.5
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:39 pynccl.py:63] vLLM is using nccl==2.20.5
+INFO 10-18 20:28:39 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/manasganti/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:39 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/manasganti/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+INFO 10-18 20:28:39 shm_broadcast.py:235] vLLM message queue communication handle: Handle(connect_ip='127.0.0.1', local_reader_ranks=[1], buffer=<vllm.distributed.device_communicators.shm_broadcast.ShmRingBuffer object at 0x1554425b7850>, local_subscribe_port=35443, remote_subscribe_port=None)
+INFO 10-18 20:28:40 model_runner.py:997] Starting to load model /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1...
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:40 model_runner.py:997] Starting to load model /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1...
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:00<00:00,  1.93it/s]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:00<00:00,  2.87it/s]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:00<00:00,  2.67it/s]
+
+[1;36m(VllmWorkerProcess pid=262100)[0;0m INFO 10-18 20:28:40 model_runner.py:1008] Loading model weights took 2.9347 GB
+INFO 10-18 20:28:41 model_runner.py:1008] Loading model weights took 2.9347 GB
+INFO 10-18 20:28:42 distributed_gpu_executor.py:57] # GPU blocks: 135371, # CPU blocks: 145635
+/home/manasganti/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/manasganti/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+[2026-10-18T20:29:21.933] error: Detected 2 oom_kill events in StepId=658390.batch. Some of the step tasks have been OOM Killed.

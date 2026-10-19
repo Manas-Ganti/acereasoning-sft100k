@@ -5,6 +5,9 @@ JobID                                              JobName      State    Elapsed
 657902                    eval-full_method_s1-cn_math_2024  COMPLETED   00:37:06       fal039      0:0 
 657903                          eval-full_method_s1-kaoyan  COMPLETED   00:53:23       fal039      0:0 
 657904                             eval-full_method_s1-amc  COMPLETED   00:26:49       fal038      0:0 
-657905                         eval-full_method_s1-minerva    RUNNING   00:58:45       fal049      0:0 
-657906                   eval-full_method_s1-olympiadbench    RUNNING   00:44:14       fal037      0:0 
-657907                            eval-full_method_s1-gpqa    RUNNING   00:25:58       fal043      0:0 
+657905                         eval-full_method_s1-minerva  COMPLETED   01:10:41       fal049      0:0 
+657906                   eval-full_method_s1-olympiadbench  COMPLETED   00:51:10       fal037      0:0 
+657907                            eval-full_method_s1-gpqa  COMPLETED   00:51:12       fal043      0:0 
+658390                            eval-full_method_s1-math OUT_OF_ME+   00:01:12       fal037    0:125 
+658391                          eval-full_method_s1-kaoyan OUT_OF_ME+   00:01:15       fal037    0:125 
+             JOBID PARTITION     NAME     USER ST          START_TIME  NODES SCHEDNODES           NODELIST(REASON)
