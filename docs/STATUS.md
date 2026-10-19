@@ -168,6 +168,11 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-19 00:50 (Manas + Claude)**: Open decision on Mrunmay's Minerva-regrade proposal. Claude recommends yes, with
+  two conditions: (1) regrade Minerva for every model (base, random_s1/s2, full_method_s1) with `diagnose_grading_hang.py`
+  on one machine and report official numbers alongside; (2) first verify the random_s1 regrade. Its 0.4522 / 0.2767
+  (123/272, 75.25/272) equals random_s2's official Minerva exactly, which suggests the wrong pickle was read. Manas to confirm.
+
 - **2026-10-19 00:40**: 35 GiB swap works on L40S. full_method_s1 math 0.668 / 0.872 and kaoyan 0.241 / 0.603 (Pass@1 / Acc).
   full_method_s1 now 6/8 (aime, math, cn_math, kaoyan, amc, minerva); gpqa running, olympiadbench est. start Oct 19 10:01
   (~19 h on L40S → ~Oct 20 05:00). Tinkercliffs copies of the 4 finished benchmarks cancelled; math/kaoyan/gpqa/olympiad
