@@ -167,6 +167,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-18 20:30**: First full_method_s1 scores (Falcon 2× L40S): aime 0.054/0.133, cn_math 0.113/0.367, amc 0.397/0.700
+  (Pass@1/Acc). math + kaoyan aborted on CPU swap: L40S KV ~37 GiB/GPU > 24 GiB swap. Swap and job memory are now
+  per-job (`VLLM_EVAL_SWAP_GB=40 MEM=128G`, decision log); rerun `bash env/vllm_swap_hook.sh` once per account.
+
 - **2026-10-18**: Tinkercliffs estimates for full_method_s1's evals were Oct 21 15:34 or N/A, after the deadline. A second copy
   was submitted on Falcon 2× L40S (657900–907, `OUT_TAG=l40s`); first starts are estimated Oct 18 18:37. `check_envs.sh` run on falcon2.
   First real L40S eval, so check the first log. The racing rule applies per benchmark. Dev eval 7958402 stays held.

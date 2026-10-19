@@ -71,8 +71,11 @@ for B in ${BENCHES:-aime math cn_math_2024 kaoyan amc minerva olympiadbench gpqa
     [ "$RUN" = base ] && { h=1; [ "$B" = olympiadbench ] || [ "$B" = math ] && h=2; }
     # HOURS=N: override the wall-time limit (shorter limits backfill sooner when the queue is full).
     h="${HOURS:-$h}"
+    # MEM: job memory. Must cover vLLM's pinned CPU swap: EVAL_GPUS x VLLM_EVAL_SWAP_GB (+ ~20 GB). Swap should be at
+    # least the per-GPU KV cache (~37 GiB on 2x L40S, 2026-10-18), or long benchmarks abort on "lack of CPU swap space".
+    # e.g. VLLM_EVAL_SWAP_GB=40 MEM=128G GPU=l40s ... (sbatch passes VLLM_EVAL_SWAP_GB to the job; the hook keeps it)
     # --chdir=eval: eval_single.sh does `cd $SLURM_SUBMIT_DIR`, so submit from inside eval/ (README).
-    jid=$(cd "$REPO/eval" && SB_CHDIR="$REPO/eval" sb --job-name="eval-$RUN-$B" $(gpu_flags "$EVAL_GPUS") --mem=96G \
+    jid=$(cd "$REPO/eval" && SB_CHDIR="$REPO/eval" sb --job-name="eval-$RUN-$B" $(gpu_flags "$EVAL_GPUS") --mem="${MEM:-96G}" \
           --time="$h:00:00" $(dep_flag "${AFTER:-}") eval_single.sh "$B")
     echo "$B: $jid (${h}h, $EVAL_GPUS GPU)"
 done

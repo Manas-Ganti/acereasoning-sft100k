@@ -34,6 +34,11 @@ tags: [run]
 - checkpoint size (`du -sh`):
 - anything unusual: evals 7958394–402 held during training (job predates the automatic tokenizer fix). 2026-10-18: `fix_tokenizer_for_eval.py` copied chat_template.jinja into tokenizer_config.json, swapped in the base tokenizer.json (identical vocab/merges/added tokens), "loads now: True"; `smoke_eval.py --static-only` PASS (bf16, eos [151645, 151643], `<|im_end|>`, chat template). wandb run fen3h0za
 
+- 2026-10-18 Falcon 2× L40S (`full_method_s1_l40s`): aime 657900 (36 min) Pass@1 0.0542, Acc 0.1333; cn_math_2024
+  657902 (37 min) Pass@1 0.1125, Acc 0.3667; amc 657904 (27 min) Pass@1 0.3969, Acc 0.7000. math 657901 and kaoyan 657903
+  aborted on CPU swap (at 238/500 and 43/199); resubmit with `VLLM_EVAL_SWAP_GB=40 MEM=128G`. minerva 657905,
+  olympiadbench 657906 and gpqa 657907 running at 20:21.
+
 ## Test results (Pass@1)
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |

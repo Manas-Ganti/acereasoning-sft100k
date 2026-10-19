@@ -3,6 +3,18 @@ title: Decision log
 tags: [reference, decisions]
 ---
 
+### 2026-10-18: CPU swap and job memory become per-job settings (L40S evals aborted on swap)
+On 2× L40S, `full_method_s1` math (657901, at 238/500) and kaoyan (657903, at 43/199) aborted with "lack of CPU swap
+space" even with the 24 GiB/GPU hook. The logs show 135,371 GPU KV blocks against 87,381 CPU swap blocks, about 37 vs
+24 GiB per GPU. With long traces, vLLM can try to swap out more than the swap holds. Swap should be at least the per-GPU
+KV cache. Raising the shared default would endanger queued jobs that ask for `--mem=96G` (pinned swap counts against job
+memory), so both become per-job: the activate hook now keeps a `VLLM_EVAL_SWAP_GB` the job already carries, and
+`eval_model.sh` takes `MEM=`. Resubmit long benchmarks on L40S with `VLLM_EVAL_SWAP_GB=40 MEM=128G`. This changes
+memory only; sampling and grading are untouched, and `eval/` is unchanged. Owners rerun `bash env/vllm_swap_hook.sh` once
+so the hook picks up the new line. *Proposed by Claude for Manas.*
+
+---
+
 ### 2026-10-17: vLLM preempts by swap only in evalenv (scheduler assert on long evals)
 random_s2 math (7934180), olympiadbench (7934185) and gpqa (7934186), on 2× A100, ran 1 h 21 min to 2 h 03 min.
 gpqa got to 111/198 and olympiadbench to 137/675 (math not checked) before dying in `vllm/core/scheduler.py`

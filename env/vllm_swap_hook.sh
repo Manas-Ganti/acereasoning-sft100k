@@ -33,7 +33,8 @@ p.write_text(pat.sub(r'\1float(__import__("os").environ.get("VLLM_EVAL_SWAP_GB",
 print(f"patched {p} (backup {p.name}.orig)")
 EOF
 mkdir -p "$ENV_PREFIX/etc/conda/activate.d"
-echo "export VLLM_EVAL_SWAP_GB=$GB" > "$ENV_PREFIX/etc/conda/activate.d/vllm_swap.sh"
+# keep a value the job already carries (per-job override: VLLM_EVAL_SWAP_GB=40 MEM=128G launch/eval_model.sh ...)
+echo "export VLLM_EVAL_SWAP_GB=\"\${VLLM_EVAL_SWAP_GB:-$GB}\"" > "$ENV_PREFIX/etc/conda/activate.d/vllm_swap.sh"
 VLLM_EVAL_SWAP_GB="$GB" PYTHONNOUSERSITE=1 "$PY" -c "
 import inspect, vllm
 d = inspect.signature(vllm.LLM.__init__).parameters['swap_space'].default
