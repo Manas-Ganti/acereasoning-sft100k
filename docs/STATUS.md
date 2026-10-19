@@ -136,6 +136,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 | 7958393 | Step 6 train `full_method_s1`, 8× A100 (manasganti) | 2026-10-12 | est. start Oct 15 18:29 (tc-gpu003); ≤23 h | `LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1/` |
 | 7958394–7958402 | `full_method_s1` 8 evals (2× A100 each) + dev eval, afterok 7958393 | 2026-10-12 | **on hold (JobHeldUser)** until tokenizer fix + smoke test pass, then `scontrol release` | [run note](runs/full_method_s1.md) |
 | 657900–657907 (Falcon) | `full_method_s1` 8 evals on 2× L40S (aime, math, cn_math, kaoyan, amc, minerva, olympiadbench, gpqa), `OUT_TAG=l40s` → `eval/outputs/full_method_s1_l40s/` | 2026-10-18 | first starts est. Oct 18 18:37–Oct 19 00:38; minerva/olympiad/gpqa N/A | racing the Tinkercliffs copies 7958394–401 (est. Oct 21) |
+| 658477–658480 (Falcon) | `full_method_s1` reruns on 2× L40S, `VLLM_EVAL_SWAP_GB=35 MEM=128G`: math 77, kaoyan 78, gpqa 79 (8 h), olympiadbench 80 (22 h) | 2026-10-18 | est. start Oct 19 00:22 / 00:51 / 08:42 / 08:52; olympiad done ~Oct 20 04:00 | keep Tinkercliffs 7958400 (olympiad) queued as a hedge |
 
 ## Next actions
 
