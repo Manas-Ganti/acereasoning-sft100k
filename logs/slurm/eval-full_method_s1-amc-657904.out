@@ -1,0 +1,147 @@
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+current stop list: None
+Random seed set as 0
+current eval model: /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1
+use n = 8, generation epoch is: 1
+available_gpus: ['0', '1']
+  0%|          | 0/40 [00:00<?, ?it/s]100%|██████████| 40/40 [00:00<00:00, 501.30it/s]
+<|im_start|>system
+Please reason step by step, and put your final answer within \boxed{}.<|im_end|>
+<|im_start|>user
+Cities $A$ and $B$ are $45$ miles apart. Alicia lives in $A$ and Beth lives in $B$. Alicia bikes towards $B$ at 18 miles per hour. Leaving at the same time, Beth bikes toward $A$ at 12 miles per hour. How many miles from City $A$ will they be when they meet?<|im_end|>
+<|im_start|>assistant
+
+INFO 10-18 19:20:22 config.py:897] Defaulting to use mp for distributed inference
+INFO 10-18 19:20:22 llm_engine.py:232] Initializing an LLM engine (v0.6.1) with config: model='/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1', speculative_config=None, tokenizer='/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, rope_scaling=None, rope_theta=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=2, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1, use_v2_block_manager=False, num_scheduler_steps=1, enable_prefix_caching=False, use_async_output_proc=True)
+WARNING 10-18 19:20:22 multiproc_gpu_executor.py:56] Reducing Torch parallelism from 16 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 10-18 19:20:22 custom_cache_manager.py:17] Setting Triton cache manager to: vllm.triton_utils.custom_cache_manager:CustomCacheManager
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:27 multiproc_worker_utils.py:215] Worker ready; awaiting tasks
+INFO 10-18 19:20:27 utils.py:977] Found nccl from library libnccl.so.2
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:27 utils.py:977] Found nccl from library libnccl.so.2
+INFO 10-18 19:20:27 pynccl.py:63] vLLM is using nccl==2.20.5
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:27 pynccl.py:63] vLLM is using nccl==2.20.5
+INFO 10-18 19:20:27 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/manasganti/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:27 custom_all_reduce_utils.py:242] reading GPU P2P access cache from /home/manasganti/.cache/vllm/gpu_p2p_access_cache_for_0,1.json
+INFO 10-18 19:20:27 shm_broadcast.py:235] vLLM message queue communication handle: Handle(connect_ip='127.0.0.1', local_reader_ranks=[1], buffer=<vllm.distributed.device_communicators.shm_broadcast.ShmRingBuffer object at 0x155442cf2790>, local_subscribe_port=36013, remote_subscribe_port=None)
+INFO 10-18 19:20:27 model_runner.py:997] Starting to load model /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1...
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:27 model_runner.py:997] Starting to load model /home/manasganti/ondemand/data/acereasoning-sft100k/LLaMA-Factory/saves/qwen25_3b_instruct/full_method_s1...
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:00<00:00,  2.07it/s]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:00<00:00,  3.11it/s]
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:00<00:00,  2.89it/s]
+
+INFO 10-18 19:20:28 model_runner.py:1008] Loading model weights took 2.9347 GB
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:28 model_runner.py:1008] Loading model weights took 2.9347 GB
+INFO 10-18 19:20:30 distributed_gpu_executor.py:57] # GPU blocks: 135371, # CPU blocks: 87381
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:45 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:20:45 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 10-18 19:20:45 model_runner.py:1309] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 10-18 19:20:45 model_runner.py:1313] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:21:03 custom_all_reduce.py:223] Registering 2555 cuda graph addresses
+INFO 10-18 19:21:03 custom_all_reduce.py:223] Registering 2555 cuda graph addresses
+[1;36m(VllmWorkerProcess pid=1940123)[0;0m INFO 10-18 19:21:03 model_runner.py:1428] Graph capturing finished in 18 secs.
+INFO 10-18 19:21:03 model_runner.py:1428] Graph capturing finished in 18 secs.
+Processed prompts:   0%|          | 0/40 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]Processed prompts:   2%|▎         | 1/40 [00:19<12:45, 19.62s/it, est. speed input: 2.75 toks/s, output: 168.58 toks/s]Processed prompts:   5%|▌         | 2/40 [00:22<06:00,  9.48s/it, est. speed input: 7.27 toks/s, output: 298.91 toks/s]Processed prompts:   8%|▊         | 3/40 [00:35<06:59, 11.33s/it, est. speed input: 5.85 toks/s, output: 322.04 toks/s]Processed prompts:  10%|█         | 4/40 [00:45<06:25, 10.71s/it, est. speed input: 7.35 toks/s, output: 410.90 toks/s]Processed prompts:  12%|█▎        | 5/40 [00:46<04:19,  7.42s/it, est. speed input: 10.43 toks/s, output: 551.46 toks/s]Processed prompts:  15%|█▌        | 6/40 [00:48<03:06,  5.49s/it, est. speed input: 11.70 toks/s, output: 677.33 toks/s]Processed prompts:  18%|█▊        | 7/40 [00:50<02:17,  4.16s/it, est. speed input: 12.89 toks/s, output: 737.77 toks/s]Processed prompts:  20%|██        | 8/40 [00:51<01:41,  3.18s/it, est. speed input: 15.04 toks/s, output: 815.25 toks/s]Processed prompts:  22%|██▎       | 9/40 [01:01<02:45,  5.34s/it, est. speed input: 13.62 toks/s, output: 814.68 toks/s]Processed prompts:  25%|██▌       | 10/40 [01:10<03:19,  6.65s/it, est. speed input: 13.95 toks/s, output: 864.04 toks/s]Processed prompts:  28%|██▊       | 11/40 [01:34<05:43, 11.85s/it, est. speed input: 11.16 toks/s, output: 753.14 toks/s]Processed prompts:  30%|███       | 12/40 [01:35<03:57,  8.49s/it, est. speed input: 13.61 toks/s, output: 857.81 toks/s]Processed prompts:  32%|███▎      | 13/40 [01:53<05:06, 11.36s/it, est. speed input: 12.44 toks/s, output: 788.62 toks/s]Processed prompts:  35%|███▌      | 14/40 [01:53<03:30,  8.08s/it, est. speed input: 13.35 toks/s, output: 888.92 toks/s]Processed prompts:  38%|███▊      | 15/40 [01:58<03:00,  7.23s/it, est. speed input: 13.29 toks/s, output: 968.20 toks/s]Processed prompts:  40%|████      | 16/40 [02:09<03:13,  8.07s/it, est. speed input: 13.02 toks/s, output: 996.64 toks/s]Processed prompts:  42%|████▎     | 17/40 [02:22<03:43,  9.70s/it, est. speed input: 12.40 toks/s, output: 1023.96 toks/s]Processed prompts:  45%|████▌     | 18/40 [03:22<09:06, 24.84s/it, est. speed input: 9.05 toks/s, output: 852.81 toks/s]  Processed prompts:  48%|████▊     | 19/40 [10:28<50:48, 145.17s/it, est. speed input: 3.05 toks/s, output: 354.40 toks/s]Processed prompts:  50%|█████     | 20/40 [25:08<2:02:01, 366.08s/it, est. speed input: 1.41 toks/s, output: 218.48 toks/s]Processed prompts:  52%|█████▎    | 21/40 [25:11<1:21:21, 256.91s/it, est. speed input: 1.53 toks/s, output: 246.68 toks/s]Processed prompts:  55%|█████▌    | 22/40 [25:12<54:04, 180.23s/it, est. speed input: 1.63 toks/s, output: 277.78 toks/s]  Processed prompts:  57%|█████▊    | 23/40 [25:13<35:46, 126.25s/it, est. speed input: 1.73 toks/s, output: 328.15 toks/s]Processed prompts:  60%|██████    | 24/40 [25:13<23:37, 88.60s/it, est. speed input: 1.83 toks/s, output: 353.03 toks/s] Processed prompts:  62%|██████▎   | 25/40 [25:14<15:34, 62.31s/it, est. speed input: 1.91 toks/s, output: 382.17 toks/s]Processed prompts:  65%|██████▌   | 26/40 [25:15<10:13, 43.79s/it, est. speed input: 1.99 toks/s, output: 474.53 toks/s]Processed prompts:  68%|██████▊   | 27/40 [25:15<06:39, 30.73s/it, est. speed input: 2.06 toks/s, output: 525.66 toks/s]Processed prompts:  72%|███████▎  | 29/40 [25:15<03:02, 16.59s/it, est. speed input: 2.21 toks/s, output: 633.80 toks/s]Processed prompts:  78%|███████▊  | 31/40 [25:16<01:30, 10.05s/it, est. speed input: 2.34 toks/s, output: 712.77 toks/s]Processed prompts:  80%|████████  | 32/40 [25:16<01:02,  7.85s/it, est. speed input: 2.41 toks/s, output: 773.21 toks/s]Processed prompts:  82%|████████▎ | 33/40 [25:16<00:42,  6.05s/it, est. speed input: 2.47 toks/s, output: 852.52 toks/s]Processed prompts:  85%|████████▌ | 34/40 [25:17<00:28,  4.72s/it, est. speed input: 2.51 toks/s, output: 942.51 toks/s]Processed prompts:  90%|█████████ | 36/40 [25:22<00:15,  3.78s/it, est. speed input: 2.70 toks/s, output: 1036.99 toks/s]Processed prompts:  92%|█████████▎| 37/40 [25:29<00:13,  4.57s/it, est. speed input: 2.78 toks/s, output: 1119.63 toks/s]Processed prompts:  95%|█████████▌| 38/40 [25:31<00:07,  3.99s/it, est. speed input: 2.83 toks/s, output: 1144.79 toks/s]Processed prompts:  98%|█████████▊| 39/40 [25:32<00:02,  2.98s/it, est. speed input: 2.90 toks/s, output: 1191.14 toks/s]Processed prompts: 100%|██████████| 40/40 [25:32<00:00,  2.33s/it, est. speed input: 2.94 toks/s, output: 1219.79 toks/s]Processed prompts: 100%|██████████| 40/40 [25:32<00:00, 38.32s/it, est. speed input: 2.94 toks/s, output: 1219.79 toks/s]
+llm generate done
+40
+check correct...:   0%|          | 0/40 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  22%|██▎       | 9/40 [00:00<00:03,  9.33it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  32%|███▎      | 13/40 [00:01<00:03,  7.65it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  40%|████      | 16/40 [00:02<00:03,  7.66it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  65%|██████▌   | 26/40 [00:02<00:01, 12.24it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  70%|███████   | 28/40 [00:02<00:01,  9.81it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  82%|████████▎ | 33/40 [00:03<00:00, 11.76it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+ANTLR runtime and generated code versions disagree: 4.9.3!=4.7.2
+check correct...:  95%|█████████▌| 38/40 [00:03<00:00, 13.57it/s]check correct...: 100%|██████████| 40/40 [00:03<00:00, 11.56it/s]
+writing generation to jsonl file...:   0%|          | 0/40 [00:00<?, ?it/s]writing generation to jsonl file...: 100%|██████████| 40/40 [00:00<00:00, 1488.97it/s]
+correct cnt / total cnt: 28/40
+Acc: 0.7000
+Pass@1: 15.875/40 = 0.3969
+ERROR 10-18 19:46:44 multiproc_worker_utils.py:120] Worker VllmWorkerProcess pid 1940123 died, exit code: -15
+INFO 10-18 19:46:44 multiproc_worker_utils.py:123] Killing local vLLM worker processes
+[rank0]:[W1018 19:46:49.457138194 CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/manasganti/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/manasganti/.conda/envs/evalenv/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked shared_memory objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
