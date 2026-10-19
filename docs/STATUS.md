@@ -167,6 +167,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-18 21:30**: full_method_s1 L40S: minerva done (0.281 / 0.474). olympiadbench + gpqa aborted on swap (24 GiB);
+  math/kaoyan at 40 GiB OOM-killed (pinned-memory power-of-two rounding). Use `VLLM_EVAL_SWAP_GB=35 MEM=128G` (decision log).
+  4 benchmarks done on L40S (aime, cn_math, amc, minerva); math, kaoyan, gpqa, olympiadbench to resubmit.
+
 - **2026-10-18 20:30**: First full_method_s1 scores (Falcon 2× L40S): aime 0.054/0.133, cn_math 0.113/0.367, amc 0.397/0.700
   (Pass@1/Acc). math + kaoyan aborted on CPU swap: L40S KV ~37 GiB/GPU > 24 GiB swap. Swap and job memory are now
   per-job (`VLLM_EVAL_SWAP_GB=40 MEM=128G`, decision log); rerun `bash env/vllm_swap_hook.sh` once per account.

@@ -9,7 +9,7 @@ space" even with the 24 GiB/GPU hook. The logs show 135,371 GPU KV blocks agains
 24 GiB per GPU. With long traces, vLLM can try to swap out more than the swap holds. Swap should be at least the per-GPU
 KV cache. Raising the shared default would endanger queued jobs that ask for `--mem=96G` (pinned swap counts against job
 memory), so both become per-job: the activate hook now keeps a `VLLM_EVAL_SWAP_GB` the job already carries, and
-`eval_model.sh` takes `MEM=`. Resubmit long benchmarks on L40S with `VLLM_EVAL_SWAP_GB=40 MEM=128G`. This changes
+`eval_model.sh` takes `MEM=`. Resubmit long benchmarks on L40S with `VLLM_EVAL_SWAP_GB=35 MEM=128G`. **Not 40:** 40 GiB got OOM-killed at 128G within a minute (658390/91). Likely cause: PyTorch's pinned-memory allocator rounds each per-layer swap tensor up to a power of two (36 layers: 40/36 = 1.11 GiB → 2 GiB, so 72 GiB per GPU), while 35/36 ≤ 1 GiB stays 36 GiB per GPU (72 GiB per 2-GPU job). This changes
 memory only; sampling and grading are untouched, and `eval/` is unchanged. Owners rerun `bash env/vllm_swap_hook.sh` once
 so the hook picks up the new line. *Proposed by Claude for Manas.*
 

@@ -38,6 +38,9 @@ tags: [run]
   657902 (37 min) Pass@1 0.1125, Acc 0.3667; amc 657904 (27 min) Pass@1 0.3969, Acc 0.7000. math 657901 and kaoyan 657903
   aborted on CPU swap (at 238/500 and 43/199); resubmit with `VLLM_EVAL_SWAP_GB=40 MEM=128G`. minerva 657905,
   olympiadbench 657906 and gpqa 657907 running at 20:21.
+- 2026-10-18 21:18: minerva 657905 (1 h 11 min) Pass@1 0.2812, Acc 0.4743. olympiadbench 657906 and gpqa 657907 aborted on
+  CPU swap (24 GiB). Reruns of math/kaoyan at 40 GiB swap (658390/91) were OOM-killed at --mem=128G (power-of-two pinned
+  rounding); resubmit math/kaoyan/gpqa/olympiadbench with `VLLM_EVAL_SWAP_GB=35 MEM=128G`.
 
 ## Test results (Pass@1)
 
