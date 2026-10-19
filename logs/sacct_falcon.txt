@@ -13,5 +13,4 @@ JobID                                              JobName      State    Elapsed
 658477                            eval-full_method_s1-math  COMPLETED   02:39:21 2026-10-18T21:51:09       fal035      0:0 
 658478                          eval-full_method_s1-kaoyan  COMPLETED   02:37:35 2026-10-18T21:59:33       fal043      0:0 
 658479                            eval-full_method_s1-gpqa     FAILED   02:14:35 2026-10-18T23:30:34       fal052      1:0 
-658480                   eval-full_method_s1-olympiadbench    RUNNING   00:08:13 2026-10-19T01:45:23       fal052      0:0 
-             JOBID PARTITION     NAME     USER ST          START_TIME  NODES SCHEDNODES           NODELIST(REASON)
+658480                   eval-full_method_s1-olympiadbench     FAILED   08:14:38 2026-10-19T01:45:23       fal052      1:0 
