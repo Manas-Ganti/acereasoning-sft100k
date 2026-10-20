@@ -1,238 +1,117 @@
 ---
 title: "Selecting 15K Reasoning Examples for SFT: Difficulty- and Topic-Aware Selection vs Random"
 course: ECE 6514 (Trustworthy ML), Fall 2026
-status: draft
-last_updated: 2026-10-12
+status: final
+last_updated: 2026-10-20
 ---
 
 # Selecting 15K Reasoning Examples for SFT: Difficulty- and Topic-Aware Selection vs Random
 
-> [!NOTE]
-> **Draft.** Sections marked **TODO** need the training and eval results (random_s1, random_s2, full_method_s1).
-> Every number here comes from the repo: `docs/steps/*`, `docs/reference/decision-log.md`,
-> `data_subsets/*.meta.json`, `results/`.
-
 **Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
-**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k · **Models:** [advanced](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) · random *TODO (Mrunmay)*
-· **Datasets:** [advanced](https://huggingface.co/datasets/manasganti/acereason-advanced15k) · [random](https://huggingface.co/datasets/manasganti/acereason-random15k)
+**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k
+**Models:** [advanced](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) · random *TODO (Mrunmay)*
+**Datasets:** [advanced](https://huggingface.co/datasets/manasganti/acereason-advanced15k) · [random](https://huggingface.co/datasets/manasganti/acereason-random15k)
 
 ## Abstract
 
-*TODO (write last).* One paragraph covering: the task (pick 15K of 100K R1-distilled reasoning traces to fine-tune
-Qwen2.5-3B-Instruct); the method (clean math only, keep problems the base model mostly fails, balance topics); the
-result vs two random baselines, with the gap compared to the random seed spread; the main findings about the pool.
+We fine-tune Qwen2.5-3B-Instruct on 15K examples chosen from a 100K pool of DeepSeek-R1 reasoning traces
+(AceReason-1.1-SFT), and compare a random 15K subset with a selected one. Our selection keeps clean math problems
+only, keeps the problems the base model solves at most half the time, and balances 100 topic clusters. With identical
+hyperparameters, both fine-tuned models beat the base model on the leaderboard average (pass@8: base 0.544, random
+0.566, advanced 0.575). The advanced subset is ahead of random by 0.9 points, but that is smaller than the
+difference between two random seeds, so **the selection matches random rather than beating it**.
 
----
+## 1. Setup
 
-## 1. Task and setup
-
-**Question.** Does a deliberately chosen 15K subset of a 100K reasoning pool fine-tune a small model better than a
-random 15K subset, at identical hyperparameters, by more than seed-to-seed noise?
-
-| Component | Setting |
+| | |
 |---|---|
 | Base model | `Qwen/Qwen2.5-3B-Instruct` |
-| Pool | `redsgnaoh/acereason11_100k`: 100,000 examples from NVIDIA AceReason-1.1-SFT. Every response is distilled from DeepSeek-R1 (`<think>…</think>` + final solution). 67,432 math, 32,568 code |
-| Subset size | exactly 15,000 examples per run |
-| Training | LLaMA-Factory (course snapshot), the course README YAML verbatim: full fine-tune, DeepSpeed ZeRO-3 offload, FlashAttention-2, lr 5e-6, 3 epochs, per-device batch 1 × grad-accum 8 × 8 GPUs = **global batch 64**, cosine schedule, no warmup, `cutoff_len` 16384, `qwen` template, bf16. ≈703 optimizer steps per run |
-| Hardware | VT ARC Tinkercliffs, 8× A100 per training run |
-| Evaluation | The course `eval/` folder, unmodified (checksums verified): vLLM sampling at temperature 0.6, top-p 0.95, **8 samples per question**, max 32,768 tokens; SymPy `\boxed{}` grader |
-| Benchmarks | AIME24 (30), MATH-500 (499), CN-Math-2024 (30), Kaoyan (199, Chinese, mostly multiple choice), AMC23 (40), Minerva (272), OlympiadBench (675), GPQA-Diamond (198, multiple choice) |
-| Metrics | **Pass@1** (mean accuracy over the 8 samples), our primary metric because it's less noisy. **Acc = pass@8** (≥1 of 8 correct), the course leaderboard metric. **avg(LB6)** = mean over the six leaderboard benchmarks available locally (CN-Math, Kaoyan, AMC, Minerva, OlympiadBench, GPQA; the leaderboard's AIME25 isn't in `eval/data`) |
+| Pool | `redsgnaoh/acereason11_100k`: 100,000 R1-distilled traces (67,432 math, 32,568 code) |
+| Training | LLaMA-Factory, the course README YAML unchanged (Appendix A); 8× A100 per run |
+| Eval | The course `eval/` folder, unmodified: temperature 0.6, top-p 0.95, 8 samples, 32,768 max tokens, `\boxed{}` grader |
+| Metric | **pass@8** (at least 1 of 8 samples correct), as on the leaderboard. **AVG** = mean of the six visible leaderboard benchmarks (CN-Math, Kaoyan, AMC, Minerva, OlympiadBench, GPQA); AIME25 is hidden |
 
-**Comparison rule.** Runs differ **only in their training data**: same base model, YAML, template, cutoff, GPU
-count and eval. A gap between the smart subset and random counts as an improvement only if it is larger than the gap
-between the two random seeds.
+The random and advanced runs differ **only in their training data**.
 
-**System prompt (deliberate, identical for every run).** Datasets are registered exactly as the course README
-does (`{"<name>": {"file_name": "<name>.json"}}`), so training uses the Qwen template's default system prompt, while
-eval uses "Please reason step by step, and put your final answer within \boxed{}." Because it's the same for every
-run, it doesn't bias the comparison.
+## 2. Data selection strategy
 
-## 2. Base model
+An audit of the pool showed four problems with random sampling. A third of the pool is code, which no benchmark tests.
+3.7% of traces exceed the 16,384-token training cutoff and get cut before their final answer. 91 rows contain a test
+question almost verbatim. And many prompts appear several times with different R1 responses. Our selection
+(`scripts/select_subset.py`, deterministic, seed 1) addresses these in four stages:
 
-The untrained Qwen2.5-3B-Instruct, evaluated with the unmodified eval (1 GPU per benchmark; OlympiadBench on 1× H200,
-see §7):
-
-| | AIME24 | MATH | CN-Math | Kaoyan | AMC | Minerva | OlympiadBench | GPQA | avg(LB6) |
-|---|---|---|---|---|---|---|---|---|---|
-| Pass@1 | 0.067 | 0.646 | 0.133 | 0.220 | 0.412 | 0.303 | 0.277 | 0.289 | 0.272 |
-| Acc (pass@8) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.544 |
-| Last year's baseline (Acc) | 0.200 | 0.844 | 0.233 | 0.513 | 0.700 | 0.338 | 0.495 | 0.742 | 0.503 |
-
-Our numbers match last year's within a problem or two everywhere except Minerva (+0.151) and CN-Math (+0.167 =
-5 of 30 problems), where we score *higher*. A broken eval would lower scores, and the hardest-to-grade
-benchmarks (MATH, OlympiadBench) agree within 0.01, so we take the eval environment as sound.
-
-## 3. The pool: what we found before selecting
-
-We measured every one of the 100K examples (tokenizer: Qwen2.5; `scripts/audit_pool.py`):
-
-| | Math | Code |
-|---|---|---|
-| Rows (unique prompts) | 67,432 (59,702) | 32,568 (24,391) |
-| Response length, median / p90 (tokens) | 6,641 / 14,238 | 6,120 / 14,004 |
-| Longer than the 16,384-token training cutoff | 3.7% | 2.8% |
-| Final answer in a balanced `\boxed{}` | 99.3% | 0% (answers are code) |
-
-Further findings:
-- **Truncation teaches the wrong ending.** 3,452 examples exceed `cutoff_len`. Training cuts them before the final
-  answer, which teaches the model to stop without one. A random 15K subset contains about 520 of them.
-- **Contamination.** 91 pool rows contain a test question nearly verbatim (≥50% of its word 8-grams): AMC 4 of 40, MATH 19
-  questions (54 rows), OlympiadBench 27 questions (33 rows). A further 81 rows overlap our dev set.
-- **Duplicates.** 28,372 rows share their prompt with another row (up to 11 R1 responses per prompt).
-- **Proof-style and prose answers.** 4,176 math rows (6.2%) ask for a proof or box a sentence. They can't be checked
-  against an answer.
-- **Quality flags** (repetition loops, language mixing, malformed think tags) are rare: 6 rows.
-
-## 4. Selection method
-
-The smart subset (`full_method_s1`) is built in four stages from per-example scores. Everything is deterministic
-(seed 1) and implemented in `scripts/select_subset.py`.
-
-### 4.1 Clean math only
-Keep math examples that fit in 16,384 tokens, end with a balanced `\boxed{}` answer, aren't proof-like or prose,
-don't overlap the test or dev sets, and carry no quality flag. **Why math only:** none of the eight benchmarks test
-code, and code responses have no `\boxed{}` answer to learn the answer format from or to grade against.
-
-### 4.2 Difficulty for *this* model
-For each of the 59,702 unique math prompts, the base model generated **4 attempts** (same sampling as the eval, with a
-cap of 8,192 tokens; capped attempts count as wrong). The frozen eval grader compared each attempt with **R1's boxed
-answer**, used as a pseudo-label, giving a pass rate in {0, ¼, ½, ¾, 1}. Cost: ≈20.5 A100 GPU-hours over 16 parallel jobs.
-- Keep pass rate **≤ 0.5** (problems the model solves at most half the time). Problems it already solves teach it little.
-- **Label-noise check.** For prompts with several R1 responses, we grouped equivalent final answers. A never-solved row
-  is dropped if its R1 answer is not the strict majority among R1's responses, because R1's label is then likely wrong.
-
-### 4.3 Topic balance
-We embedded each prompt (`BAAI/bge-base-en-v1.5`) and ran k-means with k=100. The clusters are recognisable topics:
-functional equations, probability, triangle geometry, inequalities, conics, combinatorics on grids, and so on; sizes range
-from 181 to 1,242 prompts. We sample with **max-min fair quotas** across clusters (water-filling): every cluster gets
-the same share, capped by what it has.
-
-### 4.4 One response per prompt
-Where a prompt has several R1 responses, we keep one, preferring one that agrees with the R1 majority, so 15,000
-rows = 15,000 distinct problems.
-
-### 4.5 Funnel and resulting composition
+1. **Clean math only.** Keep math examples that fit in the cutoff, end in a `\boxed{}` answer, aren't proofs, don't
+   overlap the test or dev sets, and have no repetition or malformed-output flags.
+2. **Difficulty for this model.** The base model attempted every math prompt 4 times, graded against R1's answer
+   (≈20.5 A100 GPU-hours). We keep problems with pass rate ≤ 0.5. For never-solved problems, we also drop any where R1's
+   own responses disagree on the answer, since the label is then likely wrong.
+3. **Topic balance.** We embed prompts (`bge-base-en-v1.5`), run k-means with k=100, and sample equal quotas per
+   cluster. No topic exceeds 1% of the subset.
+4. **One response per prompt.** The result is 15,000 distinct problems.
 
 | Step | Rows left |
 |---|---|
 | Pool | 100,000 |
 | Math | 67,432 |
-| Fits in 16,384 tokens | 64,907 |
-| Balanced `\boxed{}` answer | 64,712 |
-| Not proof-like / prose | 60,648 |
-| Not in test set / dev set | 60,586 / 60,508 |
-| No quality flag | 60,504 |
-| Pass rate ≤ 0.5 | 47,768 |
-| Drop never-solved rows with a minority R1 answer | 46,333 |
-| One response per prompt | 41,626 unique problems |
+| Clean (cutoff, `\boxed{}`, no proofs, no contamination, no flags) | 60,504 |
+| Pass rate ≤ 0.5, label check | 46,333 |
+| One response per prompt | 41,626 |
 | Topic-balanced sample | **15,000** |
 
-| | Random (`random_s1`) | Smart (`full_method_s1`) |
+| | Random 15K (expected) | Advanced 15K |
 |---|---|---|
-| Math / code | 10,192 / 4,808 | 15,000 / 0 |
-| Truncated at 16,384 | 520 | 0 |
-| Overlap with test questions | 14 | 0 |
-| Base pass rate 0 / ¼ / ½ (of math) | *TODO: from pool_scores* | 10,612 / 2,619 / 1,769 |
-| Largest topic cluster | *TODO* | 1.0% (150 per cluster) |
-| Training tokens (capped at cutoff) | ≈112M | 112.3M |
-| Median example length | 6,617 tokens | 6,802 tokens |
+| Math / code | ≈10.1K / 4.9K | 15,000 / 0 |
+| Truncated traces | ≈520 | 0 |
+| Test-contaminated rows | ≈14 | 0 |
+| Base model never solves (0/4) | — | 71% |
+| Training tokens | ≈112M | 112.3M |
 
-Both subsets have nearly the same number of training tokens, so compute isn't a confound. Fingerprints (sha256 of
-the sorted pool indices): `random_s1` `6212267e…`, `random_s2` `b55e6eaa…`, `full_method_s1` `d733da24…`.
+The two subsets have the same number of training tokens, so compute is not a confound.
 
-## 5. Experiments
+## 3. Results
 
-| Run | Data | Purpose | Status |
-|---|---|---|---|
-| `random_s2` | uniform random 15K of 100K, seed 2 | **the random baseline** (the better of two seeds) | trained; 8/8 evals |
-| `random_s1` | uniform random 15K of 100K, seed 1 | second seed → **seed spread** (noise floor) | trained; 7/8 evals (Minerva not available) |
-| `full_method_s1` | §4, seed 1 | the smart subset | trained; 8/8 evals |
+Pass@8. ★ = counts toward the leaderboard average.
 
-We trained two random seeds and report the **better** one (`random_s2`, ahead on every aggregate of the benchmarks
-both finished) as the random baseline. Picking the stronger baseline can only make the comparison harder for our
-method. `random_s1` is shown as a second-seed row to measure seed noise.
-
-**Noise accounting** (`scripts/collect_results.py`): (1) the **seed spread**, max − min over the random runs,
-which covers data sampling plus training nondeterminism; (2) a **bootstrap 95% CI** of each run's gap to the random
-mean, resampling problems within each benchmark, which covers eval sampling only.
-
-## 6. Results
-
-Pass@8 (any of 8 samples correct), the leaderboard metric, with the course's fixed eval (temp 0.6, top-p 0.95,
-8 samples, 32,768 max tokens). ★ = in the leaderboard average; AVG is the mean of the six visible ★ benchmarks
-(AIME25 is hidden and scored by the course staff).
-
-| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA | AVG |
+| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA | **AVG** |
 |---|---|---|---|---|---|---|---|---|---|
-| Base (Qwen2.5-3B-Instruct) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.544 |
-| Random 15K | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | 0.501 | 0.768 | 0.566 |
-| Advanced 15K (`full_method_s1`) | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | 0.505 | 0.798 | 0.575 |
+| Base (Qwen2.5-3B-Instruct) | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | **0.544** |
+| Random 15K | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | 0.501 | 0.768 | **0.566** |
+| Advanced 15K | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | 0.505 | 0.798 | **0.575** |
+| *Advanced − Random* | *−0.100* | *+0.024* | *0.000* | *−0.005* | *0.000* | *+0.022* | *+0.004* | *+0.030* | ***+0.009*** |
 
-We trained two random subsets (seeds 1 and 2) and report the better one (seed 2) as the random baseline, which
-makes it a harder bar to beat. On the benchmarks both finished, the two random seeds differ by up to 0.03–0.04
-on the small benchmarks (CN-Math, Kaoyan), so gaps of that size are within noise.
+We trained two random subsets (seeds 1 and 2) and report the better one (seed 2), which makes it a harder baseline to
+beat. On the benchmarks both seeds completed, the two random models differ by up to 0.033 on a single benchmark.
 
-*TODO when the last evals finish:* one paragraph comparing Advanced vs Random vs Base.
+## 4. Comparison and analysis
 
-## 7. Discussion and findings
+- **Fine-tuning helps on the leaderboard average.** Random is +2.2 points and advanced +3.1 points over base. The gains
+  come from Kaoyan (+8), GPQA (+6 to +9) and AMC (+5). CN-Math drops by one problem for both.
+- **Selection doesn't clearly beat random.** The +0.9-point AVG gap is well inside the seed-to-seed spread, so it
+  isn't an improvement. Per benchmark, advanced is ahead on GPQA (+3.0, 6 questions), MATH (+2.4) and Minerva (+2.2),
+  level on CN-Math, Kaoyan, AMC and OlympiadBench, and behind on AIME24 (−10 points, which is 3 of 30 problems).
+- **Cleaning the data didn't matter at this scale.** The random subset still contains ≈4.9K code examples, ≈520
+  truncated traces and ≈14 contaminated rows, and it scores the same. 15K R1 traces seem to transfer similarly
+  whatever their mix.
+- **The difficulty band may be too hard for a 3B model.** 71% of the advanced subset is problems the base model never
+  solved. Imitating R1 on problems far beyond the model's reach may teach it little more than random problems do.
+- **The gains are in pass@8, not per-sample accuracy.** Averaged over the same six benchmarks, Pass@1 (mean over the 8
+  samples) is 0.272 for base, 0.261 for random and 0.263 for advanced. Fine-tuning at this budget makes the model's 8
+  attempts more diverse (more problems solved at least once) without making a single attempt more accurate.
 
-*TODO: interpret results.* Findings already established:
-1. **The pool is hard for a 3B model.** Over the 67,432 math rows, the base model's pass rate has median 0 and mean
-   0.26: it solves none of 4 attempts on more than half the problems (mostly AoPS-style OpenMathReasoning). As a result
-   the difficulty band [0, 0.5] is dominated by never-solved problems (71% of the smart subset). Whether a 3B model
-   can learn from R1 traces on problems it never solves is the main open question this design tests.
-2. **R1 pseudo-labels are mostly self-consistent.** Among 14,758 answered math rows with several R1 responses, mean
-   agreement is 0.917 (median 1.0). In a manual check of 15 disagreeing prompts, about half were genuine
-   disagreements (`40` vs `140`) and about half were the same answer in different notation (`n≥4, n≠5` vs `n=4 or n≥6`),
-   so our majority filter is conservative. (The grader-log summary of 0.5 also counted code rows, whose empty answers
-   never match; it doesn't describe math.)
-3. **Most of what separates the smart subset from random is cleaning.** A random 15K includes ~4.8K code examples,
-   ~520 truncated traces and ~14 test-contaminated rows; the smart subset has none of these.
+## 5. Limitations
 
-## 8. Limitations
+- **One seed per method.** Variance is measured only on the random side (two seeds), and ablations of the selection
+  stages were not trained, so we can't attribute effects to individual stages.
+- **Difficulty is coarse.** It comes from 4 attempts with an 8,192-token cap, graded against R1's answer as a
+  pseudo-label.
+- **Eval hardware differs.** Advanced was evaluated on 2× L40S and random on 2× A100 (whichever cluster's queue was
+  free). Sampling and grading are identical, but small numeric differences are possible.
+- **Our base scores run higher than last year's** on Minerva (+0.15) and CN-Math (+0.17), and match elsewhere.
+  Comparisons within this report use one environment and are unaffected.
 
-- **No ablations trained.** `filter_only_s1` (cleaning only) and `filter_difficulty_s1` (+ difficulty) were built and
-  committed but not trained, for GPU-queue reasons (decision log, 2026-10-12). We therefore can't attribute any gap to
-  a single component (cleaning vs difficulty vs topic balance).
-- **One seed for the smart subset.** Variance is measured on the random side only.
-- **Difficulty from 4 attempts** with an 8,192-token cap and R1's answer as the label. Pass rates are coarse, and a
-  wrong R1 label makes a problem look unsolved.
-- **Contamination check is near-verbatim only** (8-gram overlap ≥ 0.5). Paraphrased or translated test questions can
-  pass; the 0.3–0.5 near-misses weren't hand-checked.
-- **Eval hardware.** Trained models are evaluated on 2 GPUs (tensor parallel) to avoid a vLLM CPU-swap crash on long
-  outputs. The base model used 1 GPU (OlympiadBench on 1× H200). Sampling and grading are unchanged, but floating-point
-  differences across hardware are possible.
-- **Environments across teammates' accounts** differ in three data-loading packages (`pyarrow`, `datasets`, `pandas`;
-  decision log 2026-10-10). Sampling and grading packages are identical.
-- **Training runs were raced across accounts**; the kept copy is the first to *finish training*, decided before any
-  eval score existed.
-- **The official grader slightly undercounts when the machine is busy.** `eval/utils/grader.py` gives each symbolic
-  equivalence check 3 s; checks that run over count as wrong. Regrading `random_s2`'s Minerva answers on a quieter machine
-  flipped 5 responses (3 problems) from wrong to right, about +1 pt Acc / +0.2 pt Pass@1. The eval is frozen, so the
-  official numbers are reported, but this adds load-dependent noise to every run.
-- **Eval infrastructure failures, all fixed without touching `eval/`:** an unreadable `tokenizer.json` and missing chat
-  template (newer transformers in the training env), forked vLLM workers crashing on 2 GPUs, CPU-swap overflow on long
-  outputs, a vLLM 0.6.1 scheduler assertion under recompute preemption, and one Minerva run that hung in grading. Each
-  was fixed with a documented environment hook (decision log, Oct 15–17), and the affected benchmarks were rerun.
-- **Second smart method not trained.** `longest_s1` (the 15K longest clean traces) was proposed but not built or trained
-  in time.
+## Appendix A: Hyperparameters (final model and all runs)
 
-## 9. Reproducibility and deviations from the course README
-
-Commands, in order: `env/setup_envs.sh` → `scripts/fetch_data.py` → `scripts/audit_pool.py` → `launch/eval_model.sh base`
-→ `scripts/make_random_subsets.py --seeds 1 2` → `launch/score_pool.sh` → `scripts/select_subset.py full_method --seed 1`
-→ `scripts/make_config.py <run>` → `EVAL=1 launch/train.sh <run>` → `scripts/collect_results.py`. Teammates rebuild a
-committed subset from its row list with `scripts/subset_from_idx.py <name>`, which checks the fingerprint.
-
-Deviations from the course README (only where a step was broken as written) are listed in
-[docs/reference/upstream-compliance.md](../docs/reference/upstream-compliance.md): the course LLaMA-Factory snapshot,
-torch pinned to 2.6.0+cu126 for flash-attn, the antlr4/latex2sympy2 conflict, `save_total_limit: 1` for disk, 8 GPUs
-and a 23 h limit instead of the sample's 1 GPU and 1 h. Every decision with its date and reason is in
-[docs/reference/decision-log.md](../docs/reference/decision-log.md).
-
-## Appendix A: Training hyperparameters (all runs)
+The course README YAML, unchanged. Each run's YAML differs only in `dataset` and `output_dir`.
 
 ```yaml
 model_name_or_path: Qwen/Qwen2.5-3B-Instruct
@@ -252,3 +131,7 @@ bf16: true
 save_steps: 100
 save_total_limit: 1                 # added: disk only
 ```
+
+Reproduction steps, deviations from the course README and dated decisions are in the repo's
+[README](../README.md), [upstream-compliance](../docs/reference/upstream-compliance.md) and
+[decision log](../docs/reference/decision-log.md).
