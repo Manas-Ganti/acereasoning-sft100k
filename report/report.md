@@ -21,19 +21,38 @@ hyperparameters, both fine-tuned models beat the base model on the leaderboard a
 0.566, advanced 0.575). The advanced subset is ahead of random by 0.9 points, but that is smaller than the
 difference between two random seeds, so **the selection matches random rather than beating it**.
 
-## 1. Setup
+## 1. Motivation and hypothesis
+
+All benchmarks are math or science with a `\boxed{}` answer, but a random 15K subset of the pool is one third code,
+includes traces that training truncates before the answer, and spends many examples on problems the 3B model already
+solves. **Hypothesis:** a subset of clean math problems at the edge of the model's ability (solved at most half the
+time), balanced across topics, teaches more per example than a random subset, and so beats random at the same
+hyperparameters and the same number of examples. This combines the difficulty-based and diversity-based strategies
+suggested in the course README.
+
+## 2. Experimental setup
 
 | | |
 |---|---|
 | Base model | `Qwen/Qwen2.5-3B-Instruct` |
 | Pool | `redsgnaoh/acereason11_100k`: 100,000 R1-distilled traces (67,432 math, 32,568 code) |
-| Training | LLaMA-Factory, the course README YAML unchanged (Appendix A); 8× A100 per run |
-| Eval | The course `eval/` folder, unmodified: temperature 0.6, top-p 0.95, 8 samples, 32,768 max tokens, `\boxed{}` grader |
+| Random subset | 15,000 rows drawn uniformly without replacement from all 100K (`numpy.random.default_rng(seed)`, `scripts/make_random_subsets.py`), converted to the course's LLaMA-Factory JSON format and registered in `dataset_info.json` as the README shows |
+| Advanced subset | §3 |
+| Training | LLaMA-Factory, the course README YAML unchanged (Appendix A); 8× A100-80GB per run |
+| Eval | The course `eval/` folder, unmodified (checksum-verified): temperature 0.6, top-p 0.95, 8 samples, 32,768 max tokens, `\boxed{}` grader; one job per benchmark |
 | Metric | **pass@8** (at least 1 of 8 samples correct), as on the leaderboard. **AVG** = mean of the six visible leaderboard benchmarks (CN-Math, Kaoyan, AMC, Minerva, OlympiadBench, GPQA); AIME25 is hidden |
 
-The random and advanced runs differ **only in their training data**.
+The random and advanced runs differ **only in their training data**: same base model, YAML, template, cutoff, GPU
+count and eval protocol for base, random and advanced.
 
-## 2. Data selection strategy
+**Training runs**
+
+| Run | Subset | Steps | Final train loss | Wall time (8× A100) |
+|---|---|---|---|---|
+| Random | `random_s2` | 705 | 0.631 | 5 h 28 min |
+| Advanced | `full_method_s1` | 705 | 0.569 | 20 h 04 min (slower node; same config) |
+
+## 3. Data selection strategy
 
 An audit of the pool showed four problems with random sampling. A third of the pool is code, which no benchmark tests.
 3.7% of traces exceed the 16,384-token training cutoff and get cut before their final answer. 91 rows contain a test
@@ -68,7 +87,7 @@ question almost verbatim. And many prompts appear several times with different R
 
 The two subsets have the same number of training tokens, so compute is not a confound.
 
-## 3. Results
+## 4. Results
 
 Pass@8. ★ = counts toward the leaderboard average.
 
@@ -82,7 +101,7 @@ Pass@8. ★ = counts toward the leaderboard average.
 We trained two random subsets (seeds 1 and 2) and report the better one (seed 2), which makes it a harder baseline to
 beat. On the benchmarks both seeds completed, the two random models differ by up to 0.033 on a single benchmark.
 
-## 4. Comparison and analysis
+## 5. Comparison and analysis
 
 - **Fine-tuning helps on the leaderboard average.** Random is +2.2 points and advanced +3.1 points over base. The gains
   come from Kaoyan (+8), GPQA (+6 to +9) and AMC (+5). CN-Math drops by one problem for both.
@@ -98,7 +117,7 @@ beat. On the benchmarks both seeds completed, the two random models differ by up
   samples) is 0.272 for base, 0.261 for random and 0.263 for advanced. Fine-tuning at this budget makes the model's 8
   attempts more diverse (more problems solved at least once) without making a single attempt more accurate.
 
-## 5. Limitations
+## 6. Limitations and improvements
 
 - **One seed per method.** Variance is measured only on the random side (two seeds), and ablations of the selection
   stages were not trained, so we can't attribute effects to individual stages.
@@ -108,6 +127,14 @@ beat. On the benchmarks both seeds completed, the two random models differ by up
   free). Sampling and grading are identical, but small numeric differences are possible.
 - **Our base scores run higher than last year's** on Minerva (+0.15) and CN-Math (+0.17), and match elsewhere.
   Comparisons within this report use one environment and are unaffected.
+
+**Improvements we would make next:**
+- Train the ablations already built (`filter_only_s1`, `filter_difficulty_s1`) to see whether difficulty filtering or
+  topic balance helps or hurts on its own, and a second seed of the advanced subset.
+- Move the difficulty band toward problems the model sometimes solves (pass rate ¼–½ instead of mostly 0), since 71%
+  never-solved problems may be too hard to learn from at 3B.
+- Score difficulty with more attempts (k=8) and a longer token cap, for less noisy pass rates.
+- Add Chinese and multiple-choice examples, since Kaoyan and GPQA reward formats a math-only subset lacks.
 
 ## Appendix A: Hyperparameters (final model and all runs)
 
