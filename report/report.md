@@ -1,25 +1,39 @@
 ---
 title: "Selecting 15K Reasoning Examples for SFT: Difficulty- and Topic-Aware Selection vs Random"
 course: ECE 6514 (Trustworthy ML), Fall 2026
-status: draft
-last_updated: 2026-10-12
+status: final draft
+last_updated: 2026-10-20
 ---
 
 # Selecting 15K Reasoning Examples for SFT: Difficulty- and Topic-Aware Selection vs Random
 
 > [!NOTE]
-> **Draft.** Sections marked **TODO** need the training and eval results (random_s1, random_s2, full_method_s1).
-> Every number here comes from the repo: `docs/steps/*`, `docs/reference/decision-log.md`,
-> `data_subsets/*.meta.json`, `results/`.
+> Every number here comes from the repo: the eval logs in `eval/outputs/<run>/log_<bench>.txt`, `docs/runs/*.md`,
+> `docs/steps/*`, `docs/reference/decision-log.md` and `data_subsets/*.meta.json`.
 
 **Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
-**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k · **Models / datasets:** *TODO: HF links*
+
+| Artifact | Link |
+|---|---|
+| Code | https://github.com/Manas-Ganti/acereasoning-sft100k |
+| Random 15K dataset (`random_s1`) | https://huggingface.co/datasets/Mrunmayp/acereason-random15k |
+| Smart 15K dataset (`full_method_s1`) | https://huggingface.co/datasets/Mrunmayp/acereason-smart15k |
+| Random-subset model | https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k |
+| Smart-subset model | *TODO: link once Manas uploads `full_method_s1` (`scripts/push_to_hub.py model full_method_s1 <hf_user>/qwen25-3b-acereason-smart15k`)* |
 
 ## Abstract
 
-*TODO (write last).* One paragraph covering: the task (pick 15K of 100K R1-distilled reasoning traces to fine-tune
-Qwen2.5-3B-Instruct); the method (clean math only, keep problems the base model mostly fails, balance topics); the
-result vs two random baselines, with the gap compared to the random seed spread; the main findings about the pool.
+We pick 15,000 of the 100,000 DeepSeek-R1-distilled reasoning traces in AceReason-1.1-SFT to fully fine-tune
+Qwen2.5-3B-Instruct, and ask whether a deliberate choice beats a random one by more than seed noise. Our method keeps
+clean math only (no code, no traces cut by the 16K training cutoff, no proofs, no test overlap), keeps problems the
+base model solves at most half the time (from 4 sampled attempts graded against R1's answer, with a label-noise
+filter), and balances 100 topic clusters. We train two random baselines (seeds 1, 2) and the smart subset at identical
+hyperparameters and evaluate all on the course's eight benchmarks. **The smart subset does not beat random by more than
+noise.** On the six leaderboard benchmarks, its Pass@1 is 0.263 against 0.255 / 0.261 for the random seeds (gap to the
+random mean +0.005, seed spread 0.006), and its pass@8 is 0.575 against 0.561 / 0.566 (+0.009, spread 0.005, but below
+the ≈1-point hardware and grader noise we measured). All three fine-tuned models score *below* the base model on
+Pass@1 (0.272) and *above* it on pass@8 (0.544). The pool turned out to be very hard for a 3B model (median base
+pass rate 0), so the difficulty band is dominated by problems the model never solves.
 
 ---
 
@@ -51,7 +65,7 @@ run, it doesn't bias the comparison.
 ## 2. Base model
 
 The untrained Qwen2.5-3B-Instruct, evaluated with the unmodified eval (1 GPU per benchmark; OlympiadBench on 1× H200,
-see §7):
+see §8):
 
 | | AIME24 | MATH | CN-Math | Kaoyan | AMC | Minerva | OlympiadBench | GPQA | avg(LB6) |
 |---|---|---|---|---|---|---|---|---|---|
@@ -133,8 +147,8 @@ rows = 15,000 distinct problems.
 | Math / code | 10,192 / 4,808 | 15,000 / 0 |
 | Truncated at 16,384 | 520 | 0 |
 | Overlap with test questions | 14 | 0 |
-| Base pass rate 0 / ¼ / ½ (of math) | *TODO: from pool_scores* | 10,612 / 2,619 / 1,769 |
-| Largest topic cluster | *TODO* | 1.0% (150 per cluster) |
+| Base pass rate 0 / ¼ / ½ (of math) | not computed (uniform over all pass rates) | 10,612 / 2,619 / 1,769 |
+| Topic clusters | not balanced (uniform over the pool) | 100 × 150 rows (1.0% each) |
 | Training tokens (capped at cutoff) | ≈112M | 112.3M |
 | Median example length | 6,617 tokens | 6,802 tokens |
 
@@ -145,61 +159,105 @@ the sorted pool indices): `random_s1` `6212267e…`, `random_s2` `b55e6eaa…`, 
 
 | Run | Data | Purpose | Status |
 |---|---|---|---|
-| `random_s1` | uniform random 15K of 100K, seed 1 | baseline | *TODO* |
-| `random_s2` | uniform random 15K of 100K, seed 2 | second baseline → **seed spread** (noise floor) | *TODO* |
-| `full_method_s1` | §4, seed 1 | the smart subset | *TODO* |
+| `random_s1` | uniform random 15K of 100K, seed 1 | baseline | trained 7 h 44 min (8× A100), loss 0.633; 8/8 evals (Minerva regraded, §6) |
+| `random_s2` | uniform random 15K of 100K, seed 2 | second baseline → **seed spread** (noise floor) | trained 5 h 28 min (8× A100), loss 0.631; 8/8 evals |
+| `full_method_s1` | §4, seed 1 | the smart subset | trained 20 h 04 min (8× A100, slower node), loss 0.569; 8/8 evals |
 
-**Noise accounting** (`scripts/collect_results.py`): (1) the **seed spread**, max − min over the random runs,
-which covers data sampling plus training nondeterminism; (2) a **bootstrap 95% CI** of each run's gap to the random
-mean, resampling problems within each benchmark, which covers eval sampling only.
+All three trained for 705 optimizer steps with the same YAML. Training losses aren't comparable across runs (different
+data mixes). Wall-time differences come from the nodes, not the configs.
+
+**Noise accounting.** The **seed spread** (max − min over the two random runs) covers data sampling plus training
+nondeterminism, and is the bar a gap must clear. Two seeds give only a rough estimate of it, so we also report the
+two measured sources of eval-side noise (§6.3). We didn't compute bootstrap CIs, because the per-sample outputs
+stayed on the cluster accounts.
 
 ## 6. Results
 
-> [!NOTE]
-> **Partial, as of 2026-10-18.** Official `Acc` / `Pass@1` lines from each benchmark's eval log (recorded in
-> `docs/runs/*.md`). `—` = not finished yet. The final table is `results/results.md`, generated by
-> `scripts/collect_results.py --from-logs` once all logs are in; that table replaces this one.
+Official `Acc` / `Pass@1` lines from each benchmark's eval log (`eval/outputs/<run>/log_<bench>.txt`), one
+exception marked ‡. ★ = in the leaderboard average. avg(8) is over all eight benchmarks; avg(LB6) over the six ★.
 
-**Pass@1** (mean over 8 samples; primary metric). ★ = in the leaderboard average.
+### 6.1 Pass@1 (mean over 8 samples; primary metric)
 
-| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA |
-|---|---|---|---|---|---|---|---|---|
-| Base | 0.067 | 0.646 | 0.133 | 0.221 | 0.412 | 0.303 | 0.277 | 0.289 |
-| random_s1 | 0.063 | 0.649 | 0.092 | 0.256 | 0.372 | — | 0.272 | 0.265 |
-| random_s2 | 0.079 | — | 0.133 | 0.256 | 0.359 | 0.277 | — | 0.269 |
-| full_method_s1 | — | — | — | — | — | — | — | — |
+| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA | avg(8) | **avg(LB6)** |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Base | 0.067 | 0.646 | 0.133 | 0.220 | 0.412 | 0.303 | 0.277 | 0.289 | 0.293 | **0.272** |
+| random_s1 | 0.063 | 0.649 | 0.092 | 0.256 | 0.372 | 0.277‡ | 0.272 | 0.265 | 0.281 | **0.255** |
+| random_s2 | 0.079 | 0.650 | 0.133 | 0.256 | 0.359 | 0.277 | 0.272 | 0.269 | 0.287 | **0.261** |
+| full_method_s1 | 0.054 | 0.668 | 0.113 | 0.241 | 0.397 | 0.281 | 0.272 | 0.275 | 0.288 | **0.263** |
 
-**Acc = pass@8** (any of 8 samples correct; leaderboard metric).
+### 6.2 Acc = pass@8 (any of 8 samples correct; leaderboard metric)
 
-| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA |
-|---|---|---|---|---|---|---|---|---|
-| Base | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 |
-| random_s1 | 0.233 | 0.864 | 0.333 | 0.638 | 0.675 | — | 0.507 | 0.763 |
-| random_s2 | 0.233 | — | 0.367 | 0.608 | 0.700 | 0.452 | — | 0.768 |
-| full_method_s1 | — | — | — | — | — | — | — | — |
+| Model | AIME24 | MATH | ★CN-Math | ★Kaoyan | ★AMC | ★Minerva | ★Olympiad | ★GPQA | avg(8) | **avg(LB6)** |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Base | 0.167 | 0.854 | 0.400 | 0.528 | 0.650 | 0.489 | 0.492 | 0.707 | 0.536 | **0.544** |
+| random_s1 | 0.233 | 0.864 | 0.333 | 0.638 | 0.675 | 0.452‡ | 0.507 | 0.763 | 0.558 | **0.561** |
+| random_s2 | 0.233 | 0.848 | 0.367 | 0.608 | 0.700 | 0.452 | 0.501 | 0.768 | 0.560 | **0.566** |
+| full_method_s1 | 0.133 | 0.872 | 0.367 | 0.603 | 0.700 | 0.474 | 0.505 | 0.798 | 0.557 | **0.575** |
 
-**What the partial numbers show (random vs base):** random-subset SFT does not clearly improve on the base model.
-Kaoyan rises for both seeds (Pass@1 0.221 → 0.256; Acc 0.528 → 0.638 / 0.608), and pass@8 rises on GPQA
-(0.707 → 0.763 / 0.768). AMC drops slightly, and MATH and OlympiadBench are level. Where both random seeds have a score,
-they agree closely (Kaoyan Pass@1 equal, GPQA 0.265 vs 0.269, AMC 0.372 vs 0.359), which suggests a small seed spread.
+‡ **random_s1 Minerva is a regrade, not an official log line.** Its eval hung in grading on both attempts (jobs
+7999727 and 8051762, TIMEOUT at 10 h and 4 h), after generation had finished and saved its outputs. Generation is
+deterministic (both attempts wrote an identical 60,862,951-byte completions file). We regraded that file on CPU
+with the eval's own, unmodified parsing and grading functions (`scripts/diagnose_grading_hang.py`, nothing under
+`eval/` touched); no sample hung. The result happens to equal random_s2's official Minerva score exactly
+(0.4522 / 0.2767). That is a coincidence: the two models' responses differ.
 
-*TODO when complete:* avg(LB6) per model, the seed spread, `full_method_s1` vs mean(random) compared with that spread,
-the dev-set results, and the eval hardware per benchmark (A100 / L40S racing copies).
+**Hardware.** Base and both random models were evaluated on Tinkercliffs A100s (base on 1 GPU, OlympiadBench on
+1× H200; trained models on 2× A100). `full_method_s1` was evaluated on Falcon 2× L40S, because that queue was free.
+Sampling settings and code are identical.
+
+### 6.3 Smart vs random, against noise
+
+| | Pass@1 avg(LB6) | Acc avg(LB6) |
+|---|---|---|
+| random_s1 / random_s2 | 0.255 / 0.261 | 0.561 / 0.566 |
+| **Seed spread** (the bar) | **0.006** | **0.005** |
+| full_method_s1 | 0.263 | 0.575 |
+| Gap to random mean | +0.005 | +0.009 |
+| Gap to the better random seed | +0.002 | +0.009 |
+| Verdict | **within seed spread** | above the 2-seed spread, **below eval noise** |
+
+Two measured eval-side noise sources are as large as these gaps:
+- **Hardware.** `full_method_s1` MATH also ran on Tinkercliffs 2× A100: Pass@1 0.659 / Acc 0.854, against 0.668 / 0.872
+  on L40S. That is the same model, data and sampling, differing by 0.009 Pass@1 and 0.018 Acc on a 499-problem benchmark.
+- **Grader load.** Grading random_s2's Minerva again on a quieter machine flipped 5 responses (3 problems) from wrong
+  to right: +0.011 Acc, +0.002 Pass@1 (§8).
+
+With only two random seeds the spread itself is uncertain (last year's two random runs differed by 4 points of
+pass@8). We therefore **do not claim an improvement**: the smart subset is indistinguishable from random on Pass@1,
+and its +0.9-point pass@8 edge is smaller than the noise measured on a single benchmark.
+
+Per benchmark (Pass@1), `full_method_s1` is highest on MATH (+0.019 over random mean), AMC (+0.031, about one AMC
+problem's worth of samples) and GPQA (+0.008), and lowest on AIME (−0.017, half a problem) and Kaoyan (−0.015). The
+largest pass@8 move is AIME −0.100 (3 of 30 problems). None of these is reliable: with two seeds, a per-benchmark
+spread of 0.000 only means the seeds tied.
 
 ## 7. Discussion and findings
 
-*TODO: interpret results.* Findings already established:
-1. **The pool is hard for a 3B model.** Over the 67,432 math rows, the base model's pass rate has median 0 and mean
+1. **Selection didn't matter measurably at this scale.** Training on 15K clean, hard, topic-balanced math traces gives
+   the same Pass@1 as training on 15K random traces that are one-third code, with ~520 truncated traces and 14 test
+   overlaps. Full fine-tuning on any 15K R1 traces seems to move the 3B model in the same direction, and the content of
+   the subset is a second-order effect next to seed and eval noise.
+2. **SFT on R1 traces trades Pass@1 for pass@8.** Every fine-tuned model is below base on Pass@1 avg(LB6) (−0.009 to
+   −0.017) and above it on pass@8 (+0.017 to +0.031). The models write long R1-style traces, which makes samples more
+   varied: more problems are solved at least once in 8, but each sample is right less often. The gains are concentrated
+   in the multiple-choice benchmarks (Kaoyan pass@8 0.528 → 0.60–0.64, GPQA 0.707 → 0.76–0.80), even though the smart
+   subset has no multiple-choice data. Short-answer math (AMC, CN-Math, Minerva Pass@1) mostly drops.
+3. **The pool is hard for a 3B model.** Over the 67,432 math rows, the base model's pass rate has median 0 and mean
    0.26: it solves none of 4 attempts on more than half the problems (mostly AoPS-style OpenMathReasoning). As a result
-   the difficulty band [0, 0.5] is dominated by never-solved problems (71% of the smart subset). Whether a 3B model
-   can learn from R1 traces on problems it never solves is the main open question this design tests.
-2. **R1 pseudo-labels are mostly self-consistent.** Among 14,758 answered math rows with several R1 responses, mean
+   the difficulty band [0, 0.5] is dominated by never-solved problems (71% of the smart subset). The null result is
+   consistent with a 3B model learning little from R1 traces on problems far beyond it; a band nearer 0.25–0.75, or the
+   untrained `hardest_only` / `filter_only` ablations, would test this.
+4. **R1 pseudo-labels are mostly self-consistent.** Among 14,758 answered math rows with several R1 responses, mean
    agreement is 0.917 (median 1.0). In a manual check of 15 disagreeing prompts, about half were genuine
    disagreements (`40` vs `140`) and about half were the same answer in different notation (`n≥4, n≠5` vs `n=4 or n≥6`),
    so our majority filter is conservative. (The grader-log summary of 0.5 also counted code rows, whose empty answers
    never match; it doesn't describe math.)
-3. **Most of what separates the smart subset from random is cleaning.** A random 15K includes ~4.8K code examples,
-   ~520 truncated traces and ~14 test-contaminated rows; the smart subset has none of these.
+5. **Most of what separates the smart subset from random is cleaning,** yet cleaning, difficulty and topic balance
+   together didn't produce a measurable gain: removing ~4.8K code examples, ~520 truncated traces and 14 contaminated
+   rows didn't help or hurt beyond noise. Without the ablations we can't say whether the components cancel out.
+6. **Eval cost and fragility dominated the project.** Post-SFT models write 5–15K-token traces × 8 samples, so random_s2's
+   eight benchmarks alone took ≈21 h on 2 GPUs (≈42 GPU-hours), and the frozen vLLM 0.6.1 stack failed in five
+   distinct ways (§8). This, not training, is why ablations and a second smart seed weren't run.
 
 ## 8. Limitations
 
@@ -211,9 +269,13 @@ the dev-set results, and the eval hardware per benchmark (A100 / L40S racing cop
   wrong R1 label makes a problem look unsolved.
 - **Contamination check is near-verbatim only** (8-gram overlap ≥ 0.5). Paraphrased or translated test questions can
   pass; the 0.3–0.5 near-misses weren't hand-checked.
-- **Eval hardware.** Trained models are evaluated on 2 GPUs (tensor parallel) to avoid a vLLM CPU-swap crash on long
-  outputs. The base model used 1 GPU (OlympiadBench on 1× H200). Sampling and grading are unchanged, but floating-point
-  differences across hardware are possible.
+- **Eval hardware differs between the smart and random models.** Trained models are evaluated on 2 GPUs (tensor
+  parallel) to avoid a vLLM CPU-swap crash on long outputs: both random models on 2× A100, `full_method_s1` on 2× L40S
+  (Falcon). The base model used 1 GPU (OlympiadBench on 1× H200). Sampling and grading are unchanged, but the same model
+  scored 0.009 Pass@1 apart on MATH across the two GPU types (§6.3), which is as large as the smart-vs-random gap.
+- **No dev-set results.** The dev evals (AIME 2022–23, HMMT, MATH level 5, GPQA main) didn't run in time. No data,
+  checkpoint or hyperparameter was chosen using any score, so the test numbers aren't tuned on, but there is no
+  held-out confirmation either.
 - **Environments across teammates' accounts** differ in three data-loading packages (`pyarrow`, `datasets`, `pandas`;
   decision log 2026-10-10). Sampling and grading packages are identical.
 - **Training runs were raced across accounts**; the kept copy is the first to *finish training*, decided before any
@@ -221,11 +283,15 @@ the dev-set results, and the eval hardware per benchmark (A100 / L40S racing cop
 - **The official grader slightly undercounts when the machine is busy.** `eval/utils/grader.py` gives each symbolic
   equivalence check 3 s; checks that run over count as wrong. Regrading `random_s2`'s Minerva answers on a quieter machine
   flipped 5 responses (3 problems) from wrong to right, about +1 pt Acc / +0.2 pt Pass@1. The eval is frozen, so the
-  official numbers are reported, but this adds load-dependent noise to every run.
+  official numbers are reported (except random_s1 Minerva, regraded because its official grading never finished,
+  §6), but this adds load-dependent noise to every run. The regrade ran on a quiet machine, so it may favour
+  random_s1 Minerva by up to about this amount.
 - **Eval infrastructure failures, all fixed without touching `eval/`:** an unreadable `tokenizer.json` and missing chat
   template (newer transformers in the training env), forked vLLM workers crashing on 2 GPUs, CPU-swap overflow on long
-  outputs, a vLLM 0.6.1 scheduler assertion under recompute preemption, and one Minerva run that hung in grading. Each
-  was fixed with a documented environment hook (decision log, Oct 15–17), and the affected benchmarks were rerun.
+  outputs, and a vLLM 0.6.1 scheduler assertion under recompute preemption. Each was fixed with a documented environment hook
+  (decision log, Oct 15–17), and the affected benchmarks were rerun. One failure wasn't fixed: random_s1's Minerva
+  grading hung on every attempt and was regraded offline (§6). Some long benchmarks also hit wall-time limits and were
+  rerun with longer ones (random_s2 OlympiadBench took 12 h on 2× A100).
 - **Second smart method not trained.** `longest_s1` (the 15K longest clean traces) was proposed but not built or trained
   in time.
 
