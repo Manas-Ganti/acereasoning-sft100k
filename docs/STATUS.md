@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-18
+last_updated: 2026-10-19
 updated_by: Mrunmay + Claude
 tags: [status]
 ---
@@ -26,7 +26,7 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva: hangs in grading every time (7999727, 8051762); **proposed: regrade from pickle (needs team OK)** |
-> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | olympiadbench 8051763 running (tc-gpu004, 9 h limit) |
+> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | olympiadbench 8066504 running since Oct 19 23:02 (16 h limit, ends Oct 20 15:03); 8051763 TIMEOUT at 9 h mid-generation (485/675) |
 > | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
 
 > [!NOTE]
@@ -167,6 +167,10 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-19 (Mrunmay)**: random_s2 olympiadbench 8051763 TIMEOUT at 9 h while still generating (485/675 prompts, vLLM ETA
+  +4 h; no completions pickle, nothing to regrade). Resubmitted as 8066504 (`HOURS=16`), running since Oct 19 23:02 on
+  tc-gpu004, limit ends Oct 20 15:03. If it doesn't finish, random_s2 is reported without OlympiadBench.
 
 - **2026-10-19 00:50 (Manas + Claude)**: Open decision on Mrunmay's Minerva-regrade proposal. Claude recommends yes, with
   two conditions: (1) regrade Minerva for every model (base, random_s1/s2, full_method_s1) with `diagnose_grading_hang.py`
