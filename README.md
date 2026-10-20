@@ -24,7 +24,7 @@ Minerva, OlympiadBench, GPQA).
 
 | | Model | Dataset |
 |---|---|---|
-| Random 15K | *TODO (Mrunmay)* | [manasganti/acereason-random15k](https://huggingface.co/datasets/manasganti/acereason-random15k) |
+| Random 15K | [Mrunmayp/qwen25-3b-acereason-random15k-s2](https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k-s2) | [manasganti/acereason-random15k](https://huggingface.co/datasets/manasganti/acereason-random15k) |
 | Advanced 15K | [manasganti/qwen25-3b-acereason-advanced15k](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) | [manasganti/acereason-advanced15k](https://huggingface.co/datasets/manasganti/acereason-advanced15k) |
 
 ## Repository layout

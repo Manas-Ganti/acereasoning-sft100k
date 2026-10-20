@@ -9,7 +9,7 @@ last_updated: 2026-10-20
 
 **Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
 **Code:** https://github.com/Manas-Ganti/acereasoning-sft100k
-**Models:** [advanced](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) · random *TODO (Mrunmay)*
+**Models:** [advanced](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) · [random](https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k-s2)
 **Datasets:** [advanced](https://huggingface.co/datasets/manasganti/acereason-advanced15k) · [random](https://huggingface.co/datasets/manasganti/acereason-random15k)
 
 ## Abstract
