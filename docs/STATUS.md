@@ -2,7 +2,7 @@
 title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
-last_updated: 2026-10-19
+last_updated: 2026-10-20
 updated_by: Mrunmay + Claude
 tags: [status]
 ---
@@ -32,8 +32,8 @@ tags: [status]
 > | model | test benchmarks with scores | still to run |
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva: hangs in grading every time (7999727, 8051762); **proposed: regrade from pickle (needs team OK)** |
-> | random_s2 | minerva, aime, amc, cn_math_2024, gpqa, kaoyan, math | olympiadbench 8051763 running (tc-gpu004, 9 h limit) |
-> | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
+> | random_s2 | all 8 ✅ | none |
+> | full_method_s1 | all 8 ✅ (Falcon 2× L40S) | none. gpqa 658479 / olympiadbench 658480 show FAILED only because `tee` hit "Stale file handle" after the scores printed |
 
 > [!NOTE]
 > **Eval failures found on 2026-10-15 and their fixes** (details in the [decision log](reference/decision-log.md)).
@@ -155,7 +155,9 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [x] Step 6: ablations not trained (decision log 2026-10-12); `filter_only_s1` only if GPUs free up late
 - [ ] Step 6: build + submit `longest_s1` ([run note](runs/longest_s1.md); needs `pool_scores.parquet`)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
-- [ ] Step 7: results table, report, HF uploads (deadline **Oct 20**)
+- [x] Step 7: both datasets on HF (private)
+- [x] Step 7: random model on HF (private)
+- [ ] Step 7: smart model on HF (full_method_s1, Manas), make all 4 repos public, results table, report (deadline **Oct 20**)
 
 ## Blockers / open questions
 
@@ -174,9 +176,46 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-20 (Manas + Claude)**: Deadline extended one week (to ~Oct 27). Submission report = the concise,
+  rubric-aligned `report/report.md` (Manas's); random baseline = **random_s2** (decision log 2026-10-19). Public HF set:
+  `manasganti/qwen25-3b-acereason-advanced15k`, `manasganti/acereason-advanced15k`, `manasganti/acereason-random15k` (s2);
+  random **model** link needs the **s2** weights from Mrunmay (`Mrunmayp/qwen25-3b-acereason-random15k` holds random_s1).
+  New run `medium_s1` (pass-rate band [0.25, 0.75] + topic balance; 16,713 eligible prompts, 99.9M tokens) built on
+  manasganti; training + chained evals to be submitted (8x A100, 23 h). Teammates' agents pick their own strategies.
+
 - **2026-10-19 (Manas + Claude)**: random_s2 chosen as the primary random baseline (better seed); random_s1 kept as a
   seed-noise row; random_s1 Minerva regrade dropped. HF random deliverable = random_s2. Report tables updated with
   full_method_s1's 6 finished benchmarks.
+
+- **2026-10-20 (Mrunmay + Claude)**: `report/report.md` results written: HF links table (smart model link TODO until Manas uploads), abstract, final Pass@1 / Acc tables with avg(8) and avg(LB6), smart-vs-random noise table (Pass@1 LB6 +0.005 vs random mean, spread 0.006; Acc +0.009, spread 0.005, below ~1 pt hardware/grader noise: no improvement claimed), discussion, limitations (L40S vs A100, random_s1 Minerva regrade, no dev evals). Report uses the random_s1 Minerva regrade, marked ‡; still needs Manas's OK (Minerva decision open).
+- **2026-10-20 (Mrunmay)**: Both 15K datasets on the HF Hub (**private**; flip to public before submitting), sizes verified
+  byte-for-byte: [Mrunmayp/acereason-random15k](https://huggingface.co/datasets/Mrunmayp/acereason-random15k)
+  (`random_s1.json`, 360,997,775 B) and [Mrunmayp/acereason-smart15k](https://huggingface.co/datasets/Mrunmayp/acereason-smart15k)
+  (`full_method_s1.json`, 331,250,248 B; rebuilt on mrunmayp with `subset_from_idx.py`, sha256 d733da24ca5c matches). Each has
+  `selection_meta.json`. Random model also uploaded (private, file list verified):
+  [Mrunmayp/qwen25-3b-acereason-random15k](https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k) (6.18 GB; includes
+  unused `tokenizer*.json.trained` backups from the eval tokenizer fix). Smart model (full_method_s1) still to upload from manasganti.
+
+- **2026-10-20 (Mrunmay + Claude)**: **All three models have all 8 benchmarks.** full_method_s1 gpqa (658479) Pass@1 0.2746 /
+  Acc 0.7980 and olympiadbench (658480) 0.2720 / 0.5052: both printed scores, then SLURM marked FAILED because `tee` got
+  "Stale file handle" (scores are in `logs/slurm/*-658479.out` / `*-658480.out`; the `eval/outputs/.../log_*.txt` copies are cut).
+  First comparison (Pass@1 avg over 8 / LB6; Acc LB6): base 0.293 / 0.272 / 0.544; random_s1 0.281 / 0.255 / 0.561;
+  random_s2 0.287 / 0.261 / 0.566; full_method_s1 0.288 / 0.263 / 0.575. **full_method_s1 is inside the random seed spread on
+  Pass@1** (LB6: +0.005 over the better seed vs a 0.006 seed spread); on LB6 Acc it is +0.009 over the better seed vs a 0.005
+  spread, smaller than the known grader/hardware noise (~1 pt). No claim of improvement. All SFT models are below base on Pass@1
+  and above it on Acc. Caveats: random_s1 minerva is a pickle regrade; full_method_s1 evaluated on L40S, randoms on A100
+  (its math: L40S 0.668 vs Tinkercliffs A100 copy 0.659, a ~1 pt hardware gap).
+  On the 2026-10-19 00:50 question: the random_s1 regrade did read random_s1's own pickle (different file, size 60,862,951 vs
+  65,735,686, written 10 h apart, different responses; the same script gives random_s2 0.4632 / 0.2790). Its equality with
+  random_s2's official 123/272, 75.25/272 is a coincidence.
+
+- **2026-10-20 (Mrunmay)**: random_s2 olympiadbench done (8066504, 12 h 02 min): Pass@1 0.2724, Acc 0.5007 (random_s1
+  0.2715 / 0.5067; base 0.277 / 0.492). Random baseline complete: random_s2 8/8 official; random_s1 7/8 official + minerva
+  from the pickle regrade (needs team OK).
+
+- **2026-10-19 (Mrunmay)**: random_s2 olympiadbench 8051763 TIMEOUT at 9 h while still generating (485/675 prompts, vLLM ETA
+  +4 h; no completions pickle, nothing to regrade). Resubmitted as 8066504 (`HOURS=16`), running since Oct 19 23:02 on
+  tc-gpu004, limit ends Oct 20 15:03. If it doesn't finish, random_s2 is reported without OlympiadBench.
 
 - **2026-10-19 00:50 (Manas + Claude)**: Open decision on Mrunmay's Minerva-regrade proposal. Claude recommends yes, with
   two conditions: (1) regrade Minerva for every model (base, random_s1/s2, full_method_s1) with `diagnose_grading_hang.py`

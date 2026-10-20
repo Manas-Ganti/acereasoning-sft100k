@@ -33,7 +33,7 @@ Checked against the course README at commit `4d31bfc` on 2026-10-13.
 
 - [ ] Link to the GitHub repository with all necessary files and the final `README.md`
 - [ ] Models pushed to Hugging Face (random + advanced)
-- [ ] **Both** datasets pushed to Hugging Face (random and advanced)
+- [x] **Both** datasets pushed to Hugging Face (random and advanced): `Mrunmayp/acereason-random15k`, `Mrunmayp/acereason-smart15k` (private until submission)
 - [ ] Report, which must include:
   - [ ] baseline performance of the original Qwen2.5-3B-Instruct
   - [ ] performance of the fine-tuned model

@@ -35,3 +35,5 @@ arc_quickref.md
 # agent-local state: Claude memory / local settings must never be committed
 .claude/
 memory/
+
+LLaMA-Factory/data/medium_*.json

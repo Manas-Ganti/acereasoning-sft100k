@@ -34,13 +34,13 @@ tags: [run]
 - anything unusual: tokenizer.json swapped for the base one before its evals started (2026-10-15, fix_tokenizer_for_eval.py). Batch evals aime/amc/cn_math (7934179/83/81) crashed on the 2-GPU fork bug and kaoyan (7934182) on CPU swap; both fixed 2026-10-15, rerun pending.
 - 2026-10-17: aime (8004201, 30 min) Pass@1 0.0792, Acc 0.2333 (base 0.067 / 0.167); amc (8004202, 20 min) Pass@1 0.3594, Acc 0.7000 (base 0.412 / 0.650). First jobs to run with the preempt hook. cn_math_2024 (8004203, 22 min) Pass@1 0.1333, Acc 0.3667 (base 0.133 / 0.400). gpqa (8039877, 1 h 32 min, rerun after the scheduler assert) Pass@1 0.2689, Acc 0.7677 (base 0.289 / 0.707). kaoyan (8004204, 2 h 26 min, rerun after the swap crash) Pass@1 0.2563, Acc 0.6080 (base 0.220 / 0.528).
 - 2026-10-17: minerva (7934184, 2 h 28 min, tc-gpu004) finished: Pass@1 0.2767, Acc 0.4522 (base: 0.303 / 0.489). math (7934180, 1 h 21 min), olympiadbench (7934185, 1 h 41 min) and gpqa (7934186, 2 h 03 min) show COMPLETED, but their logs have no `Acc:` line: they crashed on the vLLM scheduler `assert len(seqs) == 1` (gpqa at 111/198, olympiadbench at 137/675); fix `env/vllm_preempt_hook.sh`; resubmitted as 8039875/76/77, logs moved to `eval/outputs/random_s2_crashed/log_*_schedassert.txt`.
-- 2026-10-18: math (8039875, started 13:13) finished: Pass@1 0.6502, Acc 0.8480 (base 0.646 / 0.854). Duplicate 4 h copy 8051910 cancelled. olympiadbench: 9 h copy 8051763 started (tc-gpu004); 8 h copy 8052023 and old 16 h 8039876 cancelled.
+- 2026-10-18: math (8039875, started 13:13) finished: Pass@1 0.6502, Acc 0.8480 (base 0.646 / 0.854). Duplicate 4 h copy 8051910 cancelled. olympiadbench: 9 h copy 8051763 (8 h copy 8052023 and old 16 h 8039876 cancelled) TIMEOUT mid-generation at 485/675; rerun 8066504 (16 h) finished 2026-10-20 (12 h 02 min): Pass@1 0.2724, Acc 0.5007.
 
 ## Test results (Pass@1)
 
 | aime | math | cn_math_2024 | kaoyan | amc | minerva | olympiadbench | gpqa | avg(LB6) | boxed_rate |
 |---|---|---|---|---|---|---|---|---|---|
-| 0.0792 | 0.6502 | 0.1333 | 0.2563 | 0.3594 | 0.2767 | | 0.2689 | | |
+| 0.0792 | 0.6502 | 0.1333 | 0.2563 | 0.3594 | 0.2767 | 0.2724 | 0.2689 | | |
 
 ## Dev results
 
