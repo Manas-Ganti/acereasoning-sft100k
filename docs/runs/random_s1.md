@@ -9,7 +9,7 @@ gpu: a100 x8
 started: 2026-10-13T16:02
 finished: 2026-10-13T23:46 (training)
 wandb:
-hf_model:
+hf_model: Mrunmayp/qwen25-3b-acereason-random15k (private until submission)
 tags: [run]
 ---
 
