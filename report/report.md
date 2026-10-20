@@ -146,7 +146,7 @@ the sorted pool indices): `random_s1` `6212267e…`, `random_s2` `b55e6eaa…`, 
 
 | Run | Data | Purpose | Status |
 |---|---|---|---|
-| `random_s2` | uniform random 15K of 100K, seed 2 | **the random baseline** (the better of two seeds) | trained; 7/8 evals |
+| `random_s2` | uniform random 15K of 100K, seed 2 | **the random baseline** (the better of two seeds) | trained; 8/8 evals |
 | `random_s1` | uniform random 15K of 100K, seed 1 | second seed → **seed spread** (noise floor) | trained; 7/8 evals (Minerva not available) |
 | `full_method_s1` | §4, seed 1 | the smart subset | trained; 8/8 evals |
 
