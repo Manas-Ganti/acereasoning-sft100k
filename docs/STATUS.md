@@ -170,6 +170,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-20 (Mrunmay)**: random_s2 dataset on HF, **public**: `Mrunmayp/acereason-random15k-s2` (random_s2.json 357,606,530 B + selection_meta.json, verified via the Hub API). The report's random-dataset link now points to it; the random model link is still random_s1 (`Mrunmayp/qwen25-3b-acereason-random15k`).
 - **2026-10-20 (Mrunmay + Claude)**: `report/report.md` results written: HF links table (smart model link TODO until Manas uploads), abstract, final Pass@1 / Acc tables with avg(8) and avg(LB6), smart-vs-random noise table (Pass@1 LB6 +0.005 vs random mean, spread 0.006; Acc +0.009, spread 0.005, below ~1 pt hardware/grader noise: no improvement claimed), discussion, limitations (L40S vs A100, random_s1 Minerva regrade, no dev evals). Report uses the random_s1 Minerva regrade, marked ‡; still needs Manas's OK (Minerva decision open).
 - **2026-10-20 (Mrunmay)**: Both 15K datasets on the HF Hub (**private**; flip to public before submitting), sizes verified
   byte-for-byte: [Mrunmayp/acereason-random15k](https://huggingface.co/datasets/Mrunmayp/acereason-random15k)
