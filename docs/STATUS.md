@@ -149,7 +149,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [x] Step 6: ablations not trained (decision log 2026-10-12); `filter_only_s1` only if GPUs free up late
 - [ ] Step 6: build + submit `longest_s1` ([run note](runs/longest_s1.md); needs `pool_scores.parquet`)
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
-- [ ] Step 7: results table, report, HF uploads (deadline **Oct 20**)
+- [x] Step 7: both datasets on HF (private)
+- [ ] Step 7: models on HF (random_s1: Mrunmay; full_method_s1: Manas), make all 4 repos public, results table, report (deadline **Oct 20**)
 
 ## Blockers / open questions
 
@@ -167,6 +168,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-20 (Mrunmay)**: Both 15K datasets on the HF Hub (**private**; flip to public before submitting), sizes verified
+  byte-for-byte: [Mrunmayp/acereason-random15k](https://huggingface.co/datasets/Mrunmayp/acereason-random15k)
+  (`random_s1.json`, 360,997,775 B) and [Mrunmayp/acereason-smart15k](https://huggingface.co/datasets/Mrunmayp/acereason-smart15k)
+  (`full_method_s1.json`, 331,250,248 B; rebuilt on mrunmayp with `subset_from_idx.py`, sha256 d733da24ca5c matches). Each has
+  `selection_meta.json`. Models not uploaded yet (random_s1 on mrunmayp, full_method_s1 on manasganti).
 
 - **2026-10-20 (Mrunmay + Claude)**: **All three models have all 8 benchmarks.** full_method_s1 gpqa (658479) Pass@1 0.2746 /
   Acc 0.7980 and olympiadbench (658480) 0.2720 / 0.5052: both printed scores, then SLURM marked FAILED because `tee` got
