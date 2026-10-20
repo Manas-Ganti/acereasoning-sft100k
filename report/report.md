@@ -18,8 +18,9 @@ We fine-tune Qwen2.5-3B-Instruct on 15K examples chosen from a 100K pool of Deep
 (AceReason-1.1-SFT), and compare a random 15K subset with a selected one. Our selection keeps clean math problems
 only, keeps the problems the base model solves at most half the time, and balances 100 topic clusters. With identical
 hyperparameters, both fine-tuned models beat the base model on the leaderboard average (pass@8: base 0.544, random
-0.566, advanced 0.575). The advanced subset is ahead of random by 0.9 points, but that is smaller than the
-difference between two random seeds, so **the selection matches random rather than beating it**.
+0.566, advanced 0.575). The advanced subset is ahead of random by 0.9 points. That is larger than the gap between our two random seeds
+(0.5 points) but smaller than the eval noise we measured (up to 1.8 points for the same model on different GPUs), so
+**the selection matches random rather than clearly beating it**.
 
 ## 1. Motivation and hypothesis
 
@@ -99,14 +100,30 @@ Pass@8. ★ = counts toward the leaderboard average.
 | *Advanced − Random* | *−0.100* | *+0.024* | *0.000* | *−0.005* | *0.000* | *+0.022* | *+0.004* | *+0.030* | ***+0.009*** |
 
 We trained two random subsets (seeds 1 and 2) and report the better one (seed 2), which makes it a harder baseline to
-beat. On the benchmarks both seeds completed, the two random models differ by up to 0.033 on a single benchmark.
+beat.
+
+**Is the gap real?** We compare it with three measured sources of noise:
+
+| | AVG pass@8 |
+|---|---|
+| Random seed 1 / seed 2 | 0.561 / 0.566 |
+| Advanced | 0.575 |
+| **Advanced − better random seed** | **+0.009** |
+| Seed-to-seed spread (AVG) | 0.005 |
+| Seed-to-seed spread (largest single benchmark) | 0.033 (CN-Math, 1 problem) |
+| Same model, same data, A100 vs L40S (MATH) | 0.018 |
+| Same outputs regraded on a quieter machine (Minerva) | 0.011 |
+
+The gap is just above the seed spread on the average, but below the hardware and grader noise on single benchmarks.
+With only two random seeds, the spread itself is a rough estimate. Random seed 1's Minerva score is a regrade of
+its saved outputs, because the official grading run hung; generation and the grader code are unchanged.
 
 ## 5. Comparison and analysis
 
 - **Fine-tuning helps on the leaderboard average.** Random is +2.2 points and advanced +3.1 points over base. The gains
   come from Kaoyan (+8), GPQA (+6 to +9) and AMC (+5). CN-Math drops by one problem for both.
-- **Selection doesn't clearly beat random.** The +0.9-point AVG gap is well inside the seed-to-seed spread, so it
-  isn't an improvement. Per benchmark, advanced is ahead on GPQA (+3.0, 6 questions), MATH (+2.4) and Minerva (+2.2),
+- **Selection doesn't clearly beat random.** The +0.9-point AVG gap is within measured eval noise, so we don't claim
+  an improvement. Per benchmark, advanced is ahead on GPQA (+3.0, 6 questions), MATH (+2.4) and Minerva (+2.2),
   level on CN-Math, Kaoyan, AMC and OlympiadBench, and behind on AIME24 (−10 points, which is 3 of 30 problems).
 - **Cleaning the data didn't matter at this scale.** The random subset still contains ≈4.9K code examples, ≈520
   truncated traces and ≈14 contaminated rows, and it scores the same. 15K R1 traces seem to transfer similarly
