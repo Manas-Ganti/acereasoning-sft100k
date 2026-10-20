@@ -13,7 +13,8 @@ last_updated: 2026-10-12
 > `data_subsets/*.meta.json`, `results/`.
 
 **Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
-**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k · **Models / datasets:** *TODO: HF links*
+**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k · **Models:** [advanced](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) · random *TODO (Mrunmay)*
+· **Datasets:** [advanced](https://huggingface.co/datasets/manasganti/acereason-advanced15k) · [random](https://huggingface.co/datasets/manasganti/acereason-random15k)
 
 ## Abstract
 
@@ -147,7 +148,7 @@ the sorted pool indices): `random_s1` `6212267e…`, `random_s2` `b55e6eaa…`, 
 |---|---|---|---|
 | `random_s2` | uniform random 15K of 100K, seed 2 | **the random baseline** (the better of two seeds) | trained; 7/8 evals |
 | `random_s1` | uniform random 15K of 100K, seed 1 | second seed → **seed spread** (noise floor) | trained; 7/8 evals (Minerva not available) |
-| `full_method_s1` | §4, seed 1 | the smart subset | trained; 6/8 evals |
+| `full_method_s1` | §4, seed 1 | the smart subset | trained; 8/8 evals |
 
 We trained two random seeds and report the **better** one (`random_s2`, ahead on every aggregate of the benchmarks
 both finished) as the random baseline. Picking the stronger baseline can only make the comparison harder for our

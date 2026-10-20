@@ -52,5 +52,5 @@ Minerva, OlympiadBench, GPQA). Full write-up: [report/report.md](report/report.m
 
 | | Model | Dataset |
 |---|---|---|
-| Random 15K | *TODO* | *TODO* |
-| Advanced 15K | *TODO* | *TODO* |
+| Random 15K | *TODO (Mrunmay)* | [manasganti/acereason-random15k](https://huggingface.co/datasets/manasganti/acereason-random15k) |
+| Advanced 15K | [manasganti/qwen25-3b-acereason-advanced15k](https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k) | [manasganti/acereason-advanced15k](https://huggingface.co/datasets/manasganti/acereason-advanced15k) |
