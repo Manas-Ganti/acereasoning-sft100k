@@ -27,7 +27,7 @@ tags: [status]
 > |---|---|---|
 > | random_s1 | aime, amc, cn_math_2024, math, kaoyan, olympiadbench, gpqa | minerva: hangs in grading every time (7999727, 8051762); **proposed: regrade from pickle (needs team OK)** |
 > | random_s2 | all 8 ✅ | none |
-> | full_method_s1 | none | trained 2026-10-18; evals queued on Tinkercliffs (7958394–401, est. Oct 21) and Falcon 2× L40S (657900–907, first starts Oct 18 evening) |
+> | full_method_s1 | all 8 ✅ (Falcon 2× L40S) | none. gpqa 658479 / olympiadbench 658480 show FAILED only because `tee` hit "Stale file handle" after the scores printed |
 
 > [!NOTE]
 > **Eval failures found on 2026-10-15 and their fixes** (details in the [decision log](reference/decision-log.md)).
@@ -167,6 +167,19 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   `quota` before Step 3.
 
 ## Change log (newest first)
+
+- **2026-10-20 (Mrunmay + Claude)**: **All three models have all 8 benchmarks.** full_method_s1 gpqa (658479) Pass@1 0.2746 /
+  Acc 0.7980 and olympiadbench (658480) 0.2720 / 0.5052: both printed scores, then SLURM marked FAILED because `tee` got
+  "Stale file handle" (scores are in `logs/slurm/*-658479.out` / `*-658480.out`; the `eval/outputs/.../log_*.txt` copies are cut).
+  First comparison (Pass@1 avg over 8 / LB6; Acc LB6): base 0.293 / 0.272 / 0.544; random_s1 0.281 / 0.255 / 0.561;
+  random_s2 0.287 / 0.261 / 0.566; full_method_s1 0.288 / 0.263 / 0.575. **full_method_s1 is inside the random seed spread on
+  Pass@1** (LB6: +0.005 over the better seed vs a 0.006 seed spread); on LB6 Acc it is +0.009 over the better seed vs a 0.005
+  spread, smaller than the known grader/hardware noise (~1 pt). No claim of improvement. All SFT models are below base on Pass@1
+  and above it on Acc. Caveats: random_s1 minerva is a pickle regrade; full_method_s1 evaluated on L40S, randoms on A100
+  (its math: L40S 0.668 vs Tinkercliffs A100 copy 0.659, a ~1 pt hardware gap).
+  On the 2026-10-19 00:50 question: the random_s1 regrade did read random_s1's own pickle (different file, size 60,862,951 vs
+  65,735,686, written 10 h apart, different responses; the same script gives random_s2 0.4632 / 0.2790). Its equality with
+  random_s2's official 123/272, 75.25/272 is a coincidence.
 
 - **2026-10-20 (Mrunmay)**: random_s2 olympiadbench done (8066504, 12 h 02 min): Pass@1 0.2724, Acc 0.5007 (random_s1
   0.2715 / 0.5067; base 0.277 / 0.492). Random baseline complete: random_s2 8/8 official; random_s1 7/8 official + minerva
