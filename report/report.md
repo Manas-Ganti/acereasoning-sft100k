@@ -13,13 +13,13 @@ last_updated: 2026-10-20
 
 **Team:** Manas Ganti, Mrunmay Paratwar, Sahasree Datla
 
-| Artifact | Link |
-|---|---|
-| Code | https://github.com/Manas-Ganti/acereasoning-sft100k |
-| Random 15K dataset (`random_s1`) | https://huggingface.co/datasets/Mrunmayp/acereason-random15k |
-| Smart 15K dataset (`full_method_s1`) | https://huggingface.co/datasets/Mrunmayp/acereason-smart15k |
-| Random-subset model | https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k |
-| Smart-subset model | *TODO: link once Manas uploads `full_method_s1` (`scripts/push_to_hub.py model full_method_s1 <hf_user>/qwen25-3b-acereason-smart15k`)* |
+**Code:** https://github.com/Manas-Ganti/acereasoning-sft100k
+
+**Datasets:** random 15K https://huggingface.co/datasets/Mrunmayp/acereason-random15k · smart 15K
+https://huggingface.co/datasets/Mrunmayp/acereason-smart15k
+
+**Models:** random-subset https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k · smart-subset *TODO: link
+once Manas uploads it*
 
 ## Abstract
 
