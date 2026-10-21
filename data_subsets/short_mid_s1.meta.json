@@ -1,0 +1,112 @@
+{
+  "name": "short_mid_s1",
+  "n": 15000,
+  "pool_idx_sha256": "10cd2e1accc194c0d740a75eaef80ccaa6252dc36614345b481d2cf3b8b54848",
+  "rows_with_system_not_eval_prompt": 0,
+  "method": "short_mid",
+  "seed": 1,
+  "config": {
+    "band": [
+      0.25,
+      0.75
+    ],
+    "max_resp_tokens": 8192,
+    "stratify": true,
+    "fill_order": [
+      "pass_rate 0 (R1-majority rule)",
+      "pass_rate 1.0"
+    ],
+    "per_prompt": "best tier, majority-agreeing, shortest"
+  },
+  "keep_proof": false,
+  "funnel": [
+    [
+      "pool",
+      100000
+    ],
+    [
+      "math",
+      67432
+    ],
+    [
+      "not truncated (<=16384 tokens)",
+      64907
+    ],
+    [
+      "balanced \\boxed{} in final answer",
+      64712
+    ],
+    [
+      "not proof-like / prose answer",
+      60648
+    ],
+    [
+      "not contaminated (test)",
+      60586
+    ],
+    [
+      "not contaminated (dev)",
+      60508
+    ],
+    [
+      "no repetition / lang-mix / malformed flag",
+      60504
+    ],
+    [
+      "scored",
+      60504
+    ],
+    [
+      "drop pass_rate-0 rows whose R1 answer is not the R1 majority",
+      59069
+    ],
+    [
+      "resp_tokens <= 8192",
+      37980
+    ],
+    [
+      "in band or a fill tier",
+      37980
+    ],
+    [
+      "unique prompts (1 response each)",
+      34297
+    ],
+    [
+      "selected from pass_rate in [0.25, 0.75] (of 11571)",
+      11571
+    ],
+    [
+      "selected from fill: pass_rate 0 (of 17430)",
+      3429
+    ],
+    [
+      "selected",
+      15000
+    ]
+  ],
+  "composition": {
+    "mean_total_tokens": 4495.5726,
+    "sum_total_tokens": 67433589,
+    "resp_tokens_median": 4257.0,
+    "unique_prompts": 15000,
+    "fill_rows": 3429,
+    "tier_counts": {
+      "pass_rate in [0.25, 0.75]": 11571,
+      "fill: pass_rate 0": 3429
+    },
+    "source": {
+      "OpenMathReasoning": 12025,
+      "NuminaMath-CoT": 2975
+    },
+    "pass_rate_hist": {
+      "0.0": 3429,
+      "0.25": 4887,
+      "0.5": 3462,
+      "0.75": 3222
+    },
+    "cluster_entropy_bits": 6.55302588369743,
+    "n_clusters": 100,
+    "max_cluster_frac": 0.023
+  }
+}

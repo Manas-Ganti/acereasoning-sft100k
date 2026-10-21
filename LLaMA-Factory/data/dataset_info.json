@@ -732,5 +732,8 @@
   },
   "medium_s1": {
     "file_name": "medium_s1.json"
+  },
+  "short_mid_s1": {
+    "file_name": "short_mid_s1.json"
   }
 }
