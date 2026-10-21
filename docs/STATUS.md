@@ -3,7 +3,7 @@ title: STATUS
 current_step: 6
 phase: Steps 3 + 6 training queued (random_s1/s2, full_method_s1); Step 7 prep
 last_updated: 2026-10-20
-updated_by: Mrunmay + Claude
+updated_by: Sahasree + Claude
 tags: [status]
 ---
 
@@ -116,7 +116,7 @@ s2 math + olympiadbench, and both dev evals (see the progress table above and th
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ✅ done | 3 subsets × 15,000 (seed 1); difficulty band leaves 41,626 unique prompts; full_method uniform over 100 clusters | — | [05-selection](steps/05-selection.md) |
-| 6 | Smart model (ablations skipped) | 🔄 `full_method_s1` queued (7958393); `longest_s1` script ready, not built; ablations not trained (decision log) | — | [06-ablations](steps/06-ablations.md) |
+| 6 | Smart model (ablations skipped) | ✅ `full_method_s1` trained + 8/8 evals; `medium_s1` built (Manas); `short_mid_s1` script ready, not built; `longest_s1` dropped (decision log 2026-10-20) | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
 Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocked / gate failed
@@ -153,7 +153,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [x] Step 5: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built and committed, see [results](steps/05-selection.md#results)
 - [x] Step 6: `full_method_s1` submitted (Manas, 7958393)
 - [x] Step 6: ablations not trained (decision log 2026-10-12); `filter_only_s1` only if GPUs free up late
-- [ ] Step 6: build + submit `longest_s1` ([run note](runs/longest_s1.md); needs `pool_scores.parquet`)
+- [ ] Step 6: build + submit `short_mid_s1` ([run note](runs/short_mid_s1.md); dry run first; needs `pool_scores.parquet`). `longest_s1` dropped (decision log 2026-10-20)
+- [ ] Step 6: run `scripts/diagnose_outputs.py` on ARC (CPU; length / hit-max / loop rates per model) and commit `analysis/eval_diagnostics.md`
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
 - [x] Step 7: both datasets on HF (private)
 - [x] Step 7: random model on HF (private)
@@ -176,7 +177,12 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
-<<<<<<< HEAD
+- **2026-10-20 (Sahasree + Claude)**: `longest_s1` dropped, replaced by `short_mid_s1` (Manas approved; decision log):
+  `full_method`'s filter + resp_tokens <= 8192 + pass_rate [0.25, 0.75] + shortest response per prompt + cluster
+  water-filling; fill order pass_rate 0, then 1.0. New `scripts/select_short_mid.py` (tested on synthetic scores only)
+  and `scripts/diagnose_outputs.py` (CPU: output length, max_tokens hits, loops per run x benchmark). Committed
+  merge-conflict markers in this change log resolved (both sides kept).
+
 - **2026-10-20 (Manas + Claude)**: Deadline extended one week (to ~Oct 27). Submission report = the concise,
   rubric-aligned `report/report.md` (Manas's); random baseline = **random_s2** (decision log 2026-10-19). Public HF set:
   `manasganti/qwen25-3b-acereason-advanced15k`, `manasganti/acereason-advanced15k`, `manasganti/acereason-random15k` (s2);
@@ -188,10 +194,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
   seed-noise row; random_s1 Minerva regrade dropped. HF random deliverable = random_s2. Report tables updated with
   full_method_s1's 6 finished benchmarks.
 
-=======
 - **2026-10-20 (Mrunmay)**: random_s2 model on HF, **public**: `Mrunmayp/qwen25-3b-acereason-random15k-s2` (2 safetensors shards 4,957,560,304 + 1,214,366,696 B, tokenizer, training_config.yaml with `dataset: random_s2`; verified via the Hub API). Report model link now points to it, so the report's random dataset and model are both random_s2.
 - **2026-10-20 (Mrunmay)**: random_s2 dataset on HF, **public**: `Mrunmayp/acereason-random15k-s2` (random_s2.json 357,606,530 B + selection_meta.json, verified via the Hub API). The report's random-dataset link now points to it; the random model link is still random_s1 (`Mrunmayp/qwen25-3b-acereason-random15k`).
->>>>>>> origin/main
 - **2026-10-20 (Mrunmay + Claude)**: `report/report.md` results written: HF links table (smart model link TODO until Manas uploads), abstract, final Pass@1 / Acc tables with avg(8) and avg(LB6), smart-vs-random noise table (Pass@1 LB6 +0.005 vs random mean, spread 0.006; Acc +0.009, spread 0.005, below ~1 pt hardware/grader noise: no improvement claimed), discussion, limitations (L40S vs A100, random_s1 Minerva regrade, no dev evals). Report uses the random_s1 Minerva regrade, marked ‡; still needs Manas's OK (Minerva decision open).
 - **2026-10-20 (Mrunmay)**: Both 15K datasets on the HF Hub (**private**; flip to public before submitting), sizes verified
   byte-for-byte: [Mrunmayp/acereason-random15k](https://huggingface.co/datasets/Mrunmayp/acereason-random15k)

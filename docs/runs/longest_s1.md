@@ -1,7 +1,7 @@
 ---
 run: longest_s1
 step: 6
-status: not-started
+status: blocked
 train_job:
 eval_jobs:
 dev_job:
@@ -14,6 +14,9 @@ tags: [run]
 ---
 
 # Run: longest_s1
+
+> [!WARNING]
+> **Dropped 2026-10-20, never built.** Replaced by [short_mid_s1](short_mid_s1.md) (decision log 2026-10-20).
 
 ← [STATUS](../STATUS.md) · [Runs index](../runs/README.md)
 

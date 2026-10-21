@@ -17,4 +17,5 @@ Obsidian, use *Insert template*; anywhere else, copy the file. Add a row below w
 | filter_only_s1 | 6 | built, not trained (decision 2026-10-12) | | |
 | filter_difficulty_s1 | 6 | built, not trained (decision 2026-10-12) | | |
 | full_method_s1 | 6 | trained; evals released | | [full_method_s1](full_method_s1.md) |
-| longest_s1 | 6 | script ready; to build + train (decision 2026-10-13) | | [longest_s1](longest_s1.md) |
+| longest_s1 | 6 | dropped, never built (decision 2026-10-20) | | [longest_s1](longest_s1.md) |
+| short_mid_s1 | 6 | script ready; to build + train (decision 2026-10-20) | | [short_mid_s1](short_mid_s1.md) |

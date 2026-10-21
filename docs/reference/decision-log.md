@@ -3,6 +3,27 @@ title: Decision log
 tags: [reference, decisions]
 ---
 
+### 2026-10-20: `short_mid_s1` replaces `longest_s1`
+All three trained models score below base on Pass@1 avg(LB6) (0.255–0.263 vs 0.272) and above it on pass@8, and 71%
+of `full_method_s1` is pass_rate 0. Our reading is that the 3B model copies R1's long style without learning to
+finish. `longest_s1` would push further that way: its traces are ~10.5–16K tokens, and it needs ~1.75× the training
+tokens. So it is dropped and never built.
+
+The new method, `scripts/select_short_mid.py` (no existing script changed):
+- `full_method`'s quality filter and R1-majority rule
+- `resp_tokens` ≤ 8,192
+- pass_rate in [0.25, 0.75]
+- the shortest majority-agreeing response per prompt
+- cluster water-filling to 15,000
+- if the band runs short, fill in this fixed order: pass_rate 0, then pass_rate 1.0
+
+With Manas's `medium_s1` (same band, no length cap), this run isolates the length cap. The 2026-10-13 rule for picking
+the submitted smart model (higher mean dev Pass@1; under 1 point → `full_method_s1`) was written for two runs. How it
+extends to `medium_s1` and `short_mid_s1` is still to be confirmed by Manas, **before any of their scores exist**.
+*Decided by: Manas (approval relayed by Sahasree).*
+
+---
+
 ### 2026-10-19: random_s2 is the primary random baseline; random_s1 is kept only as a seed-noise reference
 The course README (§8) asks for one random model and one advanced model. We keep the **better** of our two random
 seeds. random_s2 is ahead on every aggregate of the 6 benchmarks both seeds finished (AIME24, MATH, CN-Math, Kaoyan,
