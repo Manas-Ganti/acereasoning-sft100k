@@ -1,10 +1,10 @@
 ---
 run: short_mid_s1
 step: 6
-status: not-started
-train_job:
-eval_jobs:
-dev_job:
+status: running
+train_job: 8089882 (account tml_2026, user mrunmayp; 8× A100, 23 h limit)
+eval_jobs: 8089883–8089890 (aime, math, cn_math_2024, kaoyan, amc, minerva, olympiadbench, gpqa; 2× A100 each, afterok 8089882)
+dev_job: 8089891 (afterok 8089882)
 gpu: a100 x8
 started:
 finished:
@@ -20,7 +20,7 @@ tags: [run]
 **Subset:** `LLaMA-Factory/data/short_mid_s1.json` · **Selection meta:** `data_subsets/short_mid_s1.meta.json` · **YAML:**
 `LLaMA-Factory/yamls/short_mid_s1.yaml` (identical to the template except `dataset`/`output_dir`)
 
-`pool_idx_sha256`: *(filled in once built)*
+`pool_idx_sha256`: `10cd2e1accc194c0d740a75eaef80ccaa6252dc36614345b481d2cf3b8b54848`
 
 > [!NOTE]
 > Third smart method, added 2026-10-20 with Manas's approval; replaces `longest_s1`
@@ -57,7 +57,36 @@ On another account: `git pull`, then `$PY scripts/subset_from_idx.py short_mid_s
 
 ## Selection funnel
 
-*(paste the dry-run output)*
+```
+short_mid_s1  (method=short_mid, band=(0.25, 0.75), max_resp_tokens=8192)
+   100000  pool
+    67432  math
+    64907  not truncated (<=16384 tokens)
+    64712  balanced oxed{} in final answer
+    60648  not proof-like / prose answer
+    60586  not contaminated (test)
+    60508  not contaminated (dev)
+    60504  no repetition / lang-mix / malformed flag
+    60504  scored
+    59069  drop pass_rate-0 rows whose R1 answer is not the R1 majority
+    37980  resp_tokens <= 8192
+    37980  in band or a fill tier
+    34297  unique prompts (1 response each)
+    11571  selected from pass_rate in [0.25, 0.75] (of 11571)
+     3429  selected from fill: pass_rate 0 (of 17430)
+    15000  selected
+```
+
+pass_rate 0 / 0.25 / 0.5 / 0.75: 3,429 / 4,887 / 3,462 / 3,222. Median resp_tokens 4,257; 67,433,589 training tokens
+(**0.60×** full_method_s1's ~112M; medium_s1 99.9M). 100 clusters, largest 2.3% (the band is taken whole, so cluster
+balance only acts on the fill). Built on mrunmayp 2026-10-20 from the pool_scores.parquet Manas pushed (583c7b4); the
+same dry run on Mrunmay's laptop gave the identical funnel.
+
+> [!WARNING]
+> Only 11,571 band prompts have a response ≤ 8,192 tokens, so **23% of the subset is pass_rate-0 fill**. Against
+> `medium_s1` (band only, no fill) this run therefore changes two things: the length cap and the 3,429 hard
+> problems. Caps tried in dry runs only: 10,000 → 1,887 fill (0.67× tokens); 12,000 → 509 (0.74×); 14,000 → 0
+> (0.81×). Kept 8,192 as decided (decision log 2026-10-20).
 
 ## Training
 - wall time:

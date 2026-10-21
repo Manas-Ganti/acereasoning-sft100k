@@ -116,7 +116,7 @@ s2 math + olympiadbench, and both dev evals (see the progress table above and th
 | 3 | Random ×2 | 🔄 queued (7934168 / 7934178) | seed spread = the bar | [03-random-baselines](steps/03-random-baselines.md) |
 | 4 | Score pool | ✅ done | pass_rate median 0 / mean 0.26 (k=4); r1_agreement median 0.5; 100 clusters (181–1242) look like topics; ~20.5 A100 GPU-h | [04-score-pool](steps/04-score-pool.md) |
 | 5 | Selection | ✅ done | 3 subsets × 15,000 (seed 1); difficulty band leaves 41,626 unique prompts; full_method uniform over 100 clusters | — | [05-selection](steps/05-selection.md) |
-| 6 | Smart model (ablations skipped) | ✅ `full_method_s1` trained + 8/8 evals; `medium_s1` built (Manas); `short_mid_s1` script ready, not built; `longest_s1` dropped (decision log 2026-10-20) | — | [06-ablations](steps/06-ablations.md) |
+| 6 | Smart model (ablations skipped) | ✅ `full_method_s1` trained + 8/8 evals; `medium_s1` built (Manas); `short_mid_s1` built + submitted on mrunmayp (train 8089882, evals 8089883–90, dev 8089891); `longest_s1` dropped (decision log 2026-10-20) | — | [06-ablations](steps/06-ablations.md) |
 | 7 | Compare + submit | ⬜ not started | deadline **Oct 20** | [07-compare-submit](steps/07-compare-submit.md) |
 
 Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocked / gate failed
@@ -125,6 +125,8 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 | Job ID | What | Submitted | Expected | Log |
 |---|---|---|---|---|
+| 8089882 | train `short_mid_s1`, 8× A100 (mrunmayp), 23 h limit | 2026-10-20 | ⏳ PD (Priority); est. 3–8 h run (0.60× tokens) | `logs/slurm/sft-short_mid_s1-8089882.out` |
+| 8089883–90, 8089891 | `short_mid_s1` 8 evals (2× A100 each) + dev eval, afterok 8089882 | 2026-10-20 | ⏳ PD (Dependency) | [run note](runs/short_mid_s1.md) |
 | 7865518–25 | base eval on H200 | 2026-10-05 | cancelled (4-day queue) | — |
 | (AIME) | base eval aime, A100 | 2026-10-05 | ✅ done: Pass@1 0.067, Acc 0.167 | `eval/outputs/base/log_aime.txt` |
 | 7865701–05 | base eval math, cn_math, kaoyan, amc, minerva | 2026-10-05 | ✅ done | `logs/slurm/eval-base-*.out` |
@@ -153,7 +155,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 - [x] Step 5: `filter_only_s1`, `filter_difficulty_s1`, `full_method_s1` built and committed, see [results](steps/05-selection.md#results)
 - [x] Step 6: `full_method_s1` submitted (Manas, 7958393)
 - [x] Step 6: ablations not trained (decision log 2026-10-12); `filter_only_s1` only if GPUs free up late
-- [ ] Step 6: build + submit `short_mid_s1` ([run note](runs/short_mid_s1.md); dry run first; needs `pool_scores.parquet`). `longest_s1` dropped (decision log 2026-10-20)
+- [x] Step 6: build + submit `short_mid_s1` ([run note](runs/short_mid_s1.md)): train 8089882 queued 2026-10-20 (Priority). `longest_s1` dropped (decision log 2026-10-20)
 - [ ] Step 6: run `scripts/diagnose_outputs.py` on ARC (CPU; length / hit-max / loop rates per model) and commit `analysis/eval_diagnostics.md`
 - [ ] Spot-check near-miss contamination (contam_score 0.3–0.5): optional, report as a limitation if skipped
 - [x] Step 7: both datasets on HF (private)
@@ -177,6 +179,7 @@ Legend: ⬜ not started · ⏭️ next · 🔄 running · ✅ done · ⛔ blocke
 
 ## Change log (newest first)
 
+- **2026-10-20 (Mrunmay + Claude)**: `short_mid_s1` built on mrunmayp (67e2fa8; sha256 10cd2e1accc1…) and submitted: train 8089882 (8× A100, 23 h), evals 8089883–90, dev 8089891. Funnel: 11,571 band prompts ≤ 8,192 tokens + 3,429 pass_rate-0 fill (23%), 67.4M tokens (0.60× full_method_s1). Fill means it differs from `medium_s1` in two ways (length cap + hard problems); noted in the run note. Est. ~60–110 A100 GPU-h total.
 - **2026-10-20 (Sahasree + Claude)**: `longest_s1` dropped, replaced by `short_mid_s1` (Manas approved; decision log):
   `full_method`'s filter + resp_tokens <= 8192 + pass_rate [0.25, 0.75] + shortest response per prompt + cluster
   water-filling; fill order pass_rate 0, then 1.0. New `scripts/select_short_mid.py` (tested on synthetic scores only)
