@@ -18,7 +18,8 @@ last_updated: 2026-10-20
 **Datasets:** random 15K (`random_s2`) https://huggingface.co/datasets/Mrunmayp/acereason-random15k-s2 · smart 15K
 https://huggingface.co/datasets/Mrunmayp/acereason-smart15k
 
-**Models:** random-subset (`random_s2`) https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k-s2 · smart-subset 
+**Models:** random-subset (`random_s2`) https://huggingface.co/Mrunmayp/qwen25-3b-acereason-random15k-s2 · smart-subset (`full_method_s1`)
+https://huggingface.co/manasganti/qwen25-3b-acereason-advanced15k
 
 ## Abstract
 

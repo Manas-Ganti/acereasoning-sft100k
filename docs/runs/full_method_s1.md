@@ -9,7 +9,7 @@ gpu: a100 x8
 started: 2026-10-17 10:27 (tc-gpu004)
 finished: 2026-10-18 06:34
 wandb:
-hf_model:
+hf_model: manasganti/qwen25-3b-acereason-advanced15k (public)
 tags: [run]
 ---
 
