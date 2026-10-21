@@ -729,5 +729,8 @@
   },
   "full_method_s1": {
     "file_name": "full_method_s1.json"
+  },
+  "medium_s1": {
+    "file_name": "medium_s1.json"
   }
 }

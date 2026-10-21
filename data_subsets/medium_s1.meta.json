@@ -1,0 +1,89 @@
+{
+  "name": "medium_s1",
+  "n": 15000,
+  "pool_idx_sha256": "61be2cedf68b1ef423deab1257d522c2b577a5672abd6790ac3c0eba7967f43f",
+  "rows_with_system_not_eval_prompt": 0,
+  "method": "full_method",
+  "seed": 1,
+  "config": {
+    "difficulty": true,
+    "stratify": true,
+    "band": [
+      0.25,
+      0.75
+    ]
+  },
+  "keep_proof": false,
+  "funnel": [
+    [
+      "pool",
+      100000
+    ],
+    [
+      "math",
+      67432
+    ],
+    [
+      "not truncated (<=16384 tokens)",
+      64907
+    ],
+    [
+      "balanced \\boxed{} in final answer",
+      64712
+    ],
+    [
+      "not proof-like / prose answer",
+      60648
+    ],
+    [
+      "not contaminated (test)",
+      60586
+    ],
+    [
+      "not contaminated (dev)",
+      60508
+    ],
+    [
+      "no repetition / lang-mix / malformed flag",
+      60504
+    ],
+    [
+      "scored",
+      60504
+    ],
+    [
+      "pass_rate in [0.25, 0.75]",
+      18725
+    ],
+    [
+      "drop pass_rate-0 rows whose R1 answer is not the R1 majority",
+      18725
+    ],
+    [
+      "unique prompts (1 response each)",
+      16713
+    ],
+    [
+      "selected",
+      15000
+    ]
+  ],
+  "composition": {
+    "mean_total_tokens": 6659.799533333334,
+    "sum_total_tokens": 99896993,
+    "unique_prompts": 15000,
+    "fill_rows": 0,
+    "source": {
+      "OpenMathReasoning": 12239,
+      "NuminaMath-CoT": 2761
+    },
+    "pass_rate_hist": {
+      "0.25": 6504,
+      "0.5": 4460,
+      "0.75": 4036
+    },
+    "cluster_entropy_bits": 6.566867846473515,
+    "n_clusters": 100,
+    "max_cluster_frac": 0.013266666666666666
+  }
+}
